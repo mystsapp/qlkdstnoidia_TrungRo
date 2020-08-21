@@ -43,9 +43,7 @@
         $('.date-picker').datepicker({ dateFormat: 'dd/mm/yy' });
 
     });
-
 </script>
-
 
 <script src="~/Scripts/script-custom-validator.js"></script>
 
@@ -61,36 +59,32 @@
                 HtmlHelper.UnobtrusiveJavaScriptEnabled = false;
                 @Html.HiddenFor(model => model.idtour)
 
+                <div class="form-group">
+                    <label for="areaname" class="col-sm-2 control-label">   Code đoàn:</label>
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(model => model.sgtcode, new { @class = "form-control", @readonly = "readonly" })
+                    </div>
 
-            <div class="form-group">
-                <label for="areaname" class="col-sm-2 control-label">   Code đoàn:</label>
-                <div class="col-sm-6">
-                    @Html.TextBoxFor(model => model.sgtcode, new { @class = "form-control", @readonly = "readonly" })
+                    @if (ViewBag.chiNhanhTao == ViewBag.chiNhanhDH)
+                    {
+                        <label for="areamvc" class="col-md-2 control-label musttype">    Chi nhánh DH(*):</label>
+                        <div class="col-md-2">
+                            @Html.DropDownListFor(model => model.ChiNhanhDH,
+                                    (SelectList)ViewBag.chiNhanhs,
+                                    htmlAttributes: new { @class = "form-control border-input ", @id = "ddlChiNhanhDH" })
+                            @Html.ValidationMessageFor(model => model.ChiNhanhDH, "", new { @class = "text-danger" })
+                        </div>
+                        <span class="label label-danger hidden" id="spanChiNhanhAlert" style="float:right;">(*)CN Tạo khác CNĐH lần sau sẽ không thay đổi CNĐH được.</span>
+                    }
+                    else
+                    {
+                        <label for="areamvc" class="col-md-2 control-label musttype">    Chi nhánh DH(*):</label>
+                        <div class="col-md-2">
+                            @Html.TextBoxFor(model => model.ChiNhanhDH, new { @class = "form-control", @readonly = "readonly" })
+                        </div>
+                        @*<span class="label label-danger " style="float:right;">(*)CN Tạo khác CNĐH lần sau sẽ không thay đổi CNĐH được.</span>*@
+                    }
                 </div>
-
-                @if (ViewBag.chiNhanhTao == ViewBag.chiNhanhDH)
-                {
-                    <label for="areamvc" class="col-md-2 control-label musttype">    Chi nhánh DH(*):</label>
-                    <div class="col-md-2">
-                        @Html.DropDownListFor(model => model.ChiNhanhDH,
-                                (SelectList)ViewBag.chiNhanhs,
-                                htmlAttributes: new { @class = "form-control border-input ", @id = "ddlChiNhanhDH" })
-                        @Html.ValidationMessageFor(model => model.ChiNhanhDH, "", new { @class = "text-danger" })
-
-                    </div>
-                    <span class="label label-danger hidden" id="spanChiNhanhAlert" style="float:right;">(*)CN Tạo khác CNĐH lần sau sẽ không thay đổi CNĐH được.</span>
-                }
-                else
-                {
-                    <label for="areamvc" class="col-md-2 control-label musttype">    Chi nhánh DH(*):</label>
-                    <div class="col-md-2">
-                        @Html.TextBoxFor(model => model.ChiNhanhDH, new { @class = "form-control", @readonly = "readonly" })
-
-                    </div>
-                    @*<span class="label label-danger " style="float:right;">(*)CN Tạo khác CNĐH lần sau sẽ không thay đổi CNĐH được.</span>*@
-                }
-
-            </div>
 
                 <div class="form-group">
                     <label for="actionnm" class="col-sm-2 control-label musttype">   Ngày khởi hành(*):</label>
@@ -102,7 +96,6 @@
                     <div class="col-sm-4">
                         @Html.TextBoxFor(model => model.ketthuc, new { @id = "txtKetThuc", @class = "form-control date-picker glyphicon glyphicon-calendar" })
                     </div>
-
                 </div>
                 <div class="row">
                     <div class="col-lg-12">
@@ -112,10 +105,8 @@
                                 @Html.TextBoxFor(model => model.chudetour, new { @id = "txtchude", @class = "form-control" })
                             </div>
                         </div>
-
                     </div>
                 </div>
-
 
                 <div class="form-group">
 
@@ -130,7 +121,6 @@
                     <div class="col-sm-5">
                         @Html.TextBoxFor(model => model.diemtq, new { @id = "txtDiemTQ", @class = "form-control", @readonly = "readonly" })
                     </div>
-
                 </div>
 
                 <div class="form-group">
@@ -145,14 +135,12 @@
                         @Html.TextBoxFor(model => model.sohopdong, new { @id = "txtSHD", @class = "form-control" })
                         chỉ được phép nhập số
                     </div>
-
                 </div>
                 <div class="form-group">
                     <label for="classcss" class="col-sm-2 control-label musttype">     Doanh thu dự kiến(*):</label>
                     <div class="col-sm-6">
                         @Html.TextBoxFor(model => model.doanhthudk, new { @id = "txtDoanhthudk", @class = "form-control numbers", @onkeypress = "return isNumber(event)" })
                     </div>
-
                 </div>
 
                 <div class="form-group">
@@ -167,7 +155,6 @@
                     <div class="col-sm-6">
                         @Html.TextBoxFor(model => model.tenkh, new { @id = "txtTenKh", @class = "form-control", @readonly = "readonly" })
                     </div>
-
                 </div>
 
                 <div class="form-group">
@@ -194,8 +181,6 @@
                     <div class="col-sm-10">
                         @Html.TextBoxFor(model => model.diachi, new { @id = "txtDiaChi", @class = "form-control", @readonly = "readonly" })
                     </div>
-
-
                 </div>
                 <div class="form-group">
                     <label for="controllernm" class="col-sm-2 control-label">   Ngày đàm phán:</label>
@@ -217,14 +202,12 @@
                                 @Html.TextBoxFor(model => model.ngaykyhopdong, new { @id = "txtNgayKHD", @class = "form-control date-picker glyphicon glyphicon-calendar" })
                             }
                         }
-
                     </div>
 
                     <label for="controllernm" class="col-sm-2 control-label">   Người đại diện:</label>
                     <div class="col-sm-2">
 
                         @Html.TextBoxFor(model => model.nguoidaidien, new { @class = "form-control" })
-
                     </div>
                 </div>
 
@@ -244,15 +227,12 @@
                                 @Html.TextBoxFor(model => model.nguoikyhopdong, new { @class = "form-control" })
                             }
                         }
-
                     </div>
-
 
                     <label for="classcss" class="col-sm-2 control-label">    Đối tác nước ngoài:</label>
                     <div class="col-sm-4">
 
                         @Html.TextBoxFor(model => model.doitacnuocngoai, new { @class = "form-control" })
-
                     </div>
                 </div>
 
@@ -275,8 +255,6 @@
                                 @Html.TextBoxFor(model => model.hanxuatvmb, new { @class = "form-control date-picker glyphicon glyphicon-calendar" });
                             }
                         }
-
-
                     </div>
 
                     <label for="controllernm" class="col-sm-2 control-label">   Ngày thanh lý HĐ:</label>
@@ -293,10 +271,7 @@
                                 @Html.TextBoxFor(model => model.ngaythanhlyhd, new { @id = "txtNgayTLHD", @class = "form-control date-picker glyphicon glyphicon-calendar" });
                             }
                         }
-
-
                     </div>
-
                 </div>
 
                 <div class="form-group">
@@ -308,9 +283,7 @@
                     <label for="ddlNguonTour" class="col-sm-2 control-label  musttype">   Nguồn tour:</label>
                     <div class="col-sm-4">
                         @Html.DropDownList("nguontour", null, "--Chọn nguồn tour--", new { @id = "ddlNguonTour", @class = "form-control" })
-
                     </div>
-
                 </div>
 
                 <div class="form-group">
@@ -328,8 +301,6 @@
                                 @Html.TextBoxFor(model => model.sokhachtt, new { @id = "txtSokhachtt", @class = "form-control numbers", @onkeypress = "return isNumber(event)" });
                             }
                         }
-
-
                     </div>
                     <label for="classcss" class="col-sm-2 control-label">     Doanh thu thực tế:</label>
                     <div class="col-sm-6">
@@ -345,7 +316,6 @@
                                 @Html.TextBoxFor(model => model.doanhthutt, new { @id = "txtDoanhthutt", @class = "form-control numbers", @onkeypress = "return isNumber(event)" });
                             }
                         }
-
                     </div>
                 </div>
                 <div class="form-group">
@@ -400,7 +370,6 @@
                     <div class="col-sm-6">
                         @Html.TextBoxFor(model => model.lidonhandu, new { @class = "form-control" })
                     </div>
-
                 </div>
 
                 <div class="form-group">
@@ -419,7 +388,6 @@
                     <div class="col-sm-2">
                         @Html.TextBoxFor(model => model.laithuctegomve, new { @id = "txtlaitt", @class = "form-control numbers" })
                     </div>
-
                 </div>
 
                 <div class="form-group">
@@ -440,8 +408,6 @@
                     <div class="col-sm-10">
                         @Html.TextBox("txthh", "", new { @id = "txthh", @class = "form-control" })
                     </div>
-
-
                 </div>
                 <div class="form-group">
 
@@ -454,7 +420,6 @@
                     <div class="col-sm-4">
                         @Html.TextBoxFor(model => model.ngaytao, new { @class = "form-control", @readonly = "readonly" })
                     </div>
-
                 </div>
                 <div class="form-group">
 
@@ -467,7 +432,6 @@
                     <div class="col-sm-4">
                         @Html.TextBoxFor(model => model.ngaysua, new { @class = "form-control", @readonly = "readonly" })
                     </div>
-
                 </div>
 
                 <div class="col-sm-offset-2">
@@ -477,14 +441,11 @@
                     {
                         <a id="btnHuyTour" data-id="@Model.idtour" class="btnhuytour btn btn-danger">Hủy Tour</a>
                     }
-
                 </div>
 
             }
-
         </div>
     </div>
-
 
     <!--model-------------------------------------------------------------------------------------------------------------------------------->
 
@@ -525,13 +486,9 @@
                                         @Html.TextBox("txt", "", new { @id = "txtDiem", @class = "form-control", @readonly = "readonly" })
                                     </div>
                                 </div>
-
                             </form>
-
                         </div>
                     </div>
-
-
                 </div>
                 <div class="modal-footer">
                     <input type="submit" class="btn btn-primary csstaotuyen" data-dismiss="modal" value="Tạo tuyến" />
@@ -563,9 +520,7 @@
                             <label class="control-label" for="ddlDmQuocGia">Tên khách hàng - địa chỉ:</label>
                             @Html.ListBox("dmkh", (MultiSelectList)ViewBag.dmkh, new { @id = "ddldmkh", size = 20, @class = "form-control" })
                         </div>
-
                     </div>
-
                 </div>
                 <div class="modal-footer">
                     <input type="submit" class="btn btn-primary csschonkh" data-dismiss="modal" value="Chọn khách hàng" />
@@ -575,8 +530,6 @@
                     {
                         <button class="btn btn-info" id="btnDMKH">Danh mục khách hàng</button>
                     }
-
-
                 </div>
             </div>
         </div>
@@ -595,7 +548,6 @@
 
                     <div id="divdmhoahong" class="page-scroll scroll" style="height:400px;">
                     </div>
-
                 </div>
                 <div class="modal-footer">
                     @*<input type="submit" class="btn btn-primary csschonkh" data-dismiss="modal" value="Chọn khách hàng" />*@
@@ -618,7 +570,6 @@
 
                     <div id="divlichsukh" class="page-scroll scroll" style="height:400px;">
                     </div>
-
                 </div>
                 <div class="modal-footer">
                     @*<input type="submit" class="btn btn-primary csschonkh" data-dismiss="modal" value="Chọn khách hàng" />*@
@@ -651,9 +602,7 @@
                             <label class="control-label" for="ddlDmQuocGia">Danh mục nguyên nhân:</label>
                             @Html.ListBox("listcacnn", (MultiSelectList)ViewBag.nguyennhanhuythau, new { @id = "listcacnn", size = 20, @class = "form-control" })
                         </div>
-
                     </div>
-
                 </div>
                 <div class="modal-footer">
                     <input type="submit" class="btn btn-primary cssbtnnn" data-dismiss="modal" value="Chọn nguyên nhân" />
@@ -662,7 +611,6 @@
             </div>
         </div>
     </div>
-
 </div>
 <script>
     $(function () {
@@ -710,7 +658,6 @@
             }
         });
 
-
     });
 
     $('.cssbtnnn').click(function () {
@@ -740,12 +687,11 @@
 
                 $.each(results, function (index, t) {
 
-                    dlNN.append($('<option/>', {
+                    dlNN.append($('<option />', {
                         value: t.idhuytour,
                         text: t.noidung
                     }));
                 });
-
 
             }
         });
@@ -772,7 +718,6 @@
 
     });
     // ddl chinhanhDH change
-
 
     $('#btnSave').click(function(){
         debugger
@@ -813,7 +758,6 @@
             return false;
         }
 
-
         if(d3<d2 && ngaytlhd!=""){
             alert('Bạn nhập sai ngày thanh lý hợp đồng!');
             return false;
@@ -852,7 +796,6 @@
         // save confirm
     });
 
-
     $('.btnhuytour').click(function(){
         if(confirm('Bạn muốn hủy tour này!')){
 
@@ -868,7 +811,6 @@
                     id:id,
                     nguyennhanhuytour: tfhuytour.val(),
                 });
-
 
                 var urlhuytour = '@Url.Action("SetHuyTour", "QLKhachDoan")';
                 var urlqlkd='@Url.Action("Index", "QLKhachDoan")';
@@ -892,13 +834,11 @@
             }
         }
 
-
     });
 
     $('.showlichsu').click(function(){
 
         var txmakh=$('#txtMaKh');
-
 
         if(txmakh.val()==""){
             alert('Chưa chọn khách hàng nào!')
@@ -912,8 +852,6 @@
 
             $('#cuasolichsukh').modal('show');
         }
-
-
 
     });
 
@@ -1008,7 +946,7 @@
 
                 $.each(results, function (index, t) {
 
-                    dlDmquan.append($('<option/>', {
+                    dlDmquan.append($('<option />', {
                         value: t.maquan,
                         text: t.tenquan
                     }));
@@ -1030,13 +968,10 @@
             return jQuery(element).text();
         }).get();
 
-
         $("#txtDiem").val(ss);
 
         //khong can goi de lay du lieu nua
         //var dulieu = { lstquan: mang };
-
-
 
         @*var url = '@Url.Action("GetQuan", "QLKhachDoan")';
                 var s = "";
@@ -1051,7 +986,6 @@
                         $("#txtDiem").val(results);
                     }
                 });*@
-
 
     });
 
@@ -1072,7 +1006,6 @@
                     response($.map(data, function (item) {
 
                         return { label: item.tengiaodich, value: item.makh,email:item.email,diachi:item.diachi,dienthoai:item.telephone,fax:item.fax};
-
 
                     }))
 
@@ -1099,8 +1032,6 @@
         }
     });
 
-
-
     $('#btnMakh').click(function(e){
         e.preventDefault();
         $('#cuasoDmkhach').modal('show');
@@ -1113,7 +1044,6 @@
         $('#cuasoDmkhach').modal('hide');
 
     });
-
 
     $("#txtTimKH").keyup(function () {
 
@@ -1136,19 +1066,16 @@
 
                 $.each(results, function (index, t) {
 
-                    dlMakh.append($('<option/>', {
+                    dlMakh.append($('<option />', {
                         value: t.makh,
                         text: t.tengiaodich
                     }));
                 });
 
-
             }
         });
 
     });
-
-
 
     $("#ddldmkh").change(function () {
         debugger
@@ -1175,13 +1102,10 @@
                     $("#txtDienThoai").val(t.telephone);
                     $("#txtFax").val(t.fax);
 
-
                 });
-
 
             }
         });
-
 
     });
 
@@ -1198,4 +1122,3 @@
         $('.numbers').inputmask({ alias: 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'autoUnmask': true, 'removeMaskOnSubmit': true });
     });
 </script>
-
