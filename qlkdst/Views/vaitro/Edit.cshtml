@@ -1,0 +1,61 @@
+﻿@model qlkdstDB.EF.roles
+<style>
+    /*.btn {
+        background-color: DodgerBlue;
+        border: none;
+        color: white;
+        padding: 12px 16px;
+        cursor: pointer;
+    }*/
+
+    /* Darker background on mouse-over */
+    .btn:hover {
+        background-color: RoyalBlue;
+    }
+</style>
+<script src="~/Scripts/script-custom-validator.js"></script>
+
+<div class="wthree_general graph-form agile_info_shadow ">
+    <h3 class="w3_inner_tittle two">SỬA VAI TRÒ </h3>
+
+    <div class="grid-1 ">
+        <div class="form-body">
+
+            @using (Html.BeginForm("Edit", "vaitro", FormMethod.Post, new { @id = "frmvaitro", @class = "form-horizontal" }))
+            {
+                @Html.AntiForgeryToken()
+                HtmlHelper.UnobtrusiveJavaScriptEnabled = false;
+                @Html.HiddenFor(model=>model.id)
+                <div class="form-group">
+
+                    <label for="txtId" class="col-sm-2 control-label"> Mã:</label>
+                        <div class="col-sm-2">
+                            @Html.TextBoxFor(model => model.id, new { @id = "txtId", @class = "form-control", @readonly = "readonly" })
+                        </div>
+
+                    <label for="txtrolenm" class="col-sm-2 control-label"> Tên vai trò:</label>
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(model => model.roleName, new { @id = "txtrolenm", @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group">
+
+                    <label for="txtghichu" class="col-sm-2 control-label">   Ghi chú:</label>
+                    <div class="col-sm-10">
+                        @Html.TextAreaFor(model => model.description, 10, 5, new { @id = "txtghichu", @class = "form-control" })
+                    </div>
+
+                </div>
+
+                <div class="col-sm-offset-2">
+                    <button name="submit" class="btn btn-primary" id="btnSave"><i class="fa fa-save"></i>Lưu</button>
+                    @*<button class="btn btn-primary" id="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-close"></i>Hủy</button>*@
+                    @Html.ActionLink("Hủy", "Cancel", "vaitro", null, new { @class = "btn btn-danger fa fa-close" })
+                </div>
+
+            }
+
+        </div>
+    </div>
+</div>
+

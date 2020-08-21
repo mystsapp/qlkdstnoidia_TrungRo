@@ -1,0 +1,64 @@
+﻿@model qlkdstDB.EF.mainmenu
+
+<style>
+    /*.btn {
+        background-color: DodgerBlue;
+        border: none;
+        color: white;
+        padding: 12px 16px;
+        cursor: pointer;
+    }*/
+
+    /* Darker background on mouse-over */
+    .btn:hover {
+        background-color: RoyalBlue;
+    }
+</style>
+<script src="~/Scripts/script-custom-validator.js"></script>
+
+<div class="wthree_general graph-form agile_info_shadow ">
+    <h3 class="w3_inner_tittle two">THÊM KHU </h3>
+
+    <div class="grid-1">
+        <div class="form-body">
+
+            @using (Html.BeginForm("Create", "MainMenu", FormMethod.Post, new { @id = "frmMainMenu", @class = "form-horizontal" }))
+            {
+                @Html.AntiForgeryToken();
+                @Html.HiddenFor(model => model.areaid);
+
+                <div class="form-group">
+                    <label for="areaname" class="col-sm-2 control-label">   Tên Khu:</label>
+                    <div class="col-sm-10">
+                        @Html.TextBoxFor(model => model.areaname, new { @class = "form-control text-uppercase" })
+                    </div>
+
+
+                </div>
+                <div class="form-group">
+                    <label for="areacss" class="col-sm-2 control-label">    CSS:</label>
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(model => model.areacss, new { @class = "form-control text-uppercase" })
+                    </div>
+
+                    <label for="areacss" class="col-sm-2 control-label">    Thứ tự sắp xếp:</label>
+                    <div class="col-sm-2">
+                        @Html.TextBoxFor(model => model.thutu, new { @class = "form-control text-uppercase" })
+                    </div>
+                </div>
+                <div class="col-sm-offset-2">
+                    <button name="submit" class="btn btn-primary" id="btnSave"><i class="fa fa-save"></i>Lưu</button>
+                    @*<button class="btn btn-primary" id="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-close"></i>Hủy</button>*@
+                    @Html.ActionLink("Hủy", "Cancel", "MainMenu", null, new { @class = "btn btn-danger fa fa-close" })
+                </div>
+
+            }
+
+
+
+        </div>
+    </div>
+
+
+
+</div>

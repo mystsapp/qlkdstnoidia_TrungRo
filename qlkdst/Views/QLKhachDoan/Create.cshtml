@@ -1,0 +1,891 @@
+﻿@model qlkdstDB.EF.tour
+@using qlkdstDB.EF
+
+<style>
+    /*.btn {
+        background-color: DodgerBlue;
+        border: none;
+        color: white;
+        padding: 12px 16px;
+        cursor: pointer;
+    }*/
+
+    /* Darker background on mouse-over */
+    .btn:hover {
+        background-color: RoyalBlue;
+    }
+
+    .ui-autocomplete {
+        max-height: 200px;
+        overflow-y: auto;
+        /* prevent horizontal scrollbar */
+        overflow-x: hidden;
+    }
+    /* IE 6 doesn't support max-height
+    * we use height instead, but this forces the menu to always be this tall
+    */
+    * html .ui-autocomplete {
+        height: 200px;
+    }
+</style>
+<!-- jQuery UI CSS Reference -->
+@*<link href="@Url.Content("~/Content/themes/base/jquery-ui.min.css")" rel="stylesheet" />*@
+@{
+    string sRole = Session["RoleName"].ToString();
+    string sessionChiNhanh = Session["chinhanh"].ToString();
+
+}
+<script>
+
+    $(function () { // will trigger when the document is ready
+        $('.date-picker').datepicker({ dateFormat: 'dd/mm/yy' });
+
+    });
+
+</script>
+
+
+<script src="~/Scripts/script-custom-validator.js"></script>
+
+<div class="wthree_general graph-form agile_info_shadow ">
+    <h3 class="w3_inner_tittle two">TẠO TOUR MỚI</h3>
+
+    <div class="grid-1">
+        <div class="form-body">
+
+            @using (Html.BeginForm("Create", "QLKhachDoan", FormMethod.Post, new { @id = "frmTour", @class = "form-horizontal", enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                HtmlHelper.UnobtrusiveJavaScriptEnabled = false;
+                @Html.HiddenFor(model => model.idtour)
+
+                if (TempData["AlertMessage"] != null)
+                {
+                    <div class="form-group col-sm-12">
+                        <div class='@TempData["AlertType"]' role="alert">
+                            <strong> @TempData["AlertMessage"]</strong>
+                        </div>
+                    </div>
+                    TempData["AlertType"] = null;
+                    TempData["AlertMessage"] = null;
+                }
+
+
+                @*<div class="form-group">
+                        <label for="areaname" class="col-sm-2 control-label">   Code đoàn:</label>
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(model => model.sgtcode, new { @class = "form-control", @readonly = "readonly" })
+                        </div>
+                    </div>*@
+                <div class="form-group row">
+
+                    <label for="actionnm" class="col-sm-2 control-label musttype">   Ngày khởi hành(*):</label>
+                    <div class="col-sm-2">
+                        @Html.TextBoxFor(model => model.batdau, new { @id = "txtBatDau", @class = "form-control date-picker glyphicon glyphicon-calendar" })
+                    </div>
+
+                    <label for="controllernm" class="col-sm-2 control-label musttype">   Kết thúc(*):</label>
+                    <div class="col-sm-2">
+                        @Html.TextBoxFor(model => model.ketthuc, new { @id = "txtKetThuc", @class = "form-control date-picker glyphicon glyphicon-calendar" })
+                    </div>
+
+                    <label for="areamvc" class="col-md-2 control-label musttype">    Chi nhánh DH(*):</label>
+                    <div class="col-md-2">
+                        @Html.DropDownListFor(model => model.ChiNhanhDH,
+                                (SelectList)ViewBag.chiNhanhs,
+                                htmlAttributes: new { @class = "form-control border-input ", @id = "ddlChiNhanhDH" })
+                        @Html.ValidationMessageFor(model => model.ChiNhanhDH, "", new { @class = "text-danger" })
+
+                    </div>
+
+                    <span class="label label-danger hidden" id="spanChiNhanhAlert" style="float:right;">(*)CN Tạo khác CNĐH lần sau sẽ không thay đổi CNĐH được.</span>
+                </div>
+
+                <div class="form-group">
+
+                    <label for="areamvc" class="col-md-2 control-label musttype">    Chủ đề tour(*):</label>
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(model => model.chudetour, new { @class = "form-control" })
+                    </div>
+
+                </div>
+
+                @*<div class="form-group">
+
+                        <label for="areamvc" class="col-md-2 control-label musttype">    Chi nhánh DH(*):</label>
+                        <div class="col-md-4">
+                            @Html.DropDownListFor(model => model.ChiNhanhDH,
+                                    new SelectList((List<chinhanh>)TempData["chinhanh"], "chinhanh1", "chinhanh1"),
+                                    htmlAttributes: new { @class = "form-control border-input ", @id = "dropDown" })
+                            @Html.ValidationMessageFor(model => model.ChiNhanhDH, "", new { @class = "text-danger" })
+                        </div>
+                    </div>*@
+
+                <div class="form-group">
+
+                    <label for="areaid" class="col-sm-2 control-label musttype">    Quốc gia:</label>
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(model => model.tuyentq, new { @id = "txtTuyenTQ", @class = "form-control", @readonly = "readonly" })
+                        <button class="button" id="btnChonTuyen">...</button>
+                    </div>
+
+                    <label for="areaid" class="col-sm-2 control-label musttype">    Tuyến tham quan(*):</label>
+                    <div class="col-sm-5">
+                        @Html.TextBoxFor(model => model.diemtq, new { @id = "txtDiemTQ", @class = "form-control", @readonly = "readonly" })
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="Role" class="col-sm-2 control-label musttype">    Số khách dự kiến(*):</label>
+                    <div class="col-sm-4">
+                        @Html.TextBoxFor(model => model.sokhachdk, new { @id = "txtSokhachdk", @class = "form-control numbers", @onkeypress = "return isNumber(event)" })
+                    </div>
+
+                    <label for="classcss" class="col-sm-2 control-label">     Số hợp đồng:</label>
+                    <div class="col-sm-4">
+                        @Html.TextBoxFor(model => model.sohopdong, new { @id = "txtSHD", @class = "form-control" })
+                        chỉ được phép nhập số
+                    </div>
+
+
+                </div>
+                <div class="form-group">
+                    <label for="classcss" class="col-sm-2 control-label musttype">     Doanh thu dự kiến(*):</label>
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(model => model.doanhthudk, new { @id = "txtDoanhthudk", @class = "form-control numbers", @onkeypress = "return isNumber(event)" })
+                    </div>
+
+                </div>
+                <div class="form-group">
+
+                    <label for="classcss" class="col-sm-2 control-label   musttype">    Mã KH:</label>
+                    <div class="col-sm-2">
+                        @Html.TextBoxFor(model => model.makh, new { @id = "txtMaKh", @class = "form-control" })
+                        <button id="btnMakh" class="button">...</button>
+                    </div>
+
+                    <label for="Role" class="col-sm-2 control-label   musttype">    Tên khách hàng:</label>
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(model => model.tenkh, new { @id = "txtTenKh", @class = "form-control" })
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="classcss" class="col-sm-2 control-label">    Email:</label>
+                    <div class="col-sm-2">
+                        @Html.TextBoxFor(model => model.email, new { @id = "txtEmail", @class = "form-control", @readonly = "readonly" })
+                    </div>
+
+                    <label for="classcss" class="col-sm-2 control-label">    Điện thoại:</label>
+                    <div class="col-sm-2">
+                        @Html.TextBoxFor(model => model.dienthoai, new { @id = "txtDienThoai", @class = "form-control", @readonly = "readonly" })
+                    </div>
+
+                    <label for="classcss" class="col-sm-2 control-label">    Fax:</label>
+                    <div class="col-sm-2">
+                        @Html.TextBoxFor(model => model.fax, new { @id = "txtFax", @class = "form-control", @readonly = "readonly" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+
+                    <label for="classcss" class="col-sm-2 control-label">     Địa chỉ:</label>
+                    <div class="col-sm-10">
+                        @Html.TextBoxFor(model => model.diachi, new { @id = "txtDiaChi", @class = "form-control", @readonly = "readonly" })
+                    </div>
+
+
+                </div>
+                <div class="form-group">
+                    <label for="controllernm" class="col-sm-2 control-label">   Ngày đàm phán:</label>
+                    <div class="col-sm-2">
+                        @Html.TextBoxFor(model => model.ngaydamphan, new { @class = "form-control date-picker glyphicon glyphicon-calendar" })
+                    </div>
+
+                    <label for="controllernm" class="col-sm-2 control-label">   Ngày ký hợp đồng:</label>
+                    <div class="col-sm-2">
+                        @Html.TextBoxFor(model => model.ngaykyhopdong, new { @class = "form-control date-picker glyphicon glyphicon-calendar", @disabled = "disabled" })
+                    </div>
+
+                    <label for="controllernm" class="col-sm-2 control-label">   Người đại diện:</label>
+                    <div class="col-sm-2">
+
+                        @Html.TextBoxFor(model => model.nguoidaidien, new { @class = "form-control" })
+
+                    </div>
+                </div>
+                <div class="form-group">
+
+                    <label for="classcss" class="col-sm-2 control-label">    Người ký HĐ:</label>
+                    <div class="col-sm-4">
+                        @{
+                            if (Model.ngaydamphan == null)
+                            {
+                                //control readonly
+                                @Html.TextBoxFor(model => model.nguoikyhopdong, new { @class = "form-control", @readonly = "readonly" })
+                            }
+                            else
+                            {
+                                //control
+                                @Html.TextBoxFor(model => model.nguoikyhopdong, new { @class = "form-control" })
+                            }
+                        }
+
+                    </div>
+
+
+                    <label for="classcss" class="col-sm-2 control-label">    Đối tác nước ngoài:</label>
+                    <div class="col-sm-4">
+
+                        @Html.TextBoxFor(model => model.doitacnuocngoai, new { @class = "form-control" })
+
+                    </div>
+                </div>
+
+                <div class="form-group">
+
+                    <label for="classcss" class="col-sm-2 control-label">     Hình thức liên hệ:</label>
+                    <div class="col-sm-2">
+                        @Html.TextBoxFor(model => model.hinhthucgiaodich, new { @class = "form-control" })
+                    </div>
+
+                    <label for="controllernm" class="col-sm-2 control-label">   Ngày đặt cọc vé:</label>
+                    <div class="col-sm-2">
+                        @Html.TextBoxFor(model => model.hanxuatvmb, new { @class = "form-control date-picker glyphicon glyphicon-calendar", @disabled = "disabled" })
+                    </div>
+
+                    <label for="controllernm" class="col-sm-2 control-label">   Ngày thanh lý HĐ:</label>
+                    <div class="col-sm-2">
+                        @Html.TextBoxFor(model => model.ngaythanhlyhd, new { @class = "form-control date-picker glyphicon glyphicon-calendar", @disabled = "disabled" })
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+                    <label for="controllernm" class="col-sm-2 control-label musttype">  Loại tour(*):</label>
+                    <div class="col-sm-4">
+                        @Html.DropDownList("loaitourid", null, "--Chọn loại tour--", new { @class = "form-control" })
+                    </div>
+
+                    <label for="ddlNguonTour" class="col-sm-2 control-label  musttype">   Nguồn tour:</label>
+                    <div class="col-sm-4">
+                        @Html.DropDownList("nguontour", null, "--Chọn nguồn tour--", new { @id = "ddlNguonTour", @class = "form-control" })
+                    </div>
+
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="Role" class="col-sm-2 control-label">    Số khách thực tế:</label>
+                    <div class="col-sm-2">
+                        @Html.TextBoxFor(model => model.sokhachtt, new { @class = "form-control numbers", @onkeypress = "return isNumber(event)", @readonly = "readonly" })
+                    </div>
+
+                    <label for="classcss" class="col-sm-2 control-label">     Doanh thu thực tế:</label>
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(model => model.doanhthutt, new { @class = "form-control numbers", @onkeypress = "return isNumber(event)", @readonly = "readonly" })
+                    </div>
+
+
+                </div>
+                <div class="form-group">
+
+                    <label for="fileChuongTrinhTour" class="col-sm-2 control-label">     Chương trình tour:</label>
+
+                    @*@Html.TextAreaFor(model => model.chuongtrinhtour,15,35, new { @class = "form-control" })*@
+                    @Html.TextBox("fileChuongTrinhTour", "", new { type = "file", @id = "fileChuongTrinhTour", @class = "col-sm-10 control-label" }) <br />
+                    <p class="help-block">Chỉ upload file word,excel,pdf . File tối đa 10MB</p>
+
+
+                </div>
+                <div class="form-group">
+
+                    <label for="controllernm" class="col-sm-2 control-label">   Ngày về đủ tiền:</label>
+                    <div class="col-sm-2">
+                        @Html.TextBoxFor(model => model.ngaynhandutien, new { @class = "form-control date-picker glyphicon glyphicon-calendar" })
+                    </div>
+
+                    <label for="classcss" class="col-sm-2 control-label">   Lí do:</label>
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(model => model.lidonhandu, new { @class = "form-control" })
+                    </div>
+
+                </div>
+                <div class="form-group">
+
+                    <label for="controllernm" class="col-sm-2 control-label">   Lãi dự tính chưa gồm vé (vé máy bay/vé xe lửa):</label>
+                    <div class="col-sm-2">
+                        @Html.TextBoxFor(model => model.laichuave, new { @class = "form-control" })
+                    </div>
+
+                    <label for="classcss" class="col-sm-2 control-label">   Lãi dự tính bao gồm vé (vé máy bay/vé xe lửa):</label>
+                    <div class="col-sm-2">
+                        @Html.TextBoxFor(model => model.laigomve, new { @class = "form-control" })
+                    </div>
+
+                    <label for="txtlaitt" class="col-sm-2 control-label">   Lãi thực tế gồm vé (vé máy bay/vé xe lửa):</label>
+                    <div class="col-sm-2">
+                        @Html.TextBoxFor(model => model.laithuctegomve, new { @id = "txtlaitt", @class = "form-control" })
+                    </div>
+
+                </div>
+
+                @*<div class="form-group">
+
+                        <label for="txtnguyennhan" class="col-sm-2 control-label">   Nguyên nhân hủy thầu:</label>
+                        <div class="col-sm-10">
+                            @Html.TextAreaFor(model => model.nguyennhanhuythau, 5, 15, new { @id = "txtnguyennhan", @class = "form-control" })
+                        </div>
+
+
+                    </div>*@
+
+                <div class="form-group">
+
+                    <label for="classcss" class="col-sm-2 control-label">    Người tạo:</label>
+                    <div class="col-sm-4">
+                        @Html.TextBoxFor(model => model.nguoitao, new { @class = "form-control", @readonly = "readonly" })
+                    </div>
+
+                    <label for="classcss" class="col-sm-2 control-label">    Ngày tạo:</label>
+                    <div class="col-sm-4">
+                        @Html.TextBoxFor(model => model.ngaytao, new { @class = "form-control", @readonly = "readonly" })
+                    </div>
+
+                </div>
+
+
+                <div class="col-sm-offset-2">
+                    <button name="submit" type="submit" class="btn btn-primary" id="btnSave"><i class="fa fa-save"></i>Lưu</button>
+                    @*<button class="btn btn-primary" id="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-close"></i>Hủy</button>*@
+                    @Html.ActionLink("Hủy", "Cancel", "QLKhachDoan", null, new { @class = "btn btn-danger fa fa-close" })
+                </div>
+
+            }
+
+        </div>
+    </div>
+
+
+    <!--model-------------------------------------------------------------------------------------------------------------------------------->
+
+    <div class="modal  fade in" role="dialog" id="cuasoTuyenTQ">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header alert alert-info">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title "><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>TẠO TUYẾN</h4>
+                </div>
+                <div class="modal-body">
+
+                    <form class="form-horizontal">
+
+                        <div class="form-group">
+
+                            <div class="col-sm-6">
+                                <label class="control-label" for="ddlDmQuocGia">Quốc gia:</label>
+                                @Html.ListBox("dmquocgia", (MultiSelectList)ViewBag.dmquocgia, new { @id = "ddlDmQuocGia", size = 10, @class = "form-control", @style = "width: 75%" })
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label class="control-label" for="ddlThanhPho">Địa danh:</label>
+                                @Html.ListBox("dmthanhpho", (MultiSelectList)ViewBag.dmthanhpho, new { @id = "ddlThanhPho", size = 10, @class = "form-control", @style = "width: 75%" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <label class="control-label" for="txtTuyen">Quốc gia:</label>
+                                @Html.TextBox("txtT", "", new { @id = "txtTuyen", @class = "form-control", @readonly = "readonly" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <label class="control-label" for="txtDiem">Tuyến tham quan:</label>
+                                @Html.TextBox("txt", "", new { @id = "txtDiem", @class = "form-control", @readonly = "readonly" })
+                            </div>
+                        </div>
+
+                    </form>
+
+
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" class="btn btn-primary csstaotuyen" data-dismiss="modal" value="Tạo tuyến" />
+                    <button class="btn btn-warning" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                    <button class="btn btn-info" id="btnDmQuocGia">Danh mục quốc gia</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--model danh muc khach hang-------------------------------------------------------------------------------------------------------------------------------->
+
+    <div class="modal fade in" role="dialog" id="cuasoDmkhach">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header alert alert-info">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title "><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>DANH MỤC KHÁCH HÀNG</h4>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            Tìm:
+                            @Html.TextBox("txtTimKH", "", new { @id = "txtTimKH", @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="row">
+
+                        <div class="col-md-12">
+                            Tên khách hàng - địa chỉ:
+                            @Html.ListBox("dmkh", (MultiSelectList)ViewBag.dmkh, new { @id = "ddldmkh", size = 20, @class = "form-control" })
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" class="btn btn-primary csschonkh" data-dismiss="modal" value="Chọn khách hàng" />
+                    <button class="btn btn-warning" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                    @if (sRole != "sales")
+                    {
+                        <button class="btn btn-info" id="btnDMKH">Danh mục khách hàng</button>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--END model-------------------------------------------------------------------------------------------------------------------------------->
+</div>
+<script>
+    $(function () {
+        $(".date-picker").mask("99/99/9999");
+    });
+
+    // ddl chinhanhDH change
+    $('#ddlChiNhanhDH').off('change').on('change', function () {
+        // spanChiNhanhAlert
+        var chiNhanhTao = '@sessionChiNhanh';
+        var chiNhanhDH = $(this).val();
+        if (chiNhanhTao !== chiNhanhDH) {
+            $('#spanChiNhanhAlert').removeClass('hidden');
+            // spanChiNhanhAlert
+        }
+        else {
+            $('#spanChiNhanhAlert').addClass('hidden');
+        }
+        
+    });
+    // ddl chinhanhDH change
+
+    $('#btnSave').click(function () {
+
+        var txtBatDau = $('#txtBatDau').val();
+        var txtKetThuc = $('#txtKetThuc').val();
+
+        var arrStartDate = txtBatDau.split("/");
+        var d1 = new Date(arrStartDate[2], arrStartDate[1], arrStartDate[0]);
+        var arrEndDate = txtKetThuc.split("/");
+        var d2 = new Date(arrEndDate[2], arrEndDate[1], arrEndDate[0]);
+
+
+        if (d2 < d1) {
+            alert('Bạn nhập sai ngày kết thúc!');
+            return false;
+        }
+
+        //kiem tra sokhach va doanh so phai lon hon 0
+        var sokhach = $('#txtSokhachdk').val();
+        var doanhso = $('#txtDoanhthudk').val();
+
+        if (sokhach > 0) {
+        }
+        else {
+            alert('Số khách dự kiến phải lớn hơn 0');
+            return false;
+        }
+
+        if (doanhso > 0) {
+        }
+        else {
+            alert('Doanh thu dự kiến phải lớn hơn 0');
+            return false;
+        }
+
+        // save confirm
+        var r = confirm("CN Tạo khác CNĐH lần sau sẽ không thay đổi CNĐH được!");
+        if (r == false) {
+            return false;
+        }
+        // save confirm
+
+        //bootbox.confirm({
+        //    title: "Confirm!",
+        //    message: "CN Tạo khác CNĐH lần sau sẽ không thay đổi CNĐH được!",
+        //    buttons: {
+        //        cancel: {
+        //            label: '<i class="fa fa-times"></i> Cancel'
+        //        },
+        //        confirm: {
+        //            label: '<i class="fa fa-check"></i> Confirm'
+        //        }
+
+        //    },
+        //    callback: function (result) {
+        //        if (!result) {
+        //            return false;
+        //        }
+        //    }
+
+        //})
+
+    });
+
+    $('.csstaotuyen').click(function () {
+
+        $("#txtDiemTQ").val($("#txtDiem").val());
+        $("#txtTuyenTQ").val($("#txtTuyen").val());
+    });
+
+    //khi chon batdau se tao so hop dong
+    $('#txtBatDau').change(function () {
+
+        var url = '@Url.Action("GetSTTSoHD", "QLKhachDoan")';
+        var tfBatDau = $(this);
+        var dulieu = { batdau: tfBatDau.val() };
+
+        $.ajax({
+            url: url,
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ o: dulieu }),
+            success: function (results) {
+
+                $('#txtSHD').val(results);
+
+            }
+        });
+
+    });
+
+    $('#txtBatDau').keypress(function () {
+
+        var url = '@Url.Action("GetSTTSoHD", "QLKhachDoan")';
+        var tfBatDau = $(this);
+        var dulieu = { batdau: tfBatDau.val() };
+
+        $.ajax({
+            url: url,
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ o: dulieu }),
+            success: function (results) {
+
+                $('#txtSHD').val(results);
+
+            }
+        });
+
+    });
+
+
+    $(document).ready(function () {
+        $('#ddlDmQuocGia').select2({ tags: true, closeOnSelect: false });
+        $("#ddlThanhPho").select2({ tags: true, closeOnSelect: false });
+    });
+
+    $("#ddlDmQuocGia").on("select2:select", function (evt) {
+        var element = evt.params.data.element;
+        var $element = $(element);
+
+        $element.detach();
+        $(this).append($element);
+        $(this).trigger("change");
+    });
+
+    //khi chon don vi dieu hanh , bind lai don vi ban tour
+    $("#ddlDmQuocGia").change(function () {
+
+        var dlDmqg = $("#ddlDmQuocGia");
+        var dlDmquan = $("#ddlThanhPho");
+
+        var url = '@Url.Action("GetDmquan", "QLKhachDoan")';
+
+        dlDmquan.empty();
+
+        var dulieu = { quocgia: dlDmqg.val() };
+        //txtTuyenTQ
+
+        var mang = dlDmqg.val();
+
+        var lstQuocGia = "";
+        var mangTenNuoc = $("#ddlDmQuocGia option:selected");
+        //$("#txtTuyen").val($("#ddlDmQuocGia option:selected").text());
+        //gan ten nuoc cho tuyen
+        for (var i = 0; i < mangTenNuoc.length; i++) {
+            lstQuocGia = lstQuocGia + mangTenNuoc[i].innerText + ",";
+        }
+
+        //bo dau , cuoi cung di
+        var pos = lstQuocGia.lastIndexOf(',');
+        if (pos > -1) {
+            lstQuocGia = lstQuocGia.substring(0, pos);
+        }
+
+        $("#txtTuyen").val(lstQuocGia);
+
+        $.ajax({
+            url: url,
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ o: dulieu }),
+            success: function (results) {
+
+                dlDmquan.empty();
+
+                $.each(results, function (index, t) {
+
+                    dlDmquan.append($('<option/>', {
+                        value: t.maquan,
+                        text: t.tenquan
+                    }));
+                });
+
+            }
+        });
+
+    });
+
+    $("#ddlThanhPho").change(function () {
+        debugger
+        var dl = $(this);
+        var mang = dl.val();
+
+        //tra ve text
+        var ss = $("#ddlThanhPho :selected").map(function (i, element) {
+            return jQuery(element).text();
+        }).get();
+
+
+        $("#txtDiem").val(ss);
+
+        @*var dulieu = { lstquan: mang };
+                var url = '@Url.Action("GetQuan", "QLKhachDoan")';
+                var s = "";
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ o: dulieu }),
+                    success: function (results) {
+                        debugger
+                        $("#txtDiem").val(results);
+                    }
+                });*@
+
+
+    });
+
+    //$('#txtMaKh').click(function () {
+    //    $('#cuasoDmkhach').modal('show');
+    //});
+
+    $('#btnDMKH').click(function (e) {
+        e.preventDefault();//de button khong submit du lieu
+        var url = '@Url.Action("Index", "Dmkh")';
+        window.location.href = url;
+
+    });
+
+    $('#btnDmQuocGia').click(function (e) {
+        e.preventDefault();//de button khong submit du lieu
+        var url = '@Url.Action("Index", "NC")';
+        window.location.href = url;
+    });
+
+    $('#btnChonTuyen').click(function (e) {
+        e.preventDefault();//de button khong submit du lieu
+
+        //khi moi mo cua so len  xoa cac dia danh cu da chon di
+        //var dlDmquan = $("#ddlThanhPho");
+        //dlDmquan.empty();
+
+        $('#cuasoTuyenTQ').modal('show');
+    });
+
+    //khi nhap makh , neu co khach hang nay, se hien cac thong tin lien quan
+    $("#txtMaKh").autocomplete({
+
+        source: function (request, response) {
+            $.ajax({
+                url: '@Url.Action("GetDmKhachhangTheoMaKH", "QLKhachDoan")',
+                type: "POST",
+                dataType: "json",
+                data: { makh: $('#txtMaKh').val() },
+                success: function (data) {
+                    response($.map(data, function (item) {
+
+                        return { label: item.tengiaodich, value: item.makh, email: item.email, diachi: item.diachi, dienthoai: item.telephone, fax: item.fax };
+
+
+                    }))
+
+                }
+            })
+        },
+        messages: {
+            noResults: "", results: ""
+        },
+        select: function (event, ui) {
+            var makh = ui.item.value;
+            var tengiaodich = ui.item.label;
+            var email = ui.item.email;
+            var diachi = ui.item.diachi;
+            var dienthoai = ui.item.dienthoai;
+            var fax = ui.item.fax;
+
+            $("#txtMaKh").val(makh);
+            $("#txtTenKh").val(tengiaodich);
+            $("#txtEmail").val(email);
+            $("#txtDiaChi").val(diachi);
+            $("#txtDienThoai").val(dienthoai);
+            $("#txtFax").val(fax);
+        }
+    });
+
+    $('#btnMakh').click(function (e) {
+        e.preventDefault();
+        $('#cuasoDmkhach').modal('show');
+    });
+
+    $('.csschonkh').click(function () {
+
+        $('#cuasoDmkhach').modal('hide');
+
+    });
+
+    @*$("#txtTimKH").keypress(function () {
+
+                var txt = $(this);
+                var tenkh = txt.val();
+                //alert(tenkh);
+                var dlMakh = $("#ddldmkh");
+
+                //bind lai ds khach hang theo dieu kien tim kiem
+                var url = '@Url.Action("GetDmKhachhang", "QLKhachDoan")';
+                var dulieu = { tengiaodich: tenkh };
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ o: dulieu }),
+                    success: function (results) {
+
+                        dlMakh.empty();
+
+                        $.each(results, function (index, t) {
+
+                            dlMakh.append($('<option/>', {
+                                value: t.makh,
+                                text: t.tengiaodich
+                            }));
+                        });
+
+
+                    }
+                });
+
+            });*@
+
+    $("#txtTimKH").keyup(function () {
+
+        var txt = $(this);
+        var tenkh = txt.val();
+        //alert(tenkh);
+        var dlMakh = $("#ddldmkh");
+
+        //bind lai ds khach hang theo dieu kien tim kiem
+        var url = '@Url.Action("GetDmKhachhang", "QLKhachDoan")';
+        var dulieu = { tengiaodich: tenkh };
+        $.ajax({
+            url: url,
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ o: dulieu }),
+            success: function (results) {
+
+                dlMakh.empty();
+
+                $.each(results, function (index, t) {
+
+                    dlMakh.append($('<option/>', {
+                        value: t.makh,
+                        text: t.tengiaodich
+                    }));
+                });
+
+
+            }
+        });
+
+    });
+
+
+
+    $("#ddldmkh").change(function () {
+        debugger
+        var dl = $(this);
+        var mang = dl.val();
+
+        var dulieu = { lstmakh: mang };
+
+        var url = '@Url.Action("GetDmKh", "QLKhachDoan")';
+        var s = "";
+        $.ajax({
+            url: url,
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ o: dulieu }),
+            success: function (results) {
+                debugger
+
+                $.each(results, function (index, t) {
+                    debugger
+                    $("#txtMaKh").val(t.makh);
+                    $("#txtTenKh").val(t.tengiaodich);
+                    $("#txtDiaChi").val(t.diachi);
+                    $("#txtDienThoai").val(t.telephone);
+                    $("#txtFax").val(t.fax);
+
+
+                });
+
+
+            }
+        });
+
+
+    });
+
+    function isNumber(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if ((charCode > 31 && charCode < 48) || charCode > 57) {
+            return false;
+        }
+        return true;
+    }
+
+    $(function () {
+        $('.numbers').inputmask({ alias: 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'autoUnmask': true, 'removeMaskOnSubmit': true });
+    });
+
+</script>
+

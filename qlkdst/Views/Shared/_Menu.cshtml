@@ -1,0 +1,44 @@
+﻿<!--menu trai-->
+@*<div class="navbar-default sidebar" role="navigation">
+    <div class="sidebar-nav navbar-collapse">*@
+<ul class="nav" id="side-menu">
+
+    @if (Session["MenuMaster"] != null)
+            {
+                var MenuMaster = (List<qlkdst.Models.MenuModels>)Session["MenuMaster"];
+
+                var groupByMenu = MenuMaster.GroupBy(x => new { x.areaname, x.areacss }).ToList();
+
+                foreach (var MenuList in groupByMenu)
+                {
+            <li>
+                <a href="#"><i class="@MenuList.Key.areacss"></i> @MenuList.Key.areaname</a>
+                <ul class="nav nav-second-level">
+                    @foreach (var SubMenuList in MenuList)
+                    {
+                        if (SubMenuList.areamvc != null)
+                        {
+                            <li>
+                                @Html.ActionLink(SubMenuList.menunm, SubMenuList.actionnm, SubMenuList.controllernm, new { area = SubMenuList.areamvc }, null)
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                @Html.ActionLink(SubMenuList.menunm, SubMenuList.actionnm, SubMenuList.controllernm, null, null)
+                            </li>
+                        }
+
+
+                    }
+                </ul>
+            </li>
+        }
+
+    }
+
+</ul>
+@*</div>*@
+<!-- /.sidebar-collapse -->
+@*</div>*@
+<!--/ menu trai-->

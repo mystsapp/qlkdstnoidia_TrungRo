@@ -1,0 +1,265 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{83B11AFE-B642-48E7-8F64-6E69D10251F3}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>qlkdstDB</RootNamespace>
+    <AssemblyName>qlkdstDB</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Class1.cs" />
+    <Compile Include="DAO\baocaoDAO.cs" />
+    <Compile Include="DAO\biennhanDAO.cs" />
+    <Compile Include="DAO\chinhanhDAO.cs" />
+    <Compile Include="DAO\dmdailyDAO.cs" />
+    <Compile Include="DAO\dmkhachhangDAO.cs" />
+    <Compile Include="DAO\dmkhachtourDAO.cs" />
+    <Compile Include="DAO\dmnganhngheDAO.cs" />
+    <Compile Include="DAO\hoahongDAO.cs" />
+    <Compile Include="DAO\khuvucDAO.cs" />
+    <Compile Include="DAO\loaitourDAO.cs" />
+    <Compile Include="DAO\MaHoaSHA1.cs" />
+    <Compile Include="DAO\mainmenuDao.cs" />
+    <Compile Include="DAO\NguyenNhanDAO.cs" />
+    <Compile Include="DAO\nuocDAO.cs" />
+    <Compile Include="DAO\phankhucnDAO.cs" />
+    <Compile Include="DAO\quanDAO.cs" />
+    <Compile Include="DAO\rolesDAO.cs" />
+    <Compile Include="DAO\roominglistDAO.cs" />
+    <Compile Include="DAO\roominglistdDAO.cs" />
+    <Compile Include="DAO\submenuDao.cs" />
+    <Compile Include="DAO\thongtinDAO.cs" />
+    <Compile Include="DAO\tourDAO.cs" />
+    <Compile Include="DAO\tourlogDAO.cs" />
+    <Compile Include="DAO\usersDAO.cs" />
+    <Compile Include="DAO\usrkhucnDAO.cs" />
+    <Compile Include="DAO\vemaybayDAO.cs" />
+    <Compile Include="EF\cacnoidunghuytour.cs">
+      <DependentUpon>qlkhachdoanModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EF\chinhanh.cs">
+      <DependentUpon>qlkhachdoanModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EF\datcoc.cs">
+      <DependentUpon>qlkhachdoanModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EF\datcoclog.cs">
+      <DependentUpon>qlkhachdoanModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EF\dmdaily.cs">
+      <DependentUpon>qlkhachdoanModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EF\dmhoahong.cs">
+      <DependentUpon>qlkhachdoanModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EF\dmkhachhang.cs">
+      <DependentUpon>qlkhachdoanModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EF\dmkhachtour.cs">
+      <DependentUpon>qlkhachdoanModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EF\dmnghanhnghe.cs">
+      <DependentUpon>qlkhachdoanModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EF\khuvuc.cs">
+      <DependentUpon>qlkhachdoanModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EF\loaitour.cs">
+      <DependentUpon>qlkhachdoanModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EF\mainmenu.cs">
+      <DependentUpon>qlkhachdoanModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EF\nuoc.cs">
+      <DependentUpon>qlkhachdoanModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EF\phankhucn.cs">
+      <DependentUpon>qlkhachdoanModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EF\qlkhachdoanModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>qlkhachdoanModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EF\qlkhachdoanModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>qlkhachdoanModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EF\qlkhachdoanModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>qlkhachdoanModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="EF\quan.cs">
+      <DependentUpon>qlkhachdoanModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EF\roles.cs">
+      <DependentUpon>qlkhachdoanModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EF\roominglist.cs">
+      <DependentUpon>qlkhachdoanModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EF\roominglistd.cs">
+      <DependentUpon>qlkhachdoanModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EF\spLogin_Result.cs">
+      <DependentUpon>qlkhachdoanModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EF\submenu.cs">
+      <DependentUpon>qlkhachdoanModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EF\thongtintour.cs">
+      <DependentUpon>qlkhachdoanModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EF\tour.cs">
+      <DependentUpon>qlkhachdoanModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EF\tourlog.cs">
+      <DependentUpon>qlkhachdoanModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EF\tourtmp.cs">
+      <DependentUpon>qlkhachdoanModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EF\users.cs">
+      <DependentUpon>qlkhachdoanModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EF\usrkhucn.cs">
+      <DependentUpon>qlkhachdoanModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EF\vemaybay.cs">
+      <DependentUpon>qlkhachdoanModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EF\vie_biennhan.cs">
+      <DependentUpon>qlkhachdoanModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EF\vie_chinhanh.cs">
+      <DependentUpon>qlkhachdoanModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EF\vie_dsmenu.cs">
+      <DependentUpon>qlkhachdoanModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EF\vie_khachNotInRoominglist.cs">
+      <DependentUpon>qlkhachdoanModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EF\vie_nuoc.cs">
+      <DependentUpon>qlkhachdoanModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EF\vie_quyenusrtheocn.cs">
+      <DependentUpon>qlkhachdoanModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EF\vie_roominglist.cs">
+      <DependentUpon>qlkhachdoanModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EF\vie_roomtour.cs">
+      <DependentUpon>qlkhachdoanModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EF\vie_tour.cs">
+      <DependentUpon>qlkhachdoanModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EF\vie_tourvahoahong.cs">
+      <DependentUpon>qlkhachdoanModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EF\vie_tourvathongtin.cs">
+      <DependentUpon>qlkhachdoanModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EF\vie_tpvanuoc.cs">
+      <DependentUpon>qlkhachdoanModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EF\vie_tttour.cs">
+      <DependentUpon>qlkhachdoanModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EF\vie_usrkhucn.cs">
+      <DependentUpon>qlkhachdoanModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <EntityDeploy Include="EF\qlkhachdoanModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>qlkhachdoanModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.Config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="EF\qlkhachdoanModel.edmx.diagram">
+      <DependentUpon>qlkhachdoanModel.edmx</DependentUpon>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="EF\qlkhachdoanModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>qlkhachdoanModel.Context.cs</LastGenOutput>
+      <DependentUpon>qlkhachdoanModel.edmx</DependentUpon>
+    </Content>
+    <Content Include="EF\qlkhachdoanModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>qlkhachdoanModel.edmx</DependentUpon>
+      <LastGenOutput>qlkhachdoanModel.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

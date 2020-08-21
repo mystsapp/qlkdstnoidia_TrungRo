@@ -1,0 +1,13 @@
+﻿
+@{
+    ViewBag.Title = "Thông báo lỗi";
+    // Layout = "~/Areas/quanly/Views/Shared/_AdminLayout.cshtml";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class='alert @TempData["AlertType"]' role="alert">
+    <h2>CÓ LỖI</h2>
+    @TempData["alertMessage"]
+</div>
+
+

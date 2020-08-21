@@ -1,0 +1,163 @@
+﻿@model qlkdstDB.EF.thongtintour
+@{
+    ViewBag.Title = "Sửa tin";
+    Layout = null;
+}
+
+
+<script>
+
+    $(function () { // will trigger when the document is ready
+        $('.date-picker').datepicker({ dateFormat: 'dd/mm/yy' });
+
+    });
+
+
+
+</script>
+<script src="~/Scripts/script-custom-validator.js"></script>
+
+<div id="modaltr" class="modal-dialog modal-lg" style="width: 900px !important;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <a href="#" class="close" data-dismiss="modal">&times;</a>
+            <h4>Sửa tin</h4>
+        </div>
+        <form id="frmThemTin">
+            @*@using (Html.BeginForm("Insert", "Vmb", FormMethod.Post, new { @id = "frmThemBN" }))
+                {*@
+            <div class="modal-body">
+
+
+                <h5 style="color:#ff6347">Thông tin tour</h5>
+
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-md-2">
+                            Code đoàn:
+                        </label>
+                        <div class="col-md-10">
+                            <input type="text" id="txtsgtcode" name="txtsgtcode" value="@ViewBag.sgtcode" placeholder="" class="form-control" disabled />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">
+                            Nội dung:
+                        </label>
+                        <div class="col-md-10">
+                            @Html.TextAreaFor(model => model.noidungtin, 10, 25, new { @id = "txtnoidung", @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">
+                            Ngày tạo:
+                        </label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(model => model.ngaytao, new { @id = "txtngaytao", @class = "form-control", @readonly = "readonly" })
+                        </div>
+                        <label class="control-label col-md-2">
+                            Người tạo:
+                        </label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(model => model.nguoitao, new { @id = "txtnguoitao", @class = "form-control", @readonly = "readonly" })
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">
+                            Ngày sửa:
+                        </label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(model => model.ngaysua, new { @id = "txtngaysua", @class = "form-control", @readonly = "readonly" })
+                        </div>
+                        <label class="control-label col-md-2">
+                            Người sửa:
+                        </label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(model => model.nguoisua, new { @id = "txtnguoisua", @class = "form-control", @readonly = "readonly" })
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button id="btneditTin" data-id="@Model.idtour" data-idk="@Model.id_nd" type="submit" class="btn btn-danger">Lưu</button>
+                <button type="reset" class="btn btn-default" data-dismiss="modal">Đóng</button>
+            </div>
+            @*}*@
+
+        </form>
+    </div>
+</div>
+
+
+<script>
+
+    
+    function editTin(id, idk) {        
+
+        var data = JSON.stringify({
+            id: id,
+            idk:idk,
+            noidung: $('#txtnoidung').val()
+        });
+
+        var vurl = '@Url.Action("SuaTT", "thongtin")' + '/' + id;
+
+        return $.ajax({
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            type: 'POST',
+            url: vurl,
+            data: data,
+            success: function (result) {
+                $("#modaltr .close").click();
+                location.reload();
+            },
+            error: function (xhr, ajaxOptions, thrownError) {                
+                
+                console.log(xhr.status);
+
+                if (xhr.status == "200") {
+                    $("#modaltr .close").click();
+                    location.reload();
+                }
+                else {
+                    alert(xhr.status);
+                }
+                
+            }
+        });
+    }
+    
+    $("#btneditTin").click(function (e) {
+       
+        var id = $(this).data('id');//id cua tour
+        var idk = $(this).data('idk');        
+
+        $('#frmThemTin').validate({
+            rules: {
+                'noidungtin': {
+                    required: true
+                }
+            }
+         ,
+            messages: {
+                'noidungtin': {
+                    required: 'Phải nhập nội dung!'
+                }
+            },
+            submitHandler: function (form) {
+                debugger
+                editTin(id,idk);
+            }
+        });
+
+    });
+
+
+
+</script>
+
+

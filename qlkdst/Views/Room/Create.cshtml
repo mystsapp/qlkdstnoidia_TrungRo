@@ -1,0 +1,101 @@
+﻿@model qlkdstDB.EF.roominglist
+@{
+
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    /* Darker background on mouse-over */
+    .btn:hover {
+        background-color: RoyalBlue;
+    }
+</style>
+<!-- jQuery UI CSS Reference -->
+@*<link href="@Url.Content("~/Content/themes/base/jquery-ui.min.css")" rel="stylesheet" />*@
+
+<script>
+
+    $(function () { // will trigger when the document is ready
+        $('.date-picker').datepicker({ dateFormat: 'dd/mm/yy' });
+
+    });
+
+</script>
+
+
+<script src="~/Scripts/script-custom-validator.js"></script>
+
+
+<div class="wthree_general graph-form agile_info_shadow ">
+    <h3 class="w3_inner_tittle two">THÊM THÔNG TIN KHÁCH SẠN</h3>
+
+    <div class="grid-1">
+        <div class="form-body">
+
+            @using (Html.BeginForm("Create", "Room", FormMethod.Post, new { @id = "frmKs", @class = "form-horizontal" }))
+            {
+                @Html.AntiForgeryToken()
+                HtmlHelper.UnobtrusiveJavaScriptEnabled = false;
+                @Html.HiddenFor(model => model.idtour)
+
+
+                <div class="form-group">
+                    <label for="areaname" class="col-sm-2 control-label">   Tên khách sạn:</label>
+                    <div class="col-sm-10">
+                        @Html.TextBoxFor(model => model.tenkhachsan, new { @class = "form-control" })
+                    </div>                 
+
+
+                </div>
+                <div class="form-group">
+
+                    <label for="controllernm" class="col-sm-2 control-label">   Ngày checkin:</label>
+                    <div class="col-sm-4">
+                        @Html.TextBoxFor(model => model.ngaycheckin, new { @class = "form-control date-picker glyphicon glyphicon-calendar" })
+                    </div>
+
+                    <label for="areaname" class="col-sm-2 control-label">  Ngày checkout:</label>
+                    <div class="col-sm-4">
+                        @Html.TextBoxFor(model => model.ngaycheckout, new { @class = "form-control date-picker glyphicon glyphicon-calendar" })
+                    </div>  
+
+                </div>
+                
+
+                <div class="col-sm-offset-2">
+                    <button name="submit" class="btn btn-primary" id="btnSave"><i class="fa fa-save"></i>Lưu</button>
+                    @*<button class="btn btn-primary" id="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-close"></i>Hủy</button>*@
+                    @Html.ActionLink("Hủy", "Cancel", "Room", null, new { @class = "btn btn-danger fa fa-close" })
+                </div>
+
+            }
+
+        </div>
+    </div>
+</div>
+
+
+@*<div class="modal fade in" role="dialog" id="cuasoDmkhach">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header alert alert-info">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title "><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>THÊM KHÁCH TOUR</h4>
+                </div>
+                <div class="modal-body">
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+
+<script>
+                $(function () {
+                    $(".date-picker").mask("99/99/9999");
+                });
+
+</script>
+

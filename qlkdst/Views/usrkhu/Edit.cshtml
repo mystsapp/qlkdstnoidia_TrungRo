@@ -1,0 +1,84 @@
+﻿@model qlkdstDB.EF.usrkhucn
+@{
+    Layout = null;
+}
+<style>
+    /*.btn {
+        background-color: DodgerBlue;
+        border: none;
+        color: white;
+        padding: 12px 16px;
+        cursor: pointer;
+    }*/
+
+    /* Darker background on mouse-over */
+    .btn:hover {
+        background-color: RoyalBlue;
+    }
+</style>
+<script src="~/Scripts/script-custom-validator.js"></script>
+<div class="modal-dialog" style="width:70%">
+    <div class="modal-content">
+        <div class="modal-header alert alert-info">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title"> SỬA QUYỀN CHI NHÁNH</h4>
+        </div>
+
+        @using (Html.BeginForm("Edit", "usrkhu", FormMethod.Post, new { @id = "frmQuyenCty" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.id_usrkhu)
+
+            @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+            <div class="modal-body">
+                <div class="row form-group">
+
+                    <div class="col-md-2">
+                        Chi nhánh:
+                        @Html.DropDownList("idkhucn", null, String.Empty, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.idkhucn, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-md-2">
+                        Người dùng:
+                        @Html.DropDownList("userId", null, String.Empty, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.userId, "", new { @class = "text-danger" })
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-4 col-md-4">
+                        Ngày tạo:
+                        @Html.TextBoxFor(model => model.ngaytao, new { @class = "form-control text-uppercase", @readonly = "readonly" })
+                    </div>
+
+                    <div class="col-xs-4 col-md-4">
+                        Người tạo:
+                        @Html.TextBoxFor(model => model.nguoitao, new { @class = "form-control text-uppercase", @readonly = "readonly" })
+                    </div>
+                </div>
+
+                <div class="row">
+
+                    <div class="col-xs-4 col-md-4">
+                        Ngày sửa:
+                        @Html.TextBoxFor(model => model.ngaysua, new { @class = "form-control text-uppercase", @readonly = "readonly" })
+                    </div>
+                    <div class="col-xs-4 col-md-4">
+                        Người sửa:
+                        @Html.TextBoxFor(model => model.nguoisua, new { @class = "form-control text-uppercase", @readonly = "readonly" })
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button name="submit" class="btn btn-primary" id="btnSave"><i class="fa fa-save"></i>Lưu</button>
+                    <button class="btn btn-primary" id="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-close"></i>Hủy</button>
+                </div>
+
+            </div>
+        }
+
+    </div>
+</div>
+

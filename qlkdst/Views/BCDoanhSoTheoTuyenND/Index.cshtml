@@ -1,0 +1,283 @@
+﻿@using System.Data
+@using System.Globalization
+@model DataSet
+@using PagedList.Mvc;
+@{
+    ViewBag.Title = "BÁO CÁO DOANH SỐ THEO NGÀY ĐI TOUR";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!-- jQuery UI CSS Reference -->
+<link href="@Url.Content("~/Content/themes/base/jquery-ui.css")" rel="stylesheet" />
+
+
+
+<script>
+
+    $(function () { // will trigger when the document is ready
+        //$('.date-picker').datepicker({ dateFormat: 'dd/mm/yy' }); //Initialise any date pickers
+        $('.date-picker').datepicker({ dateFormat: 'dd/mm/yy' });
+
+    });
+
+</script>
+
+<style>
+    .tongcss {
+        width: 75px;
+        font-weight: bold;
+        background-color: #D3D3D3;
+    }
+
+    .horizontal-scrollbar {
+        overflow-x: auto; /*for horizontal scroll bar */
+        overflow-y: hidden; /*for hiding vertical scroll bar */
+    }
+     
+
+</style>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        BÁO CÁO DOANH SỐ THEO NGÀY ĐI TOUR
+    </div>
+
+    <div class="panel-body">
+        <a href="#tour-top" id="toTop" style="display: block;"><span id="toTopHover" style="opacity: 0;"></span> <span id="toTopHover" style="opacity: 1;"> </span></a>
+
+        @using (Html.BeginForm("Index", "BCDoanhSoTheoTuyenND", FormMethod.Get, htmlAttributes: new { @class = "form-horizontal" }))
+        {
+            <div class="col-xs-12">
+
+                <div class="form-group">
+                    <div class="col-sm-1">
+                        <label for="txttungay">Từ ngày:</label>
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="text" value="@ViewBag.tungay" id="txttungay" name="tungay" placeholder="Chọn ngày" class="form-control date-picker glyphicon glyphicon-calendar" />
+                    </div>
+                    <div class="col-sm-1">
+                        <label for="txtdenngay">Đến ngày:</label>
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="text" value="@ViewBag.denngay" id="txtdenngay" name="denngay" placeholder="Chọn ngày" class="form-control date-picker glyphicon glyphicon-calendar" />
+                    </div>
+                    <div class="col-sm-1">
+                        <label for="txtdenngay">Loại tour:</label>
+                    </div>
+                    <div class="col-sm-2">
+                        @Html.DropDownList("loaitourid",null,new { @class="form-control"})
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <label>Chi nhánh:</label>
+                    </div>
+                    <div class="col-sm-6">
+                        @Html.DropDownList("dlcn", null, new { @class = "form-control" })
+                    </div>
+                    <div class="col-sm-4">
+                        <button type="submit" class="btn btn-success"><i class="fa fa-search"></i>Tìm kiếm</button>
+                        @Html.ActionLink("Excel", "Excel", new { tungay = @ViewBag.tungay, denngay = @ViewBag.denngay, schinhanh = ViewBag.chinhanhSelected,loaitourid=ViewBag.LoaiTourSelected }, new { @class = "btn btn-primary" })
+                    </div>
+                </div>
+
+
+            </div>
+
+        }
+
+        <!--Danh sach tour-->
+        <div class="col-sm-12 col-md-12" style="overflow-x: auto;">
+            @if (@TempData["alertMessage"] != null)
+            {
+                <div class='alert @TempData["AlertType"]' role="alert">
+                    <h2>CÓ LỖI</h2>
+                    @TempData["alertMessage"]
+                </div>
+
+                //hien xong reset
+                TempData["alertMessage"] = null;
+                TempData["AlertType"] = null;
+            }
+
+            <!--TABLE-->
+            <table class="tabchitiet table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Code đoàn</th>
+                        <th>Ngày đi</th>
+                        <th>Ngày về</th>
+                        <th>Tuyến tham quan</th>
+                        <th>Số khách</th>
+                        <th>Doanh số</th>
+                        <th>Sales</th>
+                        <th>Tên công ty/Khách hàng</th>
+                        <th>Loại tour</th>
+                        <th>Nguồn tour</th>
+                        <th>Ngành nghề</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @if (Model != null)
+                    {
+                        DataTable dt = Model.Tables[0];
+                        decimal dTotal = 0, dTotalSK = 0;
+                        decimal dDoanhSo = 0, dSK = 0;
+                        int iSTT = 1;
+                        string batdau = "", ketthuc = "";
+                        //lay distinct theo khu
+                        foreach (DataRow row in dt.Rows)
+                        {
+                            dSK = @Decimal.Parse(@row["sokhachtt"].ToString() == "" ? "0" : @row["sokhachtt"].ToString());
+                            dDoanhSo = @Decimal.Parse(@row["doanhthutt"].ToString() == "" ? "0" : @row["doanhthutt"].ToString());
+                            batdau = row["batdau"].ToString() == "" ? "" : DateTime.Parse(row["batdau"].ToString()).ToString("dd/MM/yyyy");
+                            ketthuc = row["ketthuc"].ToString() == "" ? "" : DateTime.Parse(row["ketthuc"].ToString()).ToString("dd/MM/yyyy");
+
+                            dTotal = dTotal + dDoanhSo;
+                            dTotalSK = dTotalSK + dSK;
+
+                            <tr>
+                                <td>@iSTT</td>
+                                @*<td>@row["sgtcode"]</td>*@
+                                @if (@row["trangthai"].ToString() == "3")
+                                {
+                                    <td style="background-color:chartreuse;">@row["sgtcode"]</td>
+                                }
+                                else if(@row["trangthai"].ToString() == "2")
+                                {
+                                    <td style="background-color:yellow;">@row["sgtcode"]</td>
+                                }                               
+                                else
+                                {
+                                    <td style="background-color:white;">@row["sgtcode"]</td>
+                                }
+
+                                <td>@batdau</td>
+                                <td>@ketthuc</td>
+                                <td  class="my-sidebar">@row["tuyentq"]</td>
+                                <td class="text-right">@string.Format("{0:N0}", dSK)</td>
+                                <td class="text-right">@string.Format("{0:N0}", dDoanhSo)</td>
+                                <td>@row["nguoitao"]</td>
+                                <td>@row["tenkh"]</td>
+
+                                @{
+
+
+                                    if (@row["loaitourid"] != null)
+                                    {
+                                        <td>@row["loaitourid"].ToString().ToUpper()</td>
+                                    }
+                                    else
+                                    {
+                                        <td>@row["loaitourid"]</td>
+                                    }
+                                }
+                                <td>@row["nguontour"]</td>
+                                <td>@row["nganhnghe"]</td>
+                            </tr>
+                            iSTT = iSTT + 1;
+                        }//end row
+
+                        //dong total
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td><strong>Tổng cộng</strong></td>
+                            <td class="text-right"><strong>@string.Format("{0:N0}", dTotalSK)</strong></td>
+                            <td class="text-right"><strong>@string.Format("{0:N0}", dTotal)</strong></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+
+
+                        //dong cac doan da thanh ly
+                        DataTable dt1 = Model.Tables[1];
+                        DataTable dt2 = Model.Tables[2];
+                        DataTable dt3 = Model.Tables[3];
+
+                        //empty row
+                        <tr>
+                            <td colspan="9"></td>
+                        </tr>
+
+                 
+                        if (dt1.Rows.Count > 0)
+                        {
+
+
+                            <tr >
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td  style="background-color:chartreuse;"><strong>Các đoàn đã thanh lý: </strong></td>
+                                <td class="text-right"><strong>@string.Format("{0:N0}", dt1.Rows[0]["sokhachtt"])</strong></td>
+                                <td class="text-right"><strong>@string.Format("{0:N0}", dt1.Rows[0]["doanhthutt"])</strong></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+
+                        }
+
+                        if (dt2.Rows.Count > 0)
+                        {
+
+
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td  style="background-color:yellow;"><strong>Các đoàn chưa thanh lý: </strong></td>
+                                <td class="text-right"><strong>@string.Format("{0:N0}", dt2.Rows[0]["sokhachtt"])</strong></td>
+                                <td class="text-right"><strong>@string.Format("{0:N0}", dt2.Rows[0]["doanhthutt"])</strong></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+
+                        }
+
+                        if (dt3.Rows.Count > 0)
+                        {
+
+
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><strong>Các đoàn chưa ký hợp đồng: </strong></td>
+                                <td class="text-right"><strong>@string.Format("{0:N0}", dt3.Rows[0]["sokhachtt"])</strong></td>
+                                <td class="text-right"><strong>@string.Format("{0:N0}", dt3.Rows[0]["doanhthutt"])</strong></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+
+                        }
+                    }
+
+
+                </tbody>
+            </table>
+            <!--END TABLE-->
+
+        </div>
+        <!--/ Danh sach tour-->
+
+    </div>
+</div>
+<script>
+
+    $(function () {
+        $(".date-picker").mask("99/99/9999");
+    });
+
+
+</script>

@@ -1,0 +1,299 @@
+﻿@model qlkdstDB.EF.datcoc
+@{
+    ViewBag.Title = "Thêm biên nhận";
+    Layout = null;
+}
+
+@*<script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/additional-methods.min.js"></script>*@
+
+
+<script>
+
+    $(function () { // will trigger when the document is ready
+        $('.date-picker').datepicker({ dateFormat: 'dd/mm/yy' });
+
+    });
+
+
+
+</script>
+<script src="~/Scripts/script-custom-validator.js"></script>
+
+<div id="modaltr" class="modal-dialog modal-lg" style="width: 900px !important;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <a href="#" class="close" data-dismiss="modal">&times;</a>
+            <h4>Sửa biên nhận</h4>
+        </div>
+        <form id="frmThemBN">
+            @*@using (Html.BeginForm("Insert", "BienNhan", FormMethod.Post, new { @id = "frmThemBN" }))
+                {*@
+            <div class="modal-body">
+
+
+                <h5 style="color:#ff6347">Thông tin biên nhận</h5>
+                <hr /><input type="hidden" name="hididtourEdit" id="hididtourEdit" value="@Model.idtour" />
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-md-2">
+                            Code đoàn
+                        </label>
+                        <div class="col-md-10">
+                            <input type="text" id="txtsgtcode" name="txtsgtcode" value="@ViewBag.sgtcode" placeholder="" class="form-control" disabled />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">
+                            Ngày biên nhận
+                        </label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(model => model.ngaydatcoc, new { @id = "ngaybn", @class = "form-control  date-picker glyphicon glyphicon-calendar" })<span style="color:red;">*</span>                            
+                        </div>
+                        <label class="control-label col-md-2">
+                            Số biên nhận
+                        </label>
+                        <div class="col-md-4">                            
+                            @Html.TextBoxFor(model => model.sobiennhan, new { @id = "txtSobn", @class = "form-control", @readonly = "readonly" })
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">
+                            Người làm biên nhận
+                        </label>
+                        <div class="col-md-4">                            
+                            @Html.TextBoxFor(model => model.nguoilambn, new { @id = "txtNguoiLamBN", @class = "form-control", @readonly = "readonly" })
+                        </div>
+                        <label class="control-label col-md-2">
+                            Đại lý
+                        </label>
+                        <div class="col-md-4">
+                            @*@Html.DropDownList("daily", null, String.Empty, new { @class = "form-control1", @id = "ddlDailyBN",@disabled = "disabled" })*@
+                            @Html.TextBoxFor(model => model.daily, new { @id = "ddlDailyBN", @class = "form-control" })
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">
+                            Tên khách
+                        </label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(x => x.tenkhach, new { @id = "txttenkhach", @class = "form-control" })<span style="color:red;">*</span>
+                        </div>
+                        <label class="control-label col-md-2">
+                            Địa chỉ
+                        </label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(x => x.diachi, new { @id = "txtdiachi", @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">
+                            Điện thoại
+                        </label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(x => x.dienthoai, new { @id = "txtdienthoai", @class = "form-control" })
+                        </div>
+                        <label class="control-label col-md-2">
+                            Số tiền
+                        </label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(x => x.sotien, new { @id = "txtsotien", @class = "form-control numbers" })<span style="color:red;">*</span>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">
+                            Loại tiền:
+                        </label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(x => x.loaitien, new { @id = "txtloaitien", @class = "form-control" })
+                        </div>
+                        <label class="control-label col-md-2">
+                            Tỷ giá:
+                        </label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(x => x.tygia, new { @id = "txttygia", @class = "form-control" })
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">
+                            Hình thức thanh toán:
+                        </label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(x => x.hinhthucthanhtoan, new { @id = "txtHinhThuc", @class = "form-control" })
+                        </div>
+
+                        <label class="control-label col-md-2">
+                            Chứng từ gốc:
+                        </label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(x => x.chungtugoc, new { @id = "txtChungtu", @class = "form-control" })
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">
+                            Nội dung đặt cộc:
+                        </label>
+                        <div class="col-md-10">
+                            @Html.TextAreaFor(x => x.noidung, 10, 50, new { @id = "txtnoidung", @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button id="btnAddBienNhan" data-id="@Model.idtour" data-idk="@Model.iddatcoc" type="submit" class="btn btn-danger">Lưu</button>
+                <button type="reset" class="btn btn-default" data-dismiss="modal">Đóng</button>
+            </div>
+            @*}*@
+
+        </form>
+    </div>
+</div>
+
+
+<script>
+
+    //them khach vao roominglist
+    function suaBienNhan(id, idk) {
+        debugger
+
+        var ngaybn = $('#ngaybn').val();
+        var txsobn = $('#txtSobn').val();
+        var txnguoibn = $('#txtNguoiLamBN').val();
+
+        var data = JSON.stringify({
+            id: id,
+            idk:idk,
+            ngaybn: ngaybn,
+            txsobn: txsobn,
+            txnguoibn: txnguoibn,
+            daily: $('#ddlDailyBN').val(),
+            tenkhach: $('#txttenkhach').val(),
+            diachi: $('#txtdiachi').val(),
+            dienthoai: $('#txtdienthoai').val(),
+            noidung: $('#txtnoidung').val(),
+            sotien: $('#txtsotien').val(),
+            htthanhtoan: $('#txtHinhThuc').val(),
+            chungtu: $('#txtChungtu').val(),
+            loaitien: $('#txtloaitien').val(),
+            tygia: $('#txttygia').val(),
+        });
+
+        var vurl = '@Url.Action("SuaBienNhan", "BienNhan")' + '/' + id;
+
+        return $.ajax({
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            type: 'POST',
+            url: vurl,//"/Room/addBienNhan",
+            data: data,
+            success: function (result) {
+                $("#modaltr .close").click();
+                location.reload();
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                if (xhr.status == "200") {
+                    $("#modaltr .close").click();
+                    location.reload();
+                } else {
+                    alert(xhr.status);
+                }
+            }
+        });
+    }
+    //Collect Multiple Order List For Pass To Controller
+    $("#btnAddBienNhan").click(function (e) {
+        //e.preventDefault();
+        var id = $(this).data('id');//id cua tour
+        var idk = $(this).data('idk');//id cua biennhan
+        
+    
+        $('#frmThemBN').validate({
+            rules: {
+                'ngaydatcoc': {
+                    required: true
+                }
+                 ,
+                'nguoilambn': {
+                    required: true
+                }
+                ,
+                'tenkhach': {
+                    required: true
+                }
+                  ,
+                'sotien': {
+                    required: true,
+                    number: true
+                }
+                 ,
+                'daily': {
+                    notEqual: ""
+                }
+                ,
+                'sobiennhan': {
+                    maxlength: 12
+                }
+                ,
+                'tygia': {
+                    required: true
+                    , number: true
+                }
+            }
+     ,
+            messages: {
+                'ngaydatcoc': {
+                    required: 'Phải chọn ngày biên nhận!'
+                }
+                ,
+                'nguoilambn': {
+                    required: 'Phải nhập người làm biên nhận!'
+                }
+                  ,
+                'tenkhach': {
+                    required: 'Phải nhập tên khách đóng!'
+                }
+                ,
+                'sotien': {
+                    required: 'Phải nhập số tiền!'
+                    ,number: 'Phải nhập kiểu số!'
+                }
+                 ,
+                'daily': {
+                    notEqual: "Phải chọn đại lý!"
+                }
+                 ,
+                'sobiennhan': {
+                    maxlength: "Nhập tối đa 12 ký tự"
+                }
+                ,
+                'tygia': {
+                    required: 'Phải nhập tỷ giá!'
+                    , number: 'Phải nhập kiểu số!'
+                }
+            }
+            ,
+            submitHandler: function (form) {
+                suaBienNhan(id, idk);
+            }
+
+        });
+
+    });
+
+    $(function () {
+        $(".date-picker").mask("99/99/9999");
+    });
+
+    $(function () {
+        $('.numbers').inputmask({ alias: 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'autoUnmask': true, 'removeMaskOnSubmit': true });
+    });
+
+</script>
+
+

@@ -1,0 +1,136 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>@ViewBag.Title - HỆ THỐNG QUẢN LÝ KHÁCH ĐOÀN NỘI ĐỊA</title>
+    <!-- Bootstrap Core CSS -->
+    @*<link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">*@
+    <!-- MetisMenu CSS -->
+    @*<link href="../vendor/metisMenu/metisMenu.min.css" rel="stylesheet">*@
+    <!-- Custom CSS -->
+    @*<link href="../dist/css/sb-admin-2.css" rel="stylesheet">*@
+    <!-- Morris Charts CSS -->
+    @*<link href="../vendor/morrisjs/morris.css" rel="stylesheet">*@
+    <!-- Custom Fonts -->
+    @*<link href="../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">*@
+
+
+    @Scripts.Render("~/bundles/sbadminjs")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/otherjs")
+    @Styles.Render("~/Content/css")  @*bootstrap.min.css,metisMenu.min.css,sb-admin-2.css,morris.css,font-awesome.min.css*@
+  @Styles.Render("~/bundles/othercss")
+    @Scripts.Render("~/bundles/inputmask")
+    <style>
+        .error{
+            border:1px solid red;
+        }
+        label.error{
+            background:url(@Url.Content("~/Content/images/unchecked.gif")) no-repeat;padding-left:16px;margin-left:.3em;
+        }
+        label.valid{
+            background:url(@Url.Content("~/Content/images/checked.gif")) no-repeat;display:block;width:16px;height:16px
+        }
+
+        .musttype{
+            color:red;
+            font-weight:bold;
+        }
+
+    </style>
+
+</head>
+<body>
+    @{
+        string sUsrNm = Session["hoten"] == null ? "" : Session["hoten"].ToString();
+        string sUsrId = Session["username"] == null ? "" : Session["username"].ToString();
+        string sUsrNmRep = sUsrId.Replace('.', '~');
+        string urlchangepwd = Url.Action("ChangePass", "User") + "/" + sUsrNmRep;
+        string sChiNhanh = Session["chinhanh"] == null ? "" : Session["chinhanh"].ToString();
+    }
+    <div id="wrapper">
+        <!-- Navigation -->
+        <nav class="navbar navbar-default navbar-static-top" role="navigation"  style="margin-bottom: 0;background-color:#3E5C9A">
+            <div class="navbar-header">
+             
+                @*<img src="~/Content/img/logo1.png" />*@
+            @{ string sCN = Session["chinhanh"] == null ? "" : Session["chinhanh"].ToString();}              
+            @Html.ActionLink("HỆ THỐNG QUẢN LÝ KHÁCH ĐOÀN NỘI ĐỊA " + sCN, "Index", "Home", new { path = "" }, new { @class = "navbar-brand", @style = "color:#FFF;" })
+                 
+            </div>
+            <!-- /.navbar-header -->         
+            
+            <ul class="nav navbar-top-links navbar-right">
+                <a class="navbar-brand" style="color:#FFF;">
+                    <li>
+                        Xin chào - @sUsrNm , Chi nhánh: @sChiNhanh
+                    </li>
+                </a>
+            <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <li>
+                            <a href="#"><i class="fa fa-user fa-fw"></i>@sUsrNm</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="@urlchangepwd"><i class="fa fa-sign-out fa-fw"></i> Đổi mật khẩu</a>
+                        </li>
+                        <li>
+                            <a href="~/Login/Logout"><i class="fa fa-sign-out fa-fw"></i> Đăng xuất</a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-user -->
+                </li>
+                <!-- /.dropdown -->
+            </ul>
+            <!-- /.navbar-top-links -->
+
+
+            <div class="navbar-default sidebar" role="navigation">
+                <div class="sidebar-nav navbar-collapse">
+                    @Html.Partial("_Menu")
+
+                </div>
+                <!-- /.sidebar-collapse -->
+            </div>
+            <!-- /.navbar-static-side -->
+
+
+
+        </nav>
+        <div id="page-wrapper">
+
+            @RenderBody()
+        </div>
+        <!-- /#page-wrapper -->
+    </div>
+    <!-- /#wrapper -->
+    <!-- jQuery -->
+    @*<script src="../vendor/jquery/jquery.min.js"></script>*@
+    <!-- Bootstrap Core JavaScript -->
+    @*<script src="../vendor/bootstrap/js/bootstrap.min.js"></script>*@
+    <!-- Metis Menu Plugin JavaScript -->
+    @*<script src="../vendor/metisMenu/metisMenu.min.js"></script>*@
+    <!-- Morris Charts JavaScript -->
+    @*<script src="../vendor/raphael/raphael.min.js"></script>*@
+    @*<script src="../vendor/morrisjs/morris.min.js"></script>*@
+    @*<script src="../data/morris-data.js"></script>*@
+    <!-- Custom Theme JavaScript -->
+    @*<script src="../dist/js/sb-admin-2.js"></script>*@
+
+
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/vendor")  @*metisMenu.min.js,raphael.min.js,morris.min.js,morris-data.js,sb-admin-2.js*@
+   
+    @RenderSection("scripts", required: false)
+</body>
+</html>

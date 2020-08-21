@@ -1,0 +1,418 @@
+﻿@using System.Data
+@using System.Globalization
+@model DataSet
+@using PagedList.Mvc;
+@{
+    ViewBag.Title = "Báo cáo Doanh số theo tuyến";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!-- jQuery UI CSS Reference -->
+<link href="@Url.Content("~/Content/themes/base/jquery-ui.css")" rel="stylesheet" />
+
+
+
+<script>
+
+        $(function () { // will trigger when the document is ready
+            //$('.date-picker').datepicker({ dateFormat: 'dd/mm/yy' }); //Initialise any date pickers
+            $('.date-picker').datepicker({ dateFormat: 'dd/mm/yy' });
+
+        });
+
+</script>
+
+<style>
+    .tongcss {
+        width: 75px;
+        font-weight: bold;
+        background-color: #D3D3D3;
+    }
+
+    .horizontal-scrollbar {
+        overflow-x: auto; /*for horizontal scroll bar */
+        overflow-y: hidden; /*for hiding vertical scroll bar */
+    }
+</style>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        BÁO CÁO DOANH SỐ THEO TUYẾN
+    </div>
+
+    <div class="panel-body">
+        <a href="#tour-top" id="toTop" style="display: block;"><span id="toTopHover" style="opacity: 0;"></span> <span id="toTopHover" style="opacity: 1;"> </span></a>
+
+        @using (Html.BeginForm("doanhthutheotuyen", "baocao", FormMethod.Get, htmlAttributes: new { @class = "form-horizontal" }))
+        {
+            <div class="col-xs-12">
+                <div class="form-group">
+                    <div class="col-md-1">
+                        <label for="txttungay">Từ ngày:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" value="@ViewBag.tungay" id="txttungay" name="tungay" placeholder="Chọn ngày" class="form-control date-picker glyphicon glyphicon-calendar" />
+                    </div>
+                    <div class="col-md-1">
+                        <label for="txtdenngay">Đến ngày:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" value="@ViewBag.denngay" id="txtdenngay" name="denngay" placeholder="Chọn ngày" class="form-control date-picker glyphicon glyphicon-calendar" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <label>Chi nhánh:</label>
+                    </div>
+                    <div class="col-sm-6">
+                        @Html.DropDownList("dlcn", null, new { @class = "form-control" })
+                    </div>
+                    <div class="col-sm-4">
+                        <button type="submit" class="btn btn-success"><i class="fa fa-search"></i>Tìm kiếm</button>
+                        @Html.ActionLink("Excel", "ExcelTheoTuyen", new { tungay = @ViewBag.tungay, denngay = @ViewBag.denngay, schinhanh = ViewBag.chinhanhSelected }, new { @class = "btn btn-primary" })
+                    </div>
+                </div>      
+            </div>
+
+
+        }
+
+        <!--Danh sach tour-->
+        <div class="col-sm-12 col-md-12" style="overflow-x: auto;">
+            @{
+                DataTable dt1 = null;
+                DataTable dt2 = null;
+                DataTable dt3 = null;
+                DataTable dt4 = null;
+
+                if (Model != null)
+                {
+                    dt1 = Model.Tables[1];//3 tuyến có số khách đông nhất :
+                    dt2 = Model.Tables[2];////3 tuyến có tỷ trọng Doanh số cao nhất
+                    dt3 = Model.Tables[3];//3 khu co so khach cao nhat
+                    dt4 = Model.Tables[4];// 3 khu vực có tỉ trọng Doanh số cao nhất:
+                }
+
+            }
+            <!--TABLE-->
+            <table id="table" class="tabchitiet table table-striped table-bordered table-hover">                
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Tuyến</th>
+                            <th>Số khách</th>
+                            <th>Doanh số tuyến</th>
+                            <th>Tỉ trọng Doanh số theo tuyến (%)</th>
+                            <th>Doanh số khu vực</th>
+                            <th>Tỉ trọng Doanh số theo khu vực (%)</th>
+                            <th>Tỉ trọng Doanh số đường xa / đường gần (%)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-nowrap">
+
+
+                        @if (Model != null)
+                        {
+                            DataTable dt0 = Model.Tables[0];
+
+                            int idem = 1;
+                            decimal dDoanhThuTT = 0, dSKTT = 0, dTotalDoanhThuTT = 0, dTotalSKTT = 0;
+                            decimal dTotalDoanhThuTheoKhu = 0;
+                            decimal dTotalTyTrongTheoTuyen = 0;
+                            decimal dTyTrongTheoTuyen = 0, dTotalTytrongtheokhu = 0;
+                            decimal dTotalTytrongtheophamvi = 0;
+                            DataView view = new DataView(dt0);
+                            view.Sort = "phamvi";
+                            //distinct theo pham vi
+                            DataTable distinctPhamvi = view.ToTable(true, "phamvi");
+
+                            //distinct theo khu
+
+                            DataTable distinctValues = view.ToTable(true, "tenkhu");//lay distinct ten cac khu vuc
+
+                            //cho tinh tong
+                            foreach (DataRow item in dt0.Rows)
+                            {
+                                dDoanhThuTT = @Decimal.Parse(item["doanhthutt"].ToString() == "" ? "0" : @item["doanhthutt"].ToString());
+                                dSKTT = @Decimal.Parse(item["sokhachtt"].ToString() == "" ? "0" : @item["sokhachtt"].ToString());
+                                dTotalDoanhThuTT = dTotalDoanhThuTT + dDoanhThuTT;
+                                dTotalSKTT = dTotalSKTT + dSKTT;
+                            }
+
+
+                            foreach (DataRow rpv in distinctPhamvi.Rows)
+                            {
+                                //TINH TONG
+
+                                decimal[] dTotalTheoPhamVi = new decimal[2];
+                                int iIndexTheoPhamVi = 0;
+                                //TINH TONG GAN XA HAY THEO PHAM VI
+                                DataRow[] rowspv = dt0.Select("phamvi='" + rpv["phamvi"].ToString() + "'");
+
+                                foreach (DataRow r1 in rowspv)
+                                {
+                                    dTotalTheoPhamVi[iIndexTheoPhamVi] = dTotalTheoPhamVi[iIndexTheoPhamVi] + Decimal.Parse(r1["doanhthutt"].ToString() == "" ? "0" : r1["doanhthutt"].ToString());
+                                }
+
+                                //tinh tong khu
+                                int iIndexTheoKhu = 0;
+                                decimal[] dTotalTheoKhu = new decimal[distinctValues.Rows.Count];
+
+                                foreach (DataRow rr in distinctValues.Rows)
+                                {
+
+                                    DataRow[] rows = dt0.Select("phamvi='" + rpv["phamvi"].ToString() + "' AND tenkhu='" + rr["tenkhu"].ToString() + "'");
+
+                                    foreach (DataRow item in rows)
+                                    {
+                                        dDoanhThuTT = @Decimal.Parse(item["doanhthutt"].ToString() == "" ? "0" : @item["doanhthutt"].ToString());
+                                        dTotalTheoKhu[iIndexTheoKhu] = dTotalTheoKhu[iIndexTheoKhu] + dDoanhThuTT;
+
+                                    }
+                                    iIndexTheoKhu = iIndexTheoKhu + 1;
+                                }//end khu
+
+                                //HIEN THI
+                                iIndexTheoKhu = 0;
+
+                                decimal dTytrongtheokhu = 0;
+
+                                foreach (DataRow rr in distinctValues.Rows)
+                                {
+                                    DataRow[] rows = dt0.Select("phamvi='" + rpv["phamvi"].ToString() + "' AND tenkhu='" + rr["tenkhu"].ToString() + "'");
+
+                                    int iLastRow = 1;//co de hien ty trong o dong cuoi cung theo khu
+                                    foreach (DataRow item in rows)
+                                    {
+                                        dDoanhThuTT = @Decimal.Parse(item["doanhthutt"].ToString() == "" ? "0" : @item["doanhthutt"].ToString());
+                                        dTyTrongTheoTuyen = dDoanhThuTT / dTotalDoanhThuTT * 100;
+                                        dTytrongtheokhu = dTotalTheoKhu[iIndexTheoKhu] / dTotalDoanhThuTT * 100;
+                                        dTotalTyTrongTheoTuyen = dTotalTyTrongTheoTuyen + dTyTrongTheoTuyen;
+                                        <tr>
+                                            <td>@idem.ToString()</td>
+                                            <td>@item["tuyentq"]</td>
+                                            <td>@Decimal.Parse(item["sokhachtt"].ToString() == "" ? "0" : @item["sokhachtt"].ToString()).ToString("#,#")</td>
+                                            <td>@dDoanhThuTT.ToString("#,#")</td>
+                                            <td>@string.Format("{0:N1}", dTyTrongTheoTuyen)%</td>
+                                            @*@if (iLastRow == rows.Length)
+                                        {
+                                            dTotalDoanhThuTheoKhu = dTotalDoanhThuTheoKhu + dTotalTheoKhu[iIndexTheoKhu];
+                                            dTotalTytrongtheokhu = dTotalTytrongtheokhu + dTytrongtheokhu;
+                                            <td>@string.Format("{0:N0}", dTotalTheoKhu[iIndexTheoKhu])</td>
+                                            <td>@string.Format("{0:N1}", dTytrongtheokhu)%</td>
+                                        }
+                                        else
+                                        {
+                                            <td></td>
+                                            <td></td>
+                                        }*@
+
+                                            @{
+                                                dTotalDoanhThuTheoKhu = dTotalDoanhThuTheoKhu + dTotalTheoKhu[iIndexTheoKhu];
+                                                dTotalTytrongtheokhu = dTotalTytrongtheokhu + dTytrongtheokhu;
+                                            }
+
+                                            <td>@string.Format("{0:N0}", dTotalTheoKhu[iIndexTheoKhu])</td>
+                                            <td>@string.Format("{0:N1}", dTytrongtheokhu)%</td>
+                                            @{
+                                                decimal dTytrongtheophamvi = 0;
+                                            }
+
+                                            @if (dTotalDoanhThuTT > 0)
+                                            {
+                                                dTytrongtheophamvi = @dTotalTheoPhamVi[iIndexTheoPhamVi] / @dTotalDoanhThuTT * 100;
+                                                dTotalTytrongtheophamvi = dTotalTytrongtheophamvi + dTytrongtheophamvi;
+                                            }
+
+                                            <td>@string.Format("{0:N1}", dTytrongtheophamvi)%</td>
+
+
+
+                                        </tr>
+                                                            iLastRow = iLastRow + 1;
+                                                            idem = idem + 1;
+
+                                                        }
+                                                        iIndexTheoKhu = iIndexTheoKhu + 1;
+
+                                                    }//end khu
+                                                    iIndexTheoPhamVi = iIndexTheoPhamVi + 1;
+                                                }//end phamvi
+
+                                                //them dong tong
+                                                <tr>
+                                                    <td></td>
+                                                    <td><b>TỔNG CỘNG</b></td>
+                                                    <td><b>@string.Format("{0:N0}", @dTotalSKTT)</b></td>
+                                                    <td><b>@string.Format("{0:N0}", @dTotalDoanhThuTT)</b></td>
+                                                    <td><b>@string.Format("{0:N0}", @dTotalTyTrongTheoTuyen)%</b></td>
+                                                    <td><b>@string.Format("{0:N0}", @dTotalDoanhThuTT)</b></td>
+                                                    <td><b>@string.Format("{0:N0}", 100)%</b></td>
+                                                    <td><b>@string.Format("{0:N0}", 100)%</b></td>
+                                                </tr>
+
+                                                }
+
+                    </tbody>
+                </table>
+                <!--END TABLE-->
+
+
+                <table class="tabchitiet2  table table-striped table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th colspan="2">3 tuyến có số khách đông nhất :</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-nowrap">
+                        @{
+                            foreach (DataRow row in dt1.Rows)
+                            {
+                                <tr>
+                                    <td>@row["tuyentq"].ToString()</td>
+                                    <td>@string.Format("{0:N0}", row["sokhachtt"])</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+
+                <table class="tabchitiet3  table table-striped table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th colspan="3">3 tuyến có tỷ trọng Doanh số cao nhất  </th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-nowrap">
+
+                        @{
+                            //tinh tong truoc
+                            decimal dTotal3 = 0;
+                            foreach (DataRow row in dt2.Rows)
+                            {
+                                dTotal3 = dTotal3 + Decimal.Parse(row["doanhthutt"].ToString() == "" ? "0" : @row["doanhthutt"].ToString());
+                            }
+
+                            int iDem3 = 0;
+                            decimal dDoanhthutt3 = 0, dTytrong3 = 0;
+                            foreach (DataRow row in dt2.Rows)
+                            {
+                                dDoanhthutt3 = Decimal.Parse(row["doanhthutt"].ToString() == "" ? "0" : @row["doanhthutt"].ToString());
+                                dTytrong3 = dDoanhthutt3 / dTotal3 * 100;
+                                if (iDem3 < 3)//chi lay 3 gia tri cao nhat
+                                {
+                                    <tr>
+                                        <td>@row["tuyentq"].ToString()</td>
+                                        <td>@string.Format("{0:N0}", dDoanhthutt3)</td>
+                                        <td>@string.Format("{0:N1}", dTytrong3)%</td>
+                                    </tr>
+                                }
+
+                                iDem3 = iDem3 + 1;
+                            }
+                        }
+
+                    </tbody>
+                </table>
+
+                <table class="tabchitiet4  table table-striped table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th colspan="2">3 khu vực có số khách cao nhất :</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-nowrap">
+
+                        @{
+                            int iDem4 = 0;
+                            decimal dSK4 = 0;
+                            foreach (DataRow row in dt3.Rows)
+                            {
+                                dSK4 = Decimal.Parse(row["sokhachtt"].ToString() == "" ? "0" : @row["sokhachtt"].ToString());
+
+                                if (iDem4 < 3)
+                                {
+                                    <tr>
+                                        <td>@row["tenkhu"].ToString()</td>
+                                        <td>@string.Format("{0:N0}", dSK4)</td>
+                                    </tr>
+                                }
+
+                                iDem4 = iDem4 + 1;
+                            }
+                        }
+
+                    </tbody>
+                </table>
+
+                <table class="tabchitiet5  table table-striped table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th colspan="3">3 khu vực có tỉ trọng Doanh số cao nhất :</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-nowrap">
+
+                        @{
+                            //tinh tong truoc
+                            decimal dTotal5 = 0;
+                            foreach (DataRow row in dt4.Rows)
+                            {
+                                dTotal5 = dTotal5 + Decimal.Parse(row["doanhthutt"].ToString() == "" ? "0" : @row["doanhthutt"].ToString());
+                            }
+
+                            int iDem5 = 0;
+                            decimal dDoanhthutt5 = 0, dTytrong5 = 0;
+                            foreach (DataRow row in dt4.Rows)
+                            {
+                                dDoanhthutt5 = Decimal.Parse(row["doanhthutt"].ToString() == "" ? "0" : @row["doanhthutt"].ToString());
+                                dTytrong5 = dDoanhthutt5 / dTotal5 * 100;
+                                if (iDem5 < 3)
+                                {
+                                    <tr>
+                                        <td>@row["tenkhu"].ToString()</td>
+                                        <td>@string.Format("{0:N0}", dDoanhthutt5)</td>
+                                        <td>@string.Format("{0:N1}", dTytrong5)%</td>
+                                    </tr>
+                                }
+
+                                iDem5 = iDem5 + 1;
+                            }
+                        }
+
+                    </tbody>
+                </table>
+
+
+
+</div>
+
+        <!--/ Danh sach tour-->
+
+    </div>
+</div>
+<script>
+  //dinh dang lai table chi tiet
+    $(function () {
+
+       // var tct = $('#tabchitiet');
+
+        //,"~/Scripts/jquery.table.marge.js"
+        $('.tabchitiet').margetable({
+           type: 2,
+            colindex: [5] // column 1, 7
+        });
+
+        $('.tabchitiet').margetable({
+            type: 2,
+            colindex: [6] // column 1, 7
+        });
+
+        $('.tabchitiet').margetable({
+            type: 2,
+            colindex: [7] // column 1, 7
+        });
+
+    });
+
+
+</script>

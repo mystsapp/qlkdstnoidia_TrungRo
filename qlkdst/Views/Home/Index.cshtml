@@ -1,0 +1,70 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+    Layout="~/Views/Shared/_Layout.cshtml";
+}
+    <!-- /inner_content_w3_agile_info-->
+@*<div class="inner_content_w3_agile_info">*@
+    <!-- /agile_top_w3_grids-->
+    <div class="agile_top_w3_grids">
+        <ul class="ca-menu">
+            <li>
+                <a href='@Url.Action("Index","QLKhachDoan",null)'>
+
+                    <i class="fa fa-building-o" aria-hidden="true"></i>
+                    <div class="ca-content">
+                        <h4 class="ca-main"></h4>
+                        <h3 class="ca-sub">Quản lý khách đoàn chi nhánh: @Session["chinhanh"].ToString()</h3>
+                    </div>
+                </a>
+            </li>
+            @*<li>
+                <a href="#">
+                    <i class="fa fa-user" aria-hidden="true"></i>
+                    <div class="ca-content">
+                        <h4 class="ca-main one">26,808</h4>
+                        <h3 class="ca-sub one">New Clients</h3>
+                    </div>
+                </a>
+            </li>*@
+
+            <div class="clearfix"></div>
+        </ul>
+    </div>
+<div class="agile_top_w3_grids">
+    <h3>Danh sách tour có thông tin mới:</h3>    
+    @Html.DropDownList("dltour",new SelectList(ViewBag.dstour, "idtour", "sgtcode"),"--Chọn tour--", new { @class="form-control col-sm-4",@id="ddltour" })
+    <div class="clearfix"></div>
+    <div class="thongtin">
+        
+    </div>
+ </div>
+
+<script>
+
+    $('#ddltour').change(function () {
+    debugger
+        var id = $(this).val();
+        var divtt=$('.thongtin');
+
+        var vurl = '@Url.Action("LayDSTT", "Home")/'+id;
+
+        if (id != null ) {
+            $.getJSON(vurl, { id: id }, function (tts) {
+                if (tts != null && !jQuery.isEmptyObject(tts)) {
+                    var ttitem = "";
+                    $.each(tts, function (index, t) {
+                        debugger
+                        
+                        ttitem =ttitem+ "<div class='well'>"+t.noidungtin+"</div>";
+                       
+                    });
+                    divtt.html(ttitem);
+
+                };
+            });
+        }
+
+
+    })
+
+</script>

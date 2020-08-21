@@ -1,0 +1,168 @@
+﻿@model PagedList.IPagedList<qlkdstDB.EF.users>
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = " DANH SÁCH USER";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="inner_content_w3_agile_info two_in">
+
+    @*<h2 class="w3_inner_tittle">MỤC KHÁCH ĐOÀN</h2>*@
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            DANH SÁCH USER
+        </div>
+        <div class="panel-body">
+
+            @using (Html.BeginForm("Index", "User", FormMethod.Get, htmlAttributes: new { @class = "form-inline" }))
+            {
+                <div class="form-group">
+                    @Html.Label("Tài khoản:", htmlAttributes: new { @class = "control-label col-sm-2" })
+                    <div class="col-sm-2">
+                        <input type="text" value="@ViewBag.searchString" class="form-control" name="searchString" />
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success"><i class="fa fa-search"></i>Tìm kiếm</button>
+                    @{
+                        //chi co nhom user admin va super admin moi duoc quyen them moi
+                        if (ViewBag.rolename == "admin" || ViewBag.rolename == "superadmin")
+                        {
+                            <a href="#" data-toggle="tooltip" data-placement="right" class="btn btn-primary themusr" title="Thêm tin"><i class="fa fa-plus">Thêm mới</i></a>
+                        }
+                    }
+
+
+                </div>
+                        }
+
+            @if (TempData["AlertMessage"] != null)
+            {
+                <div class='@TempData["AlertType"]' role="alert">
+                    <strong> @TempData["AlertMessage"]</strong>
+                </div>
+
+                TempData["AlertType"] = null;
+                TempData["AlertMessage"] = null;
+            }
+
+            <table class="table table-striped table-bordered table-hover table-condensed text-nowrap">
+                <thead>
+                    <tr id="LoadingStatusthongtin" style="color:red"></tr>
+                    <tr>
+                        <th>Quản lý</th>
+                        <th>tài khoản</th>
+                        <th>Họ tên</th>
+                        @*<th>Đại lý</th>*@
+                        <th>Chi nhánh</th>
+                        <th>Role</th>
+                        <th>Trạng thái</th>
+                    </tr>
+                </thead>
+                <tbody class="text-nowrap">
+                    @if (Model != null)
+                    {
+                        foreach (qlkdstDB.EF.users m in Model)
+                        {
+
+                            string urlDel = Url.Action("SetHideUser", "User") + "/" + m.userId;
+                            <tr>
+                                <td>
+                                    @*<span><i class="fa fa-edit fa-lg editusr" title="Sửa"  data-id="@m.userId" style="cursor:pointer;" /></span>
+                                        <a href='@urlDel' style="cursor:pointer;" onclick="return confirm('Bạn muốn xóa tài khoản này?')"><i class="fa  fa-lg fa-trash xoakhach" title="Xóa"  /></a>*@
+
+                                    <a href="#" data-id="@m.userId" data-toggle="tooltip" data-placement="right" class="btn btn-primary editusr" title="Cập nhật"><i class="fa fa-edit">Sửa</i></a>
+
+                                    @Html.ActionLink(
+                                        "Ẩn/Hiện",
+                                        "SetHideUser",
+                                        "User",
+                                        new { id = m.userId },
+                                        new { onclick = "return confirm('Bạn có muốn xóa usr này?')", @class = "btn btn-danger  fa fa-trash" }
+
+                                        )
+
+                                </td>
+                                <td>@m.username</td>
+                                <td>@m.fullName</td>
+                                @*<td>@m.daily</td>*@
+                                <td>@m.chinhanh</td>
+                                <td>@m.role</td>
+                                <td>
+                                    @{
+                                        string sTrangThai = "";
+                                        if (m.trangthai == true)
+                                        {
+                                            sTrangThai = "Sử dụng";
+                                        }
+                                        else
+                                        {
+                                            sTrangThai = "Ngưng dùng";
+                                        }
+                                    }
+                                    @sTrangThai
+
+                                </td>
+                            </tr>
+                                            }
+                                        }
+
+                </tbody>
+            </table>
+
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page, @searchString = @ViewBag.searchString }))
+
+            <!--END TABLE-->
+
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<div class="modal fade in" role="dialog" id="cuasouser">
+    <div class="cuaso-user"></div>
+</div>
+
+
+<script>
+    @*$('.editusr').click(function () {
+        debugger
+        var id = $(this).data('idk');//id khach san
+
+        var url = '@Url.Action("EditRoom", "QLKhachDoan")' + '/' + id;
+
+        window.location.href = url;
+    });*@
+
+    $('.editusr').click(function () {
+
+        var id = $(this).data('id');
+
+        var url = '@Url.Action("Edit", "User")' + '/' + id;
+        $.get(url, function (data) {
+
+            $("#cuasouser").modal();
+            $('.cuaso-user').html(data);
+        });
+
+    })
+
+    $('.themusr').click(function () {
+
+        var url = '@Url.Action("Create", "User")';
+        $.get(url, function (data) {
+            $("#cuasouser").modal();
+            $('.cuaso-user').html(data);
+        });
+
+    })
+
+
+</script>

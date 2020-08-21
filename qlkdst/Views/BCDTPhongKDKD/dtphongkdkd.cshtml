@@ -1,0 +1,323 @@
+﻿@using System.Data
+@using System.Globalization
+@model DataSet
+@using PagedList.Mvc;
+@{
+    ViewBag.Title = "Báo cáo doanh số theo tháng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!-- jQuery UI CSS Reference -->
+<link href="@Url.Content("~/Content/themes/base/jquery-ui.css")" rel="stylesheet" />
+
+
+
+<script>
+
+        $(function () { // will trigger when the document is ready
+            //$('.date-picker').datepicker({ dateFormat: 'dd/mm/yy' }); //Initialise any date pickers
+            $('.date-picker').datepicker({ dateFormat: 'dd/mm/yy' });
+
+        });
+
+</script>
+
+<style>
+    .tongcss {
+        width: 75px;
+        font-weight: bold;
+        background-color: #D3D3D3;
+    }
+
+    .horizontal-scrollbar {
+        overflow-x: auto; /*for horizontal scroll bar */
+        overflow-y: hidden; /*for hiding vertical scroll bar */
+    }
+</style>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        BÁO CÁO DOANH SỐ THEO THÁNG
+    </div>
+
+    <div class="panel-body">
+        <a href="#tour-top" id="toTop" style="display: block;"><span id="toTopHover" style="opacity: 0;"></span> <span id="toTopHover" style="opacity: 1;"> </span></a>
+
+        @using (Html.BeginForm("dtphongkdkd", "BCDTPhongKDKD", FormMethod.Get, htmlAttributes: new { @class = "form-horizontal" }))
+        {
+            <div class="col-xs-12">             
+                    
+                    <div class="form-group">
+                        <div class="col-md-2">
+                            <label  class="alert alert-info">Năm trước</label>
+                        </div>
+                      
+                        <div class="col-sm-1">
+                            <label for="txttungay">Từ tháng:</label>
+                        </div>
+                        <div class="col-sm-2">
+                            @Html.DropDownList("tuthang1", null,  new { @class = "form-control" })
+                        </div>
+                        <div class="col-sm-1">
+                            <label for="txtdenngay">Đến tháng:</label>
+                        </div>
+                        <div class="col-sm-2">
+                            @Html.DropDownList("denthang1", null,  new { @class = "form-control" })
+                        </div>
+                        <div class="col-sm-1">
+                            <label for="txtdenngay">Năm:</label>
+                        </div>
+                        <div class="col-sm-3">
+                            <input type="text" value="@ViewBag.nam1"  class="form-control" name="nam1"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-2">
+                            <label  class="alert alert-info">Năm báo cáo</label>
+                        </div>
+                        <div class="col-sm-1">
+                            <label for="txttungay">Từ tháng:</label>
+                        </div>
+                        <div class="col-sm-2">
+                            @Html.DropDownList("tuthang2", null,  new { @class = "form-control" })
+                        </div>
+                        <div class="col-sm-1">
+                            <label for="txtdenngay">Đến tháng:</label>
+                        </div>
+                        <div class="col-sm-2">
+                            @Html.DropDownList("denthang2", null,  new { @class = "form-control" })
+                        </div>
+                        <div class="col-sm-1">
+                            <label for="txtdenngay">Năm:</label>
+                        </div>
+                        <div class="col-sm-3">
+                            <input type="text" value="@ViewBag.nam2"  class="form-control" name="nam2"/>
+                        </div>
+                       
+                       
+                    </div>
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <label>Chi nhánh:</label>
+                    </div>
+                    <div class="col-sm-4">
+                        @Html.DropDownList("dlcn", null, new { @class = "form-control" })
+                    </div>
+                    <div class="col-sm-6">
+                        <button type="submit" class="btn btn-success"><i class="fa fa-search"></i>Tìm kiếm</button>
+                        @Html.ActionLink("Excel", "Excel", new { tuthang1 = @ViewBag.tuthang1val, denthang1 = @ViewBag.denthang1val, nam1 = @ViewBag.nam1, tuthang2 = @ViewBag.tuthang2val, denthang2 = @ViewBag.denthang2val, nam2 = @ViewBag.nam2, schinhanh = ViewBag.chinhanhSelected }, new { @class = "btn btn-primary" })
+                    </div>
+                </div>
+
+            </div>
+                 
+                    }
+
+                    <!--Danh sach tour-->
+                    <div class="col-sm-12 col-md-12" style="overflow-x: auto;">
+                        @if (@TempData["alertMessage"] != null)
+                        {
+                            <div class='alert @TempData["AlertType"]' role="alert">
+                                <h2>CÓ LỖI</h2>
+                                @TempData["alertMessage"]
+                            </div>
+
+                            //hien xong reset
+                            TempData["alertMessage"] = null;
+                            TempData["AlertType"] = null;
+                        }
+
+
+
+                        @{
+                            string sNam1 = "", sNam2 = "";
+                            //sNam1 = @DateTime.Parse(ViewBag.nam1).ToString("yyyy");
+                            //sNam2 = @DateTime.Parse(ViewBag.nam2).ToString("yyyy");
+                            sNam1 = ViewBag.nam1;
+                            sNam2 = ViewBag.nam2;
+                        }
+                        <!--TABLE-->
+                        <table id="table" class="table table-striped table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Tháng</th>
+                                    <th>Số khách năm @sNam1</th>
+                                    <th>Doanh số @sNam1</th>
+                                    <th>Doanh thu @sNam1</th>
+                                    <th>Số khách năm @sNam2</th>
+                                    <th>Doanh số @sNam2</th>
+                                    <th>Doanh thu @sNam2</th>
+                                    <th>Tỉ lệ SK</th>
+                                    <th>Tỉ lệ DT</th>
+                                </tr>
+                                @*<tr>
+                                    <th>A</th>
+                                    <th>B</th>
+                                    <th>B</th>
+                                    <th>C</th>
+                                    <th>D</th>
+                                    <th>D</th>
+                                    <th>C/A</th>
+                                    <th>D/B</th>
+                                </tr>*@
+                            </thead>
+                            <tbody class="text-nowrap">
+
+                                @if (Model != null)
+                                {
+
+                                    DataTable dt1 = Model.Tables[0];
+                                    DataTable dt2 = Model.Tables[1];
+
+
+
+                                    // decimal[] dTotal = new decimal[6];
+                                    decimal[] dTotal = new decimal[8];
+                                    decimal d1 = 0,d2=0;
+                                    //tinh tong truoc
+                                    foreach(DataRow row in dt1.Rows)
+                                    {
+                                        d1= @Decimal.Parse(row["doanhso"].ToString() == "" ? "0" : row["doanhso"].ToString());
+                                        dTotal[0] += @Decimal.Parse(row["sokhach"].ToString() == "" ? "0" : row["sokhach"].ToString());
+                                        dTotal[1] += d1;
+                                        dTotal[2] += d1 * 10/11;
+                                    }
+
+                                    foreach (DataRow row in dt2.Rows)
+                                    {
+                                        d2 = @Decimal.Parse(row["doanhso"].ToString() == "" ? "0" : row["doanhso"].ToString());
+                                        dTotal[3] += @Decimal.Parse(row["sokhach"].ToString() == "" ? "0" : row["sokhach"].ToString());
+                                        dTotal[4] += d2;
+                                        dTotal[5] += d2 * 10 / 11;
+                                    }
+
+                                    for (int i = 1; i <= 12; i++)
+                                    {
+                                        decimal dSK = 0, dDS = 0, dDT = 0;
+                                        decimal dSK1 = 0, dDS1 = 0, dDT1 = 0;
+
+                                        <tr>
+                                            <td>@i.ToString()</td>
+                                            <td>Tháng @i.ToString()</td>
+
+                                            @{
+                                            DataRow[] rs = dt1.Select("thang='" + i + "' AND nam='" + sNam1 + "'");
+
+                                            DataRow[] rs2 = dt2.Select("thang='" + i + "' AND nam='" + sNam2 + "'");
+
+                                            for (int i1 = 0; i1 < rs.Length; i1++)
+                                            {
+                                                dSK = dSK + @Decimal.Parse(@rs[i1]["sokhach"].ToString() == "" ? "0" : @rs[i1]["sokhach"].ToString());
+                                                dDS = dDS + @Decimal.Parse(@rs[i1]["doanhso"].ToString() == "" ? "0" : @rs[i1]["doanhso"].ToString());
+                                                dDT = dDS * 10 / 11;//Doanh thu = Doanh So / 1,1 = Doanh So / 11/10 =DS *10/11
+                                                                    //dTotal[0] += dSK;
+                                                                    //dTotal[1] += dDS;
+                                                                    //dTotal[2] += dDT;
+                                            }
+
+                                                <td>@string.Format("{0:N0}", dSK)</td>
+                                                <td>@string.Format("{0:N0}", dDS)</td>
+                                                <td>@string.Format("{0:N0}", dDT)</td>
+                                              
+
+                                                for (int i2 = 0; i2 < rs2.Length; i2++)
+                                                {
+                                                    dSK1 = dSK1 + @Decimal.Parse(@rs2[i2]["sokhach"].ToString() == "" ? "0" : @rs2[i2]["sokhach"].ToString());
+                                                    dDS1 = dDS1 + @Decimal.Parse(@rs2[i2]["doanhso"].ToString() == "" ? "0" : @rs2[i2]["doanhso"].ToString());
+                                                    dDT1 = dDS1 * 10 / 11;
+
+                                                    //dTotal[3] += dSK1;
+                                                    //dTotal[4] += dDS1;
+                                                    //dTotal[5] += dDT1;
+                                                }
+
+                                                <td> @string.Format("{0:N0}", dSK1) </td>
+                                                <td> @string.Format("{0:N0}", dDS1) </td>
+                                                <td> @string.Format("{0:N0}", dDT1) </td>
+
+                                                decimal dTyleCA = 0, dTyleDB = 0;
+
+                                              
+                                                if (dSK > 0)
+                                                {
+                                                    dTyleCA = dSK1 / dSK * 100;
+                                                }
+                                                else
+                                                {
+                                                    dTyleCA = 0;
+                                                }
+
+                                                if (dDT > 0)
+                                                {
+                                                    dTyleDB = dDT1 / dDT * 100;
+                                                }
+                                                else
+                                                {
+                                                    dTyleDB = 0;
+                                                }
+
+
+
+                                                <td>@string.Format("{0:N0}", dTyleCA)%</td>
+                                                <td>@string.Format("{0:N0}", dTyleDB)%</td>
+
+                                            }
+
+
+
+                                        </tr>
+
+                                                    //RESET VALUE
+                                                    //dSK = 0; dDS = 0; dDT = 0;
+                                                    //dSK1 = 0; dDS1 = 0; dDT1 = 0;
+
+                                                }  //end 12
+                                                   //them dong tong
+
+                                                decimal dTylePercentCA = 0, dTylePercentDB = 0;
+
+                                                if (dTotal[0] > 0)
+                                                {
+                                                    dTylePercentCA = dTotal[3] / dTotal[0] * 100;
+                                                }
+                                                else
+                                                {
+                                                    dTylePercentCA = 0;
+                                                }
+
+                                                if (dTotal[2] > 0) //lay cot doanh thu chia nhe, dTotal[3] doanh thu nam truoc
+                                                {
+                                                    dTylePercentDB = dTotal[5] / dTotal[2] * 100;
+                                                }
+                                                else
+                                                {
+                                                    dTylePercentDB = 0;
+                                                }
+
+                                                <tr>
+                                                    <td></td>
+                                                    <td><strong>Tổng Cộng:</strong></td>
+                                                    <td><strong>@string.Format("{0:N0}", dTotal[0])</strong></td>
+                                                    <td><strong>@string.Format("{0:N0}", dTotal[1])</strong></td>
+                                                    <td><strong>@string.Format("{0:N0}", dTotal[2])</strong></td>
+                                                    <td><strong>@string.Format("{0:N0}", dTotal[3])</strong></td>
+                                                    <td><strong>@string.Format("{0:N0}", dTotal[4])</strong></td>
+                                                    <td><strong>@string.Format("{0:N0}", dTotal[5])</strong></td>
+                                                    <td><strong>@string.Format("{0:N0}", dTylePercentCA)%</strong></td>
+                                                    <td><strong>@string.Format("{0:N0}", dTylePercentDB)%</strong></td>
+                                                </tr>
+
+
+
+                                                }
+
+
+                            </tbody>
+                        </table>
+                        <!--END TABLE-->
+
+                    </div>
+                    <!--/ Danh sach tour-->
+
+                </div>
+            </div>

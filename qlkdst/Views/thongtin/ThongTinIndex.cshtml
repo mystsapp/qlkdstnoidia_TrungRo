@@ -1,0 +1,151 @@
+﻿@model PagedList.IPagedList<qlkdstDB.EF.vie_tttour>
+@using PagedList.Mvc;
+@using qlkdst.Common
+@{
+    ViewBag.Title = " THÔNG TIN TOUR";
+    Layout = null;
+    string mTrangThaiTour = DungChung.GetTrangThaiTour(ViewBag.idtour);
+}
+
+<!-- //breadcrumbs -->
+<div class="inner_content_w3_agile_info two_in">
+
+    <!-- tables -->
+
+    <div class="agile-tables">
+        <div class="w3l-table-info agile_info_shadow">
+            <h3 class="w3_inner_tittle two"> THÔNG TIN TOUR</h3>
+
+            <div class="form-body">
+                <div>
+
+
+                    @using (Html.BeginForm("ThongTinIndex", "thongtin", FormMethod.Get, htmlAttributes: new { @class = "form-inline" }))
+                    {
+                        @*<div class="form-group">
+                                @Html.Label("Nội dung:", htmlAttributes: new { @class = "control-label col-sm-2" })
+                                <div class="col-sm-2">
+                                    <input type="text" value="@ViewBag.searchString" class="form-control" name="searchString" />
+                                </div>
+                            </div>*@
+
+
+                        <div class="form-group">
+                            @*<button type="submit" class="btn btn-success"><i class="fa fa-search"></i>Tìm kiếm</button>*@
+                            @if (mTrangThaiTour != "3" && mTrangThaiTour != "4")//tour chua thanh ly va chua bi huy moi hien nut them
+                            {
+                                <a href="#" data-toggle="tooltip" data-id="@ViewBag.idtour" data-placement="right" class="btn btn-primary themthongtin" title="Thêm tin"><i class="fa fa-plus">Thêm mới</i></a>
+                            }
+                            
+                        </div>
+                    }
+
+                </div>
+            </div>
+            <!--END FORM BODY-->
+            <!--TABLE-->
+            <table class="table table-striped table-bordered table-hover table-condensed text-nowrap">
+                <thead>
+                    <tr id="LoadingStatusthongtin" style="color:red"></tr>
+                    <tr>
+                        <th>Quản lý</th>
+                        <th>Nội dung</th>
+                        <th>Ngày tạo</th>                    
+                        <th>Người tạo</th>
+                    </tr>
+                </thead>
+                <tbody class="text-nowrap">
+                    @if (Model != null)
+                    {
+                        foreach (qlkdstDB.EF.vie_tttour m in Model)
+                        {
+
+                            string urlDel = Url.Action("Xoa", "thongtin") + "/" + m.id_nd;
+                            <tr>
+                                <td>
+                                    @if (mTrangThaiTour != "3")
+                                    {
+                                        <span><i class="fa fa-edit fa-lg editthongtin" title="Sửa vé" data-idk="@m.id_nd" data-id="@m.idtour" style="cursor:pointer;" /></span>
+
+                                        <a href='@urlDel' style="cursor:pointer;" onclick="return confirm('Bạn muốn xóa tin này?')"><i class="fa  fa-lg fa-trash xoakhach" title="Xóa vé" data-tour="@m.idtour" /></a>
+
+                                    }
+
+                                    @*@Html.ActionLink(
+                                        "Xoá",
+                                        "XoaKhach",
+                                        "thongtin",
+                                        new { id = m.id_dsk },
+                                        new { onclick = "return confirm('Bạn có muốn xóa mục này?')", @class = "btn btn-danger fa fa-lg fa-trash" }
+
+                                        )*@
+
+                                </td>
+                                <td>@m.noidungtin</td>
+                                <td>@(m.ngaytao.HasValue ? @m.ngaytao.Value.ToString("dd/MM/yyyy") : "")</td>
+                                <td>@m.username</td>                             
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+            </table>
+
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page, @searchString = @ViewBag.searchString }))
+
+            <!--END TABLE-->
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+<div class="modal fade in" role="dialog" id="cuasothongtin">
+    <div class="cuaso-thongtin"></div>
+</div>
+
+
+<script>
+    @*$('.editthongtin').click(function () {
+        debugger
+        var id = $(this).data('idk');//id khach san
+
+        var url = '@Url.Action("EditRoom", "QLKhachDoan")' + '/' + id;
+
+        window.location.href = url;
+    });*@
+
+    $('.editthongtin').click(function () {
+        
+        var id = $(this).data('idk');
+
+        var url = '@Url.Action("Edit", "thongtin")' + '/' + id;
+        $.get(url, function (data) {
+            
+            $("#cuasothongtin").modal();
+            $('.cuaso-thongtin').html(data);
+        });
+
+    })
+
+    $('.themthongtin').click(function () {
+        
+
+        var id = $(this).data('id');
+
+        var url = '@Url.Action("Insert", "thongtin")' + '/' + id;
+        $.get(url, function (data) {
+            
+            $("#cuasothongtin").modal();
+            $('.cuaso-thongtin').html(data);
+        });
+
+    })
+
+
+</script>

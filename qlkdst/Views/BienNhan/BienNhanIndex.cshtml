@@ -1,0 +1,156 @@
+﻿@model PagedList.IPagedList<qlkdstDB.EF.datcoc>
+@using PagedList.Mvc;
+@using qlkdst.Common
+@{
+    ViewBag.Title = "DANH SÁCH BIÊN NHẬN";
+    Layout = null;
+    string mTrangThaiTour = DungChung.GetTrangThaiTour(ViewBag.idtour);
+}
+
+<!-- //breadcrumbs -->
+<div class="inner_content_w3_agile_info two_in">  
+
+    <!-- tables -->
+
+    <div class="agile-tables">
+        <div class="w3l-table-info agile_info_shadow">
+            <h3 class="w3_inner_tittle two"> DANH SÁCH BIÊN NHẬN</h3>
+
+            <div class="form-body">
+                <div data-example-id="simple-form-inline">
+
+
+                   @using (Html.BeginForm("BienNhanIndex", "BienNhan", FormMethod.Get, htmlAttributes: new { @class = "form-inline" }))
+                   {
+                        @*<div class="form-group">
+                            @Html.Label("Tên Khách", htmlAttributes: new { @class = "control-label col-sm-2" })
+                            <div class="col-sm-2">
+                                <input type="text" value="@ViewBag.searchString" class="form-control" name="searchString" />
+                            </div>
+                        </div>*@
+
+
+                        <div class="form-group">
+                            @*<button type="submit" class="btn btn-success"><i class="fa fa-search"></i>Tìm kiếm</button>*@
+
+                            @if (mTrangThaiTour != "3" && mTrangThaiTour != "4")//tour chua thanh ly va chua bi huy moi hien nut them
+                            { 
+                                <a href="#" data-toggle="tooltip" data-id="@ViewBag.idtour" data-placement="right" class="btn btn-primary themdatcoc" title="Thêm đặt cộc"><i class="fa fa-plus">Thêm mới</i></a> 
+                            }
+
+                            
+                        </div>
+                    }
+
+                </div>
+            </div>
+            <!--END FORM BODY-->
+            <!--TABLE-->
+            <table class="table table-striped table-bordered table-hover table-condensed text-nowrap">
+                <thead>
+                    <tr id="LoadingStatusBienNhan" style="color:red"></tr>
+                    <tr>
+                        <th>Quản lý</th>
+                        <th>Ngày đặt cộc</th>
+                        <th>Số biên nhận</th>
+                        <th>Người làm biên nhận</th>
+                        <th>Tên khách</th>
+                        <th>Nội dung</th>
+                        <th>Số tiền</th>
+                        <th>Hình thức thanh toán</th>
+                    </tr>
+                </thead>
+                <tbody class="text-nowrap">
+                    @if (Model != null)
+                    {
+                        foreach (qlkdstDB.EF.datcoc m in Model)
+                        {
+
+                            string urlDel = Url.Action("Xoa", "BienNhan") + "/" + m.iddatcoc;
+                            
+
+                            <tr>
+                                <td>
+                                    <a id="btnRpt" href="~/Reports/WebFormInBN.aspx?tid=@m.iddatcoc" target="_blank" data-popup="width=600,height=800,scrollbars=yes"><i class="fa  fa-lg fa-print" title="In biên nhận" data-tour="@m.idtour" /></a>
+
+
+                                    @if (mTrangThaiTour != "3")
+                                    {
+                                        <span><i class="fa fa-edit fa-lg editbiennhan" title="Sửa biên nhận" data-idk="@m.iddatcoc" data-id="@m.idtour" style="cursor:pointer;" /></span>
+                                        <a href='@urlDel' style="cursor:pointer;" onclick="return confirm('Bạn muốn xóa biên nhận này?')"><i class="fa  fa-lg fa-trash xoakhach" title="Xóa biên nhận" data-tour="@m.idtour" /></a>
+                                    }                                    
+                                    
+                                </td>
+                                <td class="text-center">@(m.ngaydatcoc.HasValue ? @m.ngaydatcoc.Value.ToString("dd/MM/yyyy") : "")</td>
+                                <td class="text-center">@m.sobiennhan</td>
+                                <td>@m.nguoilambn</td>
+                                <td>@m.tenkhach</td>
+                                <td>@m.noidung</td>
+                                <td>@(m.sotien.HasValue ? decimal.Parse(m.sotien.ToString()).ToString("#,#") : "")</td>
+                                <td>@m.hinhthucthanhtoan</td>
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+            </table>
+
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page, @searchString = @ViewBag.searchString}))
+            
+            <!--END TABLE-->
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+<div class="modal fade in" role="dialog" id="cuasobn">
+    <div class="cuaso-bn"></div>
+</div>
+
+
+<script>
+    @*$('.editbiennhan').click(function () {
+        debugger
+        var id = $(this).data('idk');//id khach san
+
+        var url = '@Url.Action("EditRoom", "QLKhachDoan")' + '/' + id;
+       
+        window.location.href = url;
+    });*@
+
+    $('.editbiennhan').click(function () {
+        debugger
+
+        var id = $(this).data('idk');       
+
+        var url = '@Url.Action("Edit", "BienNhan")' + '/' + id;
+        $.get(url, function (data) {
+            debugger
+            $("#cuasobn").modal();
+            $('.cuaso-bn').html(data);
+        });
+
+    })
+
+    $('.themdatcoc').click(function () {
+        debugger
+        
+        var id = $(this).data('id');
+
+        var url = '@Url.Action("Insert", "BienNhan")' + '/' + id;
+        $.get(url, function (data) {
+            debugger
+            $("#cuasobn").modal();
+            $('.cuaso-bn').html(data);
+        });
+
+    })
+
+   
+</script>

@@ -1,0 +1,102 @@
+﻿@model qlkdstDB.EF.dmhoahong
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    /* Darker background on mouse-over */
+    .btn:hover {
+        background-color: RoyalBlue;
+    }
+</style>
+<!-- jQuery UI CSS Reference -->
+@*<link href="@Url.Content("~/Content/themes/base/jquery-ui.min.css")" rel="stylesheet" />*@
+
+<script>
+
+    $(function () { // will trigger when the document is ready
+        $('.date-picker').datepicker({ dateFormat: 'dd/mm/yy' });
+
+    });
+
+</script>
+
+
+<script src="~/Scripts/script-custom-validator.js"></script>
+
+
+<div class="wthree_general graph-form agile_info_shadow ">
+    <h3 class="w3_inner_tittle two">SỬA THÔNG TIN HOA HỒNG</h3>
+
+    <div class="grid-1">
+        <div class="form-body">
+
+            @using (Html.BeginForm("EditHoaHong", "QLKhachDoan", FormMethod.Post, new { @id = "frmHhEdit", @class = "form-horizontal" }))
+            {
+                @Html.AntiForgeryToken()
+                HtmlHelper.UnobtrusiveJavaScriptEnabled = false;
+                @Html.HiddenFor(model => model.idhoahong)
+                @Html.HiddenFor(model => model.idtour)
+
+                <div class="form-group">
+
+                    <label for="txtsalesnm" class="col-sm-2 control-label">   Tên Sales:</label>
+                    <div class="col-sm-4">
+                        @Html.TextBoxFor(model => model.salesnm, new { @id = "txtsalesnm", @class = "form-control", @readonly = "readonly" })
+                    </div>
+
+                    <label for="txttenkh" class="col-sm-2 control-label">   Tên khách:</label>
+                    <div class="col-sm-4">
+                        @Html.TextBoxFor(model => model.tenkhach, new { @id = "txttenkh", @class = "form-control" })
+                    </div>
+
+                </div>
+                <div class="form-group">
+
+                    <label for="txtcmnd" class="col-sm-2 control-label">   Số CMND:</label>
+                    <div class="col-sm-4">
+                        @Html.TextBoxFor(model => model.socmnd, new { @id = "txtcmnd", @class = "form-control" })
+                    </div>
+
+                    <label for="txtsotienhoahong" class="col-sm-2 control-label">  Số tiền:</label>
+                    <div class="col-sm-4">
+                        @Html.TextBoxFor(model => model.sotien, new { @id = "txtsotienhoahong", @class = "form-control numbers", @onkeypress = "return isNumber(event)" })
+                    </div>
+
+                </div>
+
+                <div class="col-sm-offset-2">
+                    <button name="submit" class="btn btn-primary" id="btnSave"><i class="fa fa-save"></i>Lưu</button>
+                    @*<button class="btn btn-primary" id="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-close"></i>Hủy</button>*@
+                    @Html.ActionLink("Hủy", "CancelHoaHong", "QLKhachDoan", new { id = @Model.idtour }, new { @class = "btn btn-danger fa fa-close" })
+                </div>
+
+            }
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+                $(function () {
+                    $(".date-picker").mask("99/99/9999");
+                });
+
+
+                function isNumber(evt) {
+                    evt = (evt) ? evt : window.event;
+                    var charCode = (evt.which) ? evt.which : evt.keyCode;
+                    if ((charCode > 31 && charCode < 48) || charCode > 57) {
+                        return false;
+                    }
+                    return true;
+                }
+
+                $(function () {
+                    $('.numbers').inputmask({ alias: 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'autoUnmask': true, 'removeMaskOnSubmit': true });
+                });
+
+
+</script>
+

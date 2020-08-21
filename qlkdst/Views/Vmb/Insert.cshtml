@@ -1,0 +1,317 @@
+﻿@model qlkdstDB.EF.vemaybay
+@{
+    ViewBag.Title = "Thêm vé";
+    Layout = null;
+}
+
+
+<script>
+
+    $(function () { // will trigger when the document is ready
+        $('.date-picker').datepicker({ dateFormat: 'dd/mm/yy' });
+
+    });
+
+
+
+</script>
+<script src="~/Scripts/script-custom-validator.js"></script>
+
+<div id="modaltr" class="modal-dialog modal-lg" style="width: 900px !important;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <a href="#" class="close" data-dismiss="modal">&times;</a>
+            <h4>Thêm vé</h4>
+        </div>
+        <form id="frmThemVmb">
+            @*@using (Html.BeginForm("Insert", "Vmb", FormMethod.Post, new { @id = "frmThemBN" }))
+                {*@
+            <div class="modal-body">
+
+
+                <h5 style="color:#ff6347">Thông tin vé</h5>
+                
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-md-2">
+                            Code đoàn
+                        </label>
+                        <div class="col-md-10">
+                            <input type="text" id="txtsgtcode" name="txtsgtcode" value="@ViewBag.sgtcode" placeholder="" class="form-control" disabled />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">
+                            Chuyến bay:
+                        </label>
+                        <div class="col-md-4">                            
+                            @Html.TextBoxFor(model => model.chuyenbay, new { @id = "txtchuyenbay", @class = "form-control" })
+                        </div>
+                        <label class="control-label col-md-2">
+                            Ngày bay:
+                        </label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(model => model.ngaybay, new { @id = "txtngaybay", @class = "form-control  date-picker glyphicon glyphicon-calendar" })<span style="color:red;">*</span>                            
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">
+                            Điểm đi;
+                        </label>
+                        <div class="col-md-4">                            
+                            @Html.TextBoxFor(model => model.diemdi, new { @id = "txtdiemdi", @class = "form-control" })<span style="color:red;">*</span>
+                        </div>
+                        <label class="control-label col-md-2">
+                            Điểm đến
+                        </label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(model => model.diemdi, new { @id = "txtdiemden", @class = "form-control" })<span style="color:red;">*</span>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">
+                            Giờ đi:
+                        </label>
+                        <div class="col-md-2">
+                            @Html.TextBoxFor(x => x.giodi, new { @id = "txtgiodi", @class = "form-control" })<span style="color:red;">*</span>
+                        </div>
+                        <label class="control-label col-md-2">
+                            Giờ đến:
+                        </label>
+                        <div class="col-md-2">
+                            @Html.TextBoxFor(x => x.gioden, new { @id = "txtgioden", @class = "form-control" })<span style="color:red;">*</span>
+                        </div>   
+                        <label class="control-label col-md-2">
+                            Chặng bay:
+                        </label>
+                        <div class="col-md-2">
+                            @Html.DropDownList("luotdive", null, "--Chọn--", new {@id="ddlLuotdive", @class = "form-control1" })                 
+                        </div>    
+                        
+                    </div>                
+                    <div class="form-group">
+                        <label class="control-label col-md-2">
+                            Số lượng vé ADL chuyến đi:
+                        </label>
+                        <div class="col-md-2">
+                            @Html.TextBoxFor(x => x.sove_adl_d, new { @id = "txtadl_d", @class = "form-control" })
+                        </div>
+                        <label class="control-label col-md-2">
+                            Số lượng vé CHL chuyến đi:
+                        </label>
+                        <div class="col-md-2">
+                            @Html.TextBoxFor(x => x.sove_chl_d, new { @id = "txtchl_d", @class = "form-control" })
+                        </div>
+                        <label class="control-label col-md-2">
+                            Số lượng vé INF chuyến đi:
+                        </label>
+                        <div class="col-md-2">
+                            @Html.TextBoxFor(x => x.sove_inf_d, new { @id = "txtinf_d", @class = "form-control" })
+                        </div>
+                    </div>            
+                    <div class="form-group">
+                        <label class="control-label col-md-2">
+                            Số lượng vé ADL chuyến về:
+                        </label>
+                        <div class="col-md-2">
+                            @Html.TextBoxFor(x => x.sove_adl_v, new { @id = "txtadl_v", @class = "form-control" })
+                        </div>
+                        <label class="control-label col-md-2">
+                            Số lượng vé CHL chuyến về:
+                        </label>
+                        <div class="col-md-2">
+                            @Html.TextBoxFor(x => x.sove_chl_v, new { @id = "txtchl_v", @class = "form-control" })
+                        </div>
+                        <label class="control-label col-md-2">
+                            Số lượng vé INF chuyến về:
+                        </label>
+                        <div class="col-md-2">
+                            @Html.TextBoxFor(x => x.sove_inf_v, new { @id = "txtinf_v", @class = "form-control" })
+                        </div>
+                    </div>                
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button id="btnaddVeMB" data-id="@ViewBag.idtour" type="submit" class="btn btn-danger">Lưu</button>
+                <button type="reset" class="btn btn-default" data-dismiss="modal">Đóng</button>
+            </div>
+            @*}*@
+
+        </form>
+    </div>
+</div>
+
+
+<script>
+
+    $('#ddlLuotdive').change(function () {
+
+        var dladl_d = $('#txtadl_d');
+        var dlchl_d = $('#txtchl_d');
+        var dlinf_d = $('#txtinf_d');
+        var dladl_v = $('#txtadl_v');
+        var dlchl_v = $('#txtchl_v');
+        var dlinf_v = $('#txtinf_v');
+
+        var l = $(this);
+
+        if (l.val() == "1") {//neu chon chan di , an cac o chan ve
+            dladl_d.prop('disabled', false);
+            dlchl_d.prop('disabled', false);
+            dlinf_d.prop('disabled', false);
+            dladl_v.prop('disabled', true);
+            dlchl_v.prop('disabled', true);
+            dlinf_v.prop('disabled', true);
+        } else { //va nguoc lai
+            dladl_d.prop('disabled', true);
+            dlchl_d.prop('disabled', true);
+            dlinf_d.prop('disabled', true);
+            dladl_v.prop('disabled', false);
+            dlchl_v.prop('disabled', false);
+            dlinf_v.prop('disabled', false);
+        }
+
+
+    });
+
+    //them khach vao roominglist
+    function addVeMB(id) {
+        debugger   
+
+        var data = JSON.stringify({
+            id: id,
+            chuyenbay: $('#txtchuyenbay').val(),
+            ngaybay: $('#txtngaybay').val(),
+            diemdi: $('#txtdiemdi').val(),
+            diemden: $('#txtdiemden').val(),
+            giodi: $('#txtgiodi').val(),
+            gioden: $('#txtgioden').val(),
+            luotdive: $('#ddlLuotdive').val(),
+            adl_d: $('#txtadl_d').val(),
+            chl_d: $('#txtchl_d').val(),
+            inf_d: $('#txtinf_d').val(),
+            adl_v: $('#txtadl_v').val(),
+            chl_v: $('#txtchl_v').val(),
+            inf_v: $('#txtinf_v').val()
+        
+        });
+
+        var vurl = '@Url.Action("ThemVmb", "Vmb")' + '/' + id;
+
+        return $.ajax({
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            type: 'POST',
+            url: vurl,//"/Room/addVeMB",
+            data: data,
+            success: function (result) {
+                $("#modaltr .close").click();
+                location.reload();
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                if (xhr.status == "200") {
+                    $("#modaltr .close").click();
+                    location.reload();
+                } else {
+                    alert(xhr.status);
+                }
+            }
+        });
+    }
+    //Collect Multiple Order List For Pass To Controller
+    $("#btnaddVeMB").click(function (e) {
+        //e.preventDefault();
+        var id = $(this).data('id');//id cua tour
+
+        $('#frmThemVmb').validate({
+            rules: {
+                'chuyenbay': {
+                    required: true
+                }
+                 ,
+                'ngaybay': {
+                    required: true
+                }
+                ,
+                'diemdi': {
+                    required: true
+                }
+                  ,
+                'diemden': {
+                    required: true
+                }
+                ,
+                'giodi': {
+                    maxlength: 12,
+                    required: true
+                }
+                ,
+                'gioden': {
+                    maxlength: 12
+                }
+                ,
+                'sove_adl_d': {
+                    number: true
+                }
+            }
+    ,
+            messages: {
+                'chuyenbay': {
+                    required: 'Phải nhập chuyến bay!'
+                }
+                ,
+                'ngaybay': {
+                    required: 'Phải chọn ngày bay!'
+                }
+                  ,
+                'diemdi': {
+                    required: 'Phải nhập điểm đi!'
+                }
+                ,
+                'diemden': {
+                    required: 'Phải nhập điểm đến!'
+                }
+                 ,
+                'giodi': {
+                    maxlength: 'Nhập tối đa 12 ký tự!',
+                    required: 'Phải nhập giờ đi!'
+                }
+                ,
+                'gioden': {
+                    maxlength: 'Nhập tối đa 12 ký tự!'
+                }
+                ,
+                'sove_adl_d': {
+                    number: 'Số vé phải là kiểu số!'
+                }
+            }
+            ,
+            submitHandler: function (form) {
+
+                addVeMB(id);
+            }
+
+        });
+
+        
+    
+    });
+
+    $('.timepicker').timepicker({
+        timeFormat: 'HH:mm',
+        //  defaultTime: 'now',
+        //  interval: 15, // 15 minutes
+        dropdown: true,
+        scrollbar: true,
+        zindex:1000
+    });
+
+    $(function () {
+        $(".date-picker").mask("99/99/9999");
+    });
+
+</script>
+
+

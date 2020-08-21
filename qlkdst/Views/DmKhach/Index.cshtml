@@ -1,0 +1,52 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    /* Darker background on mouse-over */
+    .btn:hover {
+        background-color: RoyalBlue;
+    }
+</style>
+@*@if (TempData["AlertType"] != null)
+    {
+        Html.RenderPartial("ErrorMessageView");
+        //reset
+        TempData["AlertType"] = null;
+    }*@
+
+<div class="wthree_general graph-form agile_info_shadow ">
+    <h3 class="w3_inner_tittle two">THÊM KHÁCH TOUR TỪ FILE EXCEL</h3>
+
+    <div class="grid-1">
+        <div class="form-body">
+
+            @using (Html.BeginForm("ImportFromExcel", "DmKhach", FormMethod.Post, new { @id = "frmImportExcel", enctype = "multipart/form-data" }))
+            {
+
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <a href="~/ExcelFiles/DmKhach/FileExcelKhachMau.xlsx">File Excel mẫu</a>
+                    </div>
+
+                </div>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            Chọn file:
+                            <input type="file" id="dataFile" name="uploadExcel" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="col-sm-offset-2">
+                        <button name="submit" class="btn btn-primary" id="btnSave"><i class="fa fa-save"></i>Lưu</button>
+                    </div>
+
+
+            }
+
+
+
+        </div>
+    </div>
+</div>
+
+
+

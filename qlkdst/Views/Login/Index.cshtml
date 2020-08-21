@@ -1,0 +1,84 @@
+﻿@model qlkdst.Models.LoginModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title - HỆ THỐNG QUẢN LÝ KHÁCH ĐOÀN NỘI ĐỊA.</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link rel="shortcut icon" href="/Content/image/favicon.ico" />
+</head>
+<body>
+    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="background-color:#3E5C9A;">
+        <!--navbar-header -->
+        <div class="navbar-header">
+
+            @*<div class="logo">
+                    <a href="#">
+                        <img src="/Content/image/logo-color-big1.png" alt="logo">
+                    </a>
+                </div>*@
+
+            <div class="logo text-left">
+                <a href="#" class="navbar-brand" style="color:white;">
+                    HỆ THỐNG QUẢN LÝ KHÁCH ĐOÀN NỘI ĐỊA
+                </a>
+            </div>
+
+        </div>  <!-- /.navbar-header -->
+    </nav>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <div class="login-panel panel panel-default">
+                    <div class="panel-heading">
+
+                        <h3 class="panel-title text-center">ĐĂNG NHẬP</h3>
+                    </div>
+                    <div class="panel-body">
+                        @using (Html.BeginForm("Login", "Login", FormMethod.Post))
+                        {
+                            @Html.ValidationSummary(false, "", new { @class = "alert-danger" });
+                            <fieldset>
+                                <div class="form-group input-group">
+                                    <span class="input-group-addon"><i class="fa fa-user" style="color:black"></i></span>
+                                    @Html.TextBoxFor(model => model.username, new { @class = "form-control", @autofocus = "autofocus", placeholder = "Tên đăng nhập" })
+
+                                </div>
+                                <div class="form-group input-group">
+                                    <span class="input-group-addon"><i class="fa fa-key "></i></span>
+                                    @Html.PasswordFor(model => model.password, new { @class = "form-control", placeholder = "Mật khẩu" })
+
+                                </div>                             
+                                <!-- Change this to a button or input when using this as a form -->
+
+                                <button type="submit" class="btn btn-primary btn-block">Đồng ý</button>
+
+                            </fieldset>
+                        }
+                        @if (TempData["AlertMessage"] != null)
+                        {
+                            <div class='@TempData["AlertType"]' role="alert">
+                                <strong> @TempData["AlertMessage"]</strong>
+                            </div>
+
+                            TempData["AlertType"] = null;
+                            TempData["AlertMessage"] = null;
+                        }
+                    </div>
+                </div>
+            </div>
+        </div> <!--end row-->
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/vendor")
+
+</body>
+</html>

@@ -1,0 +1,178 @@
+﻿@model qlkdstDB.EF.roominglist
+@{
+    ViewBag.Title = "GetDataRoomingForEdit";
+    Layout = null;
+}
+
+@*<div class="modal fade" id="editOrderModal">*@
+    <div class="modal-dialog modal-lg" style="width: 900px !important;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4>Thêm khách cho rooming list</h4>
+            </div>
+            <form id="frmKsEdit">
+                <div class="modal-body">
+
+                    <h5 style="color:#ff6347">Thông tin khách sạn</h5>
+                    <hr /><input type="hidden" name="hididtourEdit" id="hididtourEdit" value="@Model.idtour" />
+                    <div class="form-horizontal">
+                        <input type="hidden" id="CustomerIdEdit" />
+                        <div class="form-group">
+                            <label class="control-label col-md-2">
+                                Tên khách sạn
+                            </label>
+                            <div class="col-md-10">
+                                <input type="text" id="tenksEdit" name="tenksEdit" class="form-control" disabled  value="@Model.tenkhachsan"/>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <h5 style="margin-top:10px;color:#ff6347">Danh sách khách</h5>
+                    <hr />
+                    <div class="form-horizontal">
+                        <input type="hidden" id="id_roomlistEdit" value="@Model.id_roomlist"/>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">
+                                Số phòng
+                            </label>
+                            <div class="col-md-2">
+                                <input type="text" id="txtsophongEdit" name="txtsophongEdit" placeholder="Số phòng" class="form-control" />
+                            </div>
+                            <label class="control-label col-md-2">
+                                Loại phòng
+                            </label>
+                            <div class="col-md-6">
+                                @Html.DropDownList("loaiphong", null, String.Empty, new { @class = "form-control", @id = "ddlloaiphongEdit" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-2">
+                                Tên khách
+                            </label>
+                            <div class="col-md-4">
+                                @Html.DropDownList("id_dsk", null, String.Empty, new { @class = "form-control", @id = "ddlkhachEdit" })
+                            </div>
+                            <div class="col-md-2 col-lg-offset-4">
+                                <a id="addToListEdit" class="btn btn-primary">Thêm khách</a>
+                            </div>
+                        </div>
+
+                        <table id="detailsTableEdit" class="table">
+                            <thead>
+                                <tr>
+                                    <th style="width:15%">Số phòng</th>
+                                    <th style="width:25%">Loại phòng</th>
+                                    <th style="width:30%">Tên khách</th>
+                                    <th>
+
+                                    </th>
+                                    <th style="width:30%">Quản lý</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="editOrder" type="submit" class="btn btn-danger">Lưu</button>
+                    <button type="reset" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                </div>
+            </form>
+        </div>
+    </div>
+@*</div>*@
+
+<script>
+
+    //Edit Multiple Order.
+    $("#addToListEdit").click(function (e) {
+        e.preventDefault();
+
+        if ($.trim($("#txtsophongEdit").val()) == "" || $.trim($("#ddlloaiphongEdit").val()) == "" || $.trim($("#ddlkhachEdit").val()) == "") return;
+
+        var txtsophong = $("#txtsophongEdit").val(),
+            tenkhach = $("#ddlkhachEdit option:selected").text(),
+            loaiphong = $("#ddlloaiphongEdit").val(),
+            idkhach = $("#ddlkhachEdit").val(),
+            detailsTableBody = $("#detailsTableEdit tbody");
+
+        var khachitem = '<tr><td>' + txtsophong + '</td><td>' + loaiphong + '</td><td>' + tenkhach + '</td><td>' + idkhach + '</td><td><a data-itemId="0" href="#" class="deleteItem">Remove</a></td></tr>';
+        detailsTableBody.append(khachitem);
+        clearItemEdit();
+    });
+    //After Add A New Order In The List, Clear Clean The Form For Add More Order.
+    function clearItemEdit() {
+        $("#txtsophongEdit").val('');
+        $("#ddlloaiphongEdit").val('');
+        $("#ddlkhachEdit").val('');
+        $("#hidkhachEdit").val('');
+    }
+
+    //remove dong moi them neu khong muon
+    $(document).on('click', 'a.deleteItemEdit', function (e) {
+        e.preventDefault();
+        var $self = $(this);
+        if ($(this).attr('data-itemIdEdit') == "0") {
+            $(this).parents('tr').css("background-color", "#ff6347").fadeOut(800, function () {
+                $(this).remove();
+            });
+        }
+    });
+    //them khach vao roominglist
+    function addKhach(data) {
+        return $.ajax({
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            type: 'POST',
+            url: "/Room/AddKhach",
+            data: data,
+            success: function (result) {
+                alert(result);
+                location.reload();
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert(xhr.status);
+            }
+        });
+    }
+    //Collect Multiple Order List For Pass To Controller
+    $("#editOrder").click(function (e) {
+        e.preventDefault();
+    debugger
+        //lay id roominglist de truyen cho chi tiet
+        var id=$('#id_roomlistEdit').val();
+        //sau khi lay thi reset
+        $('#id_roomlistEdit').val("");
+
+        var khachArr = [];
+        khachArr.length = 0;
+
+        $.each($("#detailsTableEdit tbody tr"), function () {
+            debugger
+            khachArr.push({
+                sophong: $(this).find('td:eq(0)').html(),
+                loaiphong: $(this).find('td:eq(1)').html(),
+                id_dsk: $(this).find('td:eq(3)').html()
+            });
+        });
+
+        var data = JSON.stringify({
+            id:id,
+            khachs: khachArr
+        });
+
+        $.when(addKhach(data)).then(function (response) {
+            console.log(response);
+        }).fail(function (err) {
+            console.log(err);
+        });
+    });
+
+
+</script>
+
+
+ 

@@ -1,0 +1,149 @@
+﻿@model qlkdstDB.EF.dmkhachtour
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    /* Darker background on mouse-over */
+    .btn:hover {
+        background-color: RoyalBlue;
+    }
+</style>
+<!-- jQuery UI CSS Reference -->
+@*<link href="@Url.Content("~/Content/themes/base/jquery-ui.min.css")" rel="stylesheet" />*@
+
+<script>
+
+    $(function () { // will trigger when the document is ready
+        $('.date-picker').datepicker({ dateFormat: 'dd/mm/yy' });
+
+    });
+
+</script>
+
+
+<script src="~/Scripts/script-custom-validator.js"></script>
+
+
+<div class="wthree_general graph-form agile_info_shadow ">
+    <h3 class="w3_inner_tittle two">THÊM KHÁCH TOUR</h3>
+
+    <div class="grid-1">
+        <div class="form-body">
+
+            @using (Html.BeginForm("EditKhachTour", "QLKhachDoan", FormMethod.Post, new { @id = "frmDmkhachtour", @class = "form-horizontal" }))
+            {
+                @Html.AntiForgeryToken()
+                HtmlHelper.UnobtrusiveJavaScriptEnabled = false;
+                @Html.HiddenFor(model => model.idtour)
+                @Html.HiddenFor(model => model.id_dsk)
+
+                <div class="form-group">
+                    <label for="areaname" class="col-sm-2 control-label">   Tên khách:</label>
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(model => model.tenkhach, new { @class = "form-control" })
+                    </div>
+
+                    <label for="actionnm" class="col-sm-2 control-label">   hộ chiếu:</label>
+                    <div class="col-sm-2">
+                        @Html.TextBoxFor(model => model.hochieu, new { @class = "form-control" })
+                    </div>
+
+
+                </div>
+                <div class="form-group">
+
+                    <label for="controllernm" class="col-sm-2 control-label">   Hiệu lực hộ chiếu:</label>
+                    <div class="col-sm-2">
+                        @Html.TextBoxFor(model => model.hieuluchochieu, new { @class = "form-control date-picker glyphicon glyphicon-calendar" })
+                    </div>
+
+                    <label for="areaname" class="col-sm-2 control-label">  Ngày sinh:</label>
+                    <div class="col-sm-2">
+                        @Html.TextBoxFor(model => model.ngaysinh, new { @class = "form-control date-picker glyphicon glyphicon-calendar" })
+                    </div>
+
+                    <label for="actionnm" class="col-sm-2 control-label">   Số CMND:</label>
+                    <div class="col-sm-2">
+                        @Html.TextBoxFor(model => model.socmnd, new { @class = "form-control" })
+                    </div>
+
+
+                </div>
+                <div class="form-group">
+
+                    <label for="controllernm" class="col-sm-2 control-label">   Ngày CMND:</label>
+                    <div class="col-sm-2">
+                        @Html.TextBoxFor(model => model.ngaycmnd, new { @class = "form-control date-picker glyphicon glyphicon-calendar" })
+                    </div>
+
+                    <label for="areaname" class="col-sm-2 control-label">  Nơi cấp:</label>
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(model => model.noicapcmnd, new { @class = "form-control" })
+                    </div>
+
+                </div>
+                <div class="form-group">
+
+                    <label for="actionnm" class="col-sm-2 control-label">   Phái:</label>
+                    <div class="col-sm-2">
+                        @*@Html.DropDownList("Dlphai", new List<SelectListItem>
+                            {
+                               new SelectListItem {Text = "Nam", Value = "1"},
+                               new SelectListItem {Text = "Nữ", Value = "2"},
+                               new SelectListItem {Text = "Khác", Value = "3"}
+
+                            }, "--- Chọn ---", new { @class = "form-control" })*@
+                        @Html.DropDownList("phai", null, "--Chọn--", new { @class = "form-control1" })
+                    </div>
+
+                    <label for="controllernm" class="col-sm-2 control-label">   Điện thoại:</label>
+                    <div class="col-sm-2">
+                        @Html.TextBoxFor(model => model.dienthoai, new { @class = "form-control" })
+                    </div>
+
+                    <label for="areaname" class="col-sm-2 control-label">  Quốc tịch:</label>
+                    <div class="col-sm-2">
+                        @Html.TextBoxFor(model => model.quoctich, new { @class = "form-control" })
+                    </div>
+
+                </div>
+
+                <div class="col-sm-offset-2">
+                    <button name="submit" class="btn btn-primary" id="btnSave"><i class="fa fa-save"></i>Lưu</button>
+                    @*<button class="btn btn-primary" id="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-close"></i>Hủy</button>*@
+                    @Html.ActionLink("Hủy", "Cancel", "QLKhachDoan", null, new { @class = "btn btn-danger fa fa-close" })
+                </div>
+
+            }
+
+        </div>
+    </div>
+</div>
+
+
+@*<div class="modal fade in" role="dialog" id="cuasoDmkhach">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header alert alert-info">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title "><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>THÊM KHÁCH TOUR</h4>
+                </div>
+                <div class="modal-body">
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+
+<script>
+                $(function () {
+                    $(".date-picker").mask("99/99/9999");
+                });
+
+</script>
+

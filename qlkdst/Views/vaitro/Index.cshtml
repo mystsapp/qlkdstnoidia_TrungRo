@@ -1,0 +1,165 @@
+﻿@model PagedList.IPagedList<qlkdstDB.EF.roles>
+@using PagedList.Mvc;
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<!-- breadcrumbs -->
+@*<div class="w3l_agileits_breadcrumbs">
+    <div class="w3l_agileits_breadcrumbs_inner">
+        <ul>
+            <li><a href=@Url.Action("Index","Home")>Trang chủ</a><span>«</span></li>
+
+            <li>Menu chính</li>
+        </ul>
+    </div>
+</div>*@
+<!-- //breadcrumbs -->
+<div class="inner_content_w3_agile_info two_in">
+    @*<h2 class="w3_inner_tittle">QUẢN LÝ</h2>*@
+
+    <!-- tables -->
+
+    <div class="agile-tables">
+        <div class="w3l-table-info agile_info_shadow">
+            <h3 class="w3_inner_tittle two">DANH MỤC VAI TRÒ</h3>
+
+            <div class="form-body">
+                <div data-example-id="simple-form-inline">
+
+
+                    @using (Html.BeginForm("Index", "vaitro", FormMethod.Get, new { @class = "form-inline" }))
+                    {
+                        <div class="form-group">
+                            @Html.Label("Tên vai trò", htmlAttributes: new { @class = "col-sm-2 control-label" })
+                            <div class="col-sm-4">
+                                <input type="text" value="@ViewBag.searchString" class="form-control" name="searchString" />
+                            </div>                        
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-success"><i class="fa fa-search"></i>Tìm kiếm</button>
+                            <a href="#" data-toggle="tooltip" data-placement="right" class="btn btn-primary themkhu" title="Thêm khu"><i class="fa fa-plus">Thêm mới</i></a>
+                        </div>
+                    }
+
+                </div>
+            </div>
+            <!--END FORM BODY-->
+
+            @if (TempData["AlertMessage"] != null)
+            {
+                <div class='@TempData["AlertType"]' role="alert">
+                    <strong> @TempData["AlertMessage"]</strong>
+                </div>
+
+                TempData["AlertType"] = null;
+                TempData["AlertMessage"] = null;
+            }
+
+            <!--TABLE-->
+            <table id="table" class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Mã</th>
+                        <th>Tên vai trò</th>
+                        <th>Ghi chú</th>
+                        <th>Quản lý</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr id="row_@item.id" data-id="@item.id" class="khu">
+                            <td>@item.id</td>
+                            <td>@item.roleName</td>
+                            <td>@item.description</td>
+                            <td class="col-md-2">
+
+                                <a href="#" data-id="@item.id" data-toggle="tooltip" data-placement="right" class="btn btn-primary editkhu" title="Cập nhật"><i class="fa fa-edit">Sửa</i></a>
+
+
+                                @Html.ActionLink(
+                                        "Xoá",
+                                        "Delete",
+                                        "vaitro",
+                                        new { id = item.id },
+                                        new { onclick = "return confirm('Bạn có muốn xóa mục này?')", @class = "btn btn-danger  fa fa-trash" }
+
+                                        )
+                            </td>
+                        </tr>
+                    }
+                    @Html.PagedListPager(Model, page => Url.Action("Index", new { page, @searchString = @ViewBag.searchString }))
+                </tbody>
+            </table>
+
+
+
+            <!--END TABLE-->
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+
+
+<script>
+
+
+            $(document).ready(function () {
+                $('#table').basictable({
+                    tableWrapper: true
+                });
+            });
+
+
+            $(function () {
+                $('.themkhu').click(function () {
+                    var url = '@Url.Action("Create", "vaitro")';
+
+                    window.location.href = url;
+                });
+
+                $('.editkhu').click(function () {
+                    var id = $(this).data('id');
+                    var url = '@Url.Action("Edit", "vaitro")' + '/' + id;
+
+                    window.location.href = url;
+
+                });
+
+            })
+
+
+            $('#btnXoa').click(function () {
+                var btn = $(this);
+                var id = btn.data('id');
+
+                var urlaction = '@Url.Action("Delete", "vaitro")';
+
+                $.ajax({
+                    url: urlaction,
+                    type: 'POST',
+                    data: { id: id },
+                    success: function (res) {
+                        if (res) {
+                            alert("ok");
+                        }
+                        else {
+
+                        }
+                    }
+                });
+            });
+
+
+</script>
+

@@ -1,0 +1,26 @@
+﻿@model qlkdstDB.EF.dmkhachhang
+@{
+    ViewBag.Title = "LayLichSuThamGiaTour";
+    Layout = null;
+}
+
+
+
+@if (Model != null)
+{
+    <h3>@Model.tengiaodich</h3>
+    <h4>LỊCH SỬ THAM GIA TOUR</h4>
+    <p>
+        @Model.lsthamgiatour
+    </p>
+
+    <h4>LƯU Ý KHI GIAO DỊCH VỚI KHÁCH HÀNG</h4>
+    <p>
+        @Model.ghichukhigiaodich
+    </p>
+}else
+{
+    <p>Chưa có thông tin nào!</p>
+}
+
+

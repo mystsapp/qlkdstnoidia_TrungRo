@@ -1,0 +1,48 @@
+﻿@model qlkdstDB.EF.tour
+@using qlkdst.Common
+@{
+    ViewBag.Title = "Danh sách khách đi tour";
+    Layout = null;
+}
+<!-- //breadcrumbs -->
+<div class="inner_content_w3_agile_info two_in">
+
+    <!-- tables -->
+
+    <div class="agile-tables">
+        <div class="w3l-table-info agile_info_shadow">
+            <h3 class="w3_inner_tittle two">  DANH SÁCH KHÁCH ĐI TOUR</h3>
+
+            <div class="form-body">
+                <div>
+
+                    @{
+                        string sFilePath = ViewBag.ViewUploadPath + Model.filekhachditour;
+
+                        string encodePath = DungChung.FTP_PATH + DungChung.DSKHACH_FTP_PATH + Model.filekhachditour;
+                        encodePath = encodePath.Replace(":", "aabbccddee");
+                        encodePath = encodePath.Replace("/", "asdfghjkl");
+                        encodePath = encodePath.Replace("+", "aqwsedrf");
+
+                    }
+
+                    @if (Model.filekhachditour != null)
+                    {
+                        <a href="@Url.Action("ShowSoftwareNewJsTreeFTP", "QLKhachDoan",new { path = encodePath })" target="_blank">
+                            @Model.filekhachditour
+                        </a>
+                    }
+
+
+                </div>
+            </div>
+            <!--END FORM BODY-->
+
+        </div>
+
+
+    </div>
+
+
+</div>
+

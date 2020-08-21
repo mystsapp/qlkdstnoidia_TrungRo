@@ -1,0 +1,151 @@
+﻿@model PagedList.IPagedList<qlkdstDB.EF.vie_dsmenu>
+@using PagedList.Mvc;
+
+@{
+    
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- breadcrumbs -->
+@*<div class="w3l_agileits_breadcrumbs">
+    <div class="w3l_agileits_breadcrumbs_inner">
+        <ul>
+            <li><a href=@Url.Action("Index","Home")>Trang chủ</a><span>«</span></li>
+
+            <li>Danh sách menu</li>
+        </ul>
+    </div>
+</div>*@
+<!-- //breadcrumbs -->
+<div class="inner_content_w3_agile_info two_in">
+    @*<h2 class="w3_inner_tittle">QUẢN LÝ</h2>*@
+
+    <!-- tables -->
+
+    <div class="agile-tables">
+        <div class="w3l-table-info agile_info_shadow">
+            <h3 class="w3_inner_tittle two">DANH SÁCH MENU</h3>
+
+            <div class="form-body">
+                <div data-example-id="simple-form-inline">
+
+
+                    @using (Html.BeginForm("Index", "SubMenu", FormMethod.Get, htmlAttributes: new { @class = "form-inline" }))
+                    {
+                        <div class="form-group">
+                            @Html.Label("Tên menu", htmlAttributes: new { @class = "control-label col-sm-2" })
+                            <div class="col-sm-2">
+                                <input type="text" value="@ViewBag.searchString" class="form-control" name="searchString" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("Loại người dùng:", htmlAttributes: new { @class = "control-label col-sm-2" })                            
+                            <div class="col-sm-2">
+                                @Html.DropDownList("Role", null, "--Chọn loại--", new { @id = "txtLoaiND", @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-success"><i class="fa fa-search"></i>Tìm kiếm</button>
+                            <a href="#" data-toggle="tooltip" data-placement="right" class="btn btn-primary themkhu" title="Thêm khu"><i class="fa fa-plus">Thêm mới</i></a>
+                        </div>
+                    }
+
+                </div>
+            </div>
+            <!--END FORM BODY-->
+            <!--TABLE-->
+            <table id="table" class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Menu ID</th>
+                        <th>Tên menu</th>
+                        <th>Area MVC</th>
+                        <th>Khu</th>
+                        <th>Loại người dùng</th>
+                        <th>Action</th>
+                        <th>Controller</th>
+                        <th>Css Class</th>
+                        <th>Hiển thị</th>
+                        <th>Thứ tự sắp xếp</th>
+                        <th>Quản lý</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr id="row_@item.menuid" data-id="@item.menuid" class="khu">
+                            <td>@item.menuid</td>
+                            <td>@item.menunm</td>
+                            <td>@item.areamvc</td>
+                            <td>@item.areaname</td>
+                            <td>@item.role</td>
+                            <td>@item.actionnm</td>
+                            <td>@item.controllernm</td>
+                            <td>@item.classcss</td>
+                            <td>@item.show_mk</td>
+                            <td>@item.thutu</td>
+                            <td>
+                                <a href="#" data-id="@item.menuid" data-toggle="tooltip" data-placement="right" class="btn btn-primary editkhu" title="Cập nhật"><i class="fa fa-edit">Sửa</i></a>
+
+
+
+                                @Html.ActionLink(
+                                        "Xoá",
+                                        "Delete",
+                                        "SubMenu",
+                                        new { id = item.menuid },
+                                        new { onclick = "return confirm('Bạn có muốn xóa menu này?')", @class = "btn btn-danger  fa fa-trash" }
+
+                                        )
+                                @*<a href="#" data-id="@item.menuid" data-toggle="tooltip" data-placement="right" class="btn btn-danger btnXoa" title="Cập nhật"><i class="fa fa-edit">Ẩn/Hiện</i></a>*@
+
+                            </td>
+                        </tr>
+                    }
+                    @Html.PagedListPager(Model, page => Url.Action("Index", new { page, @searchString = @ViewBag.searchString }))
+                </tbody>
+            </table>
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page, @searchString = @ViewBag.searchString, @Role = @ViewBag.RoleSelected }))
+
+
+            <!--END TABLE-->
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+<script>
+    $(function () {
+        $('.themkhu').click(function () {
+            var url='@Url.Action("Create", "SubMenu")';
+            //$.get(url, function(data){
+            //    $('#themkhu').modal('show');
+            //    $('.them-khu').html(data);
+            //});
+
+            window.location.href = url;
+        });
+
+        $('.editkhu').click(function () {
+            var id = $(this).data('id');
+            var url = '@Url.Action("Edit", "SubMenu")'+'/'+id;
+
+            //$.get(url, function (data) {
+            //    $('#themkhu').modal('show');
+            //    $('.them-khu').html(data);
+            //});
+
+            window.location.href = url;
+
+         });
+    })
+
+
+   
+</script>

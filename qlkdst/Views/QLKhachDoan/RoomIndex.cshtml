@@ -1,0 +1,428 @@
+﻿@model List<qlkdstDB.EF.roominglist>
+@using qlkdst.Common
+@{
+    ViewBag.Title = "Tạo rooming list";
+    Layout = null;
+
+    string mTrangThaiTour = DungChung.GetTrangThaiTour(ViewBag.idtour);
+}
+<script>
+
+    $(function () { // will trigger when the document is ready
+        $('.date-picker').datepicker({ dateFormat: 'dd/mm/yy' });
+
+    });
+
+</script>
+
+
+<script src="~/Scripts/script-custom-validator.js"></script>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        TẠO ROOMING LIST
+    </div>
+
+    <div class="panel-body">
+        <a href="#tour-top" id="toTop" style="display: block;"><span id="toTopHover" style="opacity: 0;"></span> <span id="toTopHover" style="opacity: 1;"> </span></a>
+
+        @using (Html.BeginForm("RoomIndex", "QLKhachDoan", FormMethod.Get, htmlAttributes: new { @class = "form-inline" }))
+        {
+            <div class="col-xs-12">
+                <div class="col-xs-6">
+                    <div class="input-group">
+                        
+                        <span class="input-group-btn">
+                        @if (mTrangThaiTour != "3" && mTrangThaiTour != "4")//tour chua thanh ly va chua bi huy moi hien nut them
+                        {
+                            <a href="#" data-toggle="tooltip" data-id="@ViewBag.idtour" data-placement="right" class="btn btn-primary themroominglist" title="Thêm mới"><i class="fa fa-plus">Thêm mới</i></a>
+                        }                         
+
+                        </span>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <!--Danh sach tour-->
+        <div class="col-sm-12 col-md-12" style="overflow-x: auto">
+
+            @if (Model.Count() != 0)
+            {
+    <!--TABLE-->
+                <table class="table table-striped table-bordered table-hover table-condensed text-nowrap">
+                    <thead>
+                        <tr>
+                            <th>Quản lý</th>
+                            <th>Tên Khách sạn</th>
+                            @*<th>code đoàn</th>*@
+
+                        </tr>
+                    </thead>
+                    <tbody class="text-nowrap">
+                        @if (Model != null)
+                        {
+                            foreach (qlkdstDB.EF.roominglist m in Model)
+                            {
+
+                                string urlDel = Url.Action("DeleteRoom", "QLKhachDoan") + "/" + m.id_roomlist;
+                                string urlExcel = Url.Action("ExportRoom", "QLKhachDoan") + "/" + m.id_roomlist;
+                                <tr>
+                                    <td>
+                                        @if (mTrangThaiTour != "3")
+                                        {
+                                            <span><i class="fa fa-edit fa-lg editks" title="Sửa thông tin khách sạn" data-idk="@m.id_roomlist" style="cursor:pointer;" /></span>
+
+                                            <a href='@urlDel' style="cursor:pointer;" onclick="return confirm('Bạn muốn xóa?');"><i class="fa  fa-lg fa-trash xoaks" title="Xóa khách sạn" data-idk="@m.id_roomlist" /></a>
+
+                                            <a href='#' style="cursor:pointer;"><i class="fa  fa-lg fa-plus themkhachvaoroom" title="Thêm khách" data-id="@m.id_roomlist" data-tour="@m.idtour" /></a>
+
+                                            <a href='@urlExcel' style="cursor:pointer;"><i class="fa  fa-lg fa-file-excel-o" title="Xuất Excel Rooming List" /></a>
+                                        }                                        
+
+                                    </td>
+                                    <td class="text-center">@m.tenkhachsan</td>
+
+                                </tr>
+                                <!--dong chi tiet-->
+                                <tr>
+                                    <td colspan="2">
+                                        <table class="table table-bordered tabchitiet">
+                                            <tbody>
+                                                <tr>
+                                                    <th>Quản lý</th>
+                                                    <th>Số phòng</th>
+                                                    <th>Loại phòng</th>
+                                                    <th>Tên khách</th>
+                                                </tr>
+                                           
+                                                @foreach (var kh in m.roominglistd)
+                                                {
+                                                    string sTenKH = "";
+                                                    string urlXoaKhach = Url.Action("XoaKhachRoom", "QLKhachDoan") + "/" + kh.id_roomlistd;                                                                                                   
+
+                                                    <tr>
+                                                        <td>
+                                                        
+                                                        @if (mTrangThaiTour != "3")
+                                                        {
+                                                            <a href='#' onclick="xoakhachkhoiroom(@kh.id_roomlistd)" style="cursor:pointer;"><i class="fa  fa-lg fa-trash" title="Xóa khách" /></a>
+                                                        }                                                       
+                                                        
+                                                        </td>
+
+                                                        <td>@kh.sophong</td>
+                                                        <td>@kh.loaiphong</td>
+                                                        
+                                                        <td>
+                                                            @{
+                                                            sTenKH = qlkdst.Controllers.RoomController.GetTenKhach(kh.id_dsk);
+                                                        }
+                                                        @sTenKH
+                                                    </td>
+                                                </tr>
+
+                                                            }
+                                            </tbody>
+                                        </table>
+                                    </td>
+
+                                </tr>
+                                                                }
+                                                            }
+
+                    </tbody>
+                </table>
+
+            <!--END TABLE-->
+                                                            }
+
+
+
+        </div>
+
+        <!--/ Danh sach tour-->
+
+    </div>
+</div>
+
+
+<div class="modal fade in" role="dialog" id="them-khach">
+    <div class="them-khach1"></div>
+</div>
+
+@*Desing Bootdtrap Modal With Order Form*@
+
+<div class="modal fade" id="newOrderModal">
+    <div class="modal-dialog modal-lg" style="width: 900px !important;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4>Tạo rooming list</h4>
+            </div>
+            <form id="frmKs">
+                <div class="modal-body">
+                    @*Customer Details*@
+                    <h5 style="color:#ff6347">Thông tin khách sạn</h5>
+                    <hr /><input type="hidden" name="hididtour" id="hididtour" value="@ViewBag.idtour" />
+                    <div class="form-horizontal">
+                        @*<input type="hidden" id="CustomerId" />*@
+                        <div class="form-group">
+                            <label class="control-label col-md-2">
+                                Tên khách sạn
+                            </label>
+                            <div class="col-md-10">
+                                <input type="text" id="tenks" name="tenks" placeholder="Tên khách sạn" class="form-control " />
+                            </div>
+                            <label class="control-label col-md-2">
+                                Ngày checkin
+                            </label>
+                            <div class="col-md-4">
+                                <input type="text" id="ngayin" name="ngayin" placeholder="Ngày checkin" class="form-control date-picker glyphicon glyphicon-calendar" />
+                            </div>
+
+                            <label class="control-label col-md-2">
+                                Ngày checkout
+                            </label>
+                            <div class="col-md-4">
+                                <input type="text" id="ngayout" name="ngayout" placeholder="Ngày checkout" class="form-control date-picker glyphicon glyphicon-calendar" />
+                            </div>
+                        </div>
+                    </div>
+
+                    @*Order Details*@
+                    <h5 style="margin-top:10px;color:#ff6347">Danh sách khách</h5>
+                    <hr />
+                    <div class="form-horizontal">
+                        <input type="hidden" id="id_roomlist" />
+                        <div class="form-group">
+                            <label class="control-label col-md-2">
+                                Số phòng
+                            </label>
+                            <div class="col-md-2">
+                                <input type="text" id="txtsophong" name="txtsophong" placeholder="Số phòng" class="form-control" />
+                            </div>
+                            <label class="control-label col-md-2">
+                                Loại phòng
+                            </label>
+                            <div class="col-md-6">
+                                @Html.DropDownList("loaiphong", null, String.Empty, new { @class = "form-control1", @id = "ddlloaiphong" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-2">
+                                Tên khách
+                            </label>
+                            <div class="col-md-4">
+                                @Html.DropDownList("id_dsk", null, String.Empty, new { @class = "form-control1", @id = "ddlkhach" })
+                            </div>
+                            <div class="col-md-2 col-lg-offset-4">
+                                <a id="addToList" class="btn btn-primary">Thêm khách</a>
+                            </div>
+                        </div>
+
+                        <table id="detailsTable" class="table">
+                            <thead>
+                                <tr>
+                                    <th style="width:15%">Số phòng</th>
+                                    <th style="width:25%">Loại phòng</th>
+                                    <th style="width:30%">Tên khách</th>
+                                    <th>
+
+                                    </th>
+                                    <th style="width:30%">Quản lý</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="saveOrder" type="submit" class="btn btn-danger fa-lg">Lưu</button>
+                    <button type="reset" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade in" id="editOrderModal">
+    <div class="edit-OrderModal"></div>
+</div>
+
+
+<script>  
+
+    $('.themroominglist').click(function () {
+         $("#newOrderModal").modal();
+    });
+
+    //Add Multiple Order.
+    $("#addToList").click(function (e) {
+        e.preventDefault();
+
+        if ($.trim($("#txtsophong").val()) == "" || $.trim($("#ddlloaiphong").val()) == "" || $.trim($("#ddlkhach").val()) == "") return;
+
+        var txtsophong = $("#txtsophong").val(),
+            tenkhach = $("#ddlkhach option:selected").text(),
+            loaiphong = $("#ddlloaiphong").val(),
+            idkhach = $("#ddlkhach").val(),
+            detailsTableBody = $("#detailsTable tbody");
+
+        //sau khi chon khach, remove khach khoi danh sach
+        $("#ddlkhach option:selected").remove();
+
+        var khachitem = '<tr><td>' + txtsophong + '</td><td>' + loaiphong + '</td><td>' + tenkhach + '</td><td>'+idkhach+'</td><td><a data-itemIdEdit="0" href="#" class="deleteItemEdit">Remove</a></td></tr>';
+        detailsTableBody.append(khachitem);
+        clearItem();
+    });
+    //After Add A New Order In The List, Clear Clean The Form For Add More Order.
+    function clearItem() {
+        $("#txtsophong").val('');
+        $("#ddlloaiphong").val('');
+        $("#ddlkhach").val('');
+        $("#hidkhach").val('');
+    }
+
+    //remove dong moi them neu khong muon
+    $(document).on('click', 'a.deleteItem', function (e) {
+        e.preventDefault();
+        var $self = $(this);
+        if ($(this).attr('data-itemId') == "0") {
+            $(this).parents('tr').css("background-color", "#ff6347").fadeOut(800, function () {
+                $(this).remove();
+            });
+        }
+    });
+
+
+    //After Click Save Button Pass All Data View To Controller For Save Database
+    function saveOrder(data) {
+
+        var vurl = '@Url.Action("SaveRoomingList", "QLKhachDoan")';
+
+        return $.ajax({
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            type: 'POST',
+            url: vurl,
+            data: data,
+            success: function (result) {
+                alert(result);
+                location.reload();
+            },
+            error: function () {
+                alert("Error!")
+            }
+        });
+    }
+    //Collect Multiple Order List For Pass To Controller
+    $("#saveOrder").click(function (e) {
+        e.preventDefault();
+
+        var khachArr = [];
+        khachArr.length = 0;
+
+        $.each($("#detailsTable tbody tr"), function () {
+            debugger
+            khachArr.push({
+                sophong: $(this).find('td:eq(0)').html(),
+                loaiphong: $(this).find('td:eq(1)').html(),
+                id_dsk: $(this).find('td:eq(3)').html()
+            });
+        });
+
+        var data = JSON.stringify({
+            idtour:$("#hididtour").val(),
+            tenks: $("#tenks").val(),
+            checkin: $("#ngayin").val(),
+            checkout: $("#ngayout").val(),
+            khachs: khachArr
+        });
+
+        $.when(saveOrder(data)).then(function (response) {
+            console.log(response);
+        }).fail(function (err) {
+            console.log(err);
+        });
+    });
+
+        
+
+    $('.editks').click(function () {
+        debugger
+        var id = $(this).data('idk');//id khach san
+
+        var url = '@Url.Action("EditRoom", "QLKhachDoan")' + '/' + id;
+        //$.get(url, function (data) {
+        //    $('#them-khach').modal('show');
+        //    $('.them-khach1').html(data);
+        //});
+
+        window.location.href = url;
+    });
+
+    function xoakhachkhoiroom(id) {
+
+        var data = JSON.stringify({
+            id: id
+        });
+
+        var vurl='@Url.Action("XoaKhachRoom", "QLKhachDoan")';
+
+        return $.ajax({
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            type: 'POST',
+            url: vurl,
+            data: data,
+            success: function (result) {
+                alert(result);
+                location.reload();
+            },
+            error: function () {
+                alert("Error!")
+            }
+        });
+    }
+
+    $('.themkhachvaoroom').click(function () {
+        debugger
+        //lay ten khach san
+        var id = $(this).data('id');
+        var dataidtour = $(this).data('tour');
+
+        var url = '@Url.Action("GetDataRoomingForEdit", "QLKhachDoan")' + '/' + id;
+        $.get(url, function (data) {
+            debugger
+            $("#editOrderModal").modal();
+            $('.edit-OrderModal').html(data);
+        });
+
+
+        
+
+
+    })
+
+
+    $(function () {
+        $(".date-picker").mask("99/99/9999");
+    });
+
+    //dinh dang lai table chi tiet
+    $(function () {
+        
+       // var tct = $('#tabchitiet');
+
+        //,"~/Scripts/jquery.table.marge.js"
+        $('.tabchitiet').margetable({
+           type: 2,            
+            colindex: [1, 2] // column 1, 7      
+       });
+
+    });
+
+
+</script>

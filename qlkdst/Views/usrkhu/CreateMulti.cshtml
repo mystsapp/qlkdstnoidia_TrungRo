@@ -1,0 +1,107 @@
+﻿@model qlkdst.Models.QuyenCtyViewModel
+@{
+    Layout = null;
+}
+
+
+<style>
+    /*.btn {
+        background-color: DodgerBlue;
+        border: none;
+        color: white;
+        padding: 12px 16px;
+        cursor: pointer;
+    }*/
+
+    /* Darker background on mouse-over */
+    .btn:hover {
+        background-color: RoyalBlue;
+    }
+
+
+    .multi-list {
+        float: left;
+        padding-right: 50px;
+    }
+
+    .clear {
+        clear: both;
+    }
+</style>
+<script src="~/Scripts/script-custom-validator.js"></script>
+<div class="modal-dialog" style="width:70%">
+    <div class="modal-content">
+        <div class="modal-header alert alert-info">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title"> THÊM QUYỀN CHI NHÁNH</h4>
+        </div>
+
+        @using (Html.BeginForm("CreateMulti", "usrkhu", FormMethod.Post, new { @id = "frmQuyenCty" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+            <div class="modal-body">
+                <div class="row form-group">
+
+                    <div class="col-md-12">
+                     
+                        Khu phân quyền:
+                        <div>
+                            @{
+                                if (Model != null)
+                                {
+
+                                    int itemCount = 0;
+                                    <ul class="multi-list">
+                                        @for (int i = 0; i < Model.listKhuCN.Count; i++)
+                                        {
+                                            itemCount++;
+                                            <li>
+                                                @Html.HiddenFor(x => x.listKhuCN[i].idkhucn)
+                                                @Html.CheckBoxFor(x => x.listKhuCN[i].Checked)
+                                                @Html.LabelFor(x => x.listKhuCN[i].Checked, Model.listKhuCN[i].tenkhucn)
+                                            </li>
+                                            if (Model.listKhuCN.Count > 10 && itemCount == (int)(Model.listKhuCN.Count / 2))
+                                            {
+                                                @Html.Raw("</ul><ul class=\"multi-list\">");
+                                            }
+                                        }
+                                    </ul>
+                                    <div class="clear"></div>
+                                }
+                            }
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row  form-group">
+                    <div class="col-md-2">
+                        Người dùng:
+                        @Html.DropDownList("userId", null, String.Empty, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.userId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-4 col-md-4">
+                        Ngày tạo:
+                        @Html.TextBoxFor(model => model.ngaytao, new { @class = "form-control text-uppercase", @readonly = "readonly" })
+                    </div>
+
+                    <div class="col-xs-4 col-md-4">
+                        Người tạo:
+                        @Html.TextBoxFor(model => model.nguoitao, new { @class = "form-control text-uppercase", @readonly = "readonly" })
+                    </div>
+                </div>
+
+
+                <div class="modal-footer">
+                    <button name="submit" class="btn btn-primary" id="btnSave"><i class="fa fa-save"></i>Lưu</button>
+                    <button class="btn btn-primary" id="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-close"></i>Hủy</button>
+                </div>
+
+            </div>
+                                }
+
+    </div>
+</div>

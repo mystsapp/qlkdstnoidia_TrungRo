@@ -1,0 +1,50 @@
+﻿@model qlkdstDB.EF.tour
+
+@using qlkdst.Common
+@{
+    ViewBag.Title = " DANH SÁCH VÉ MÁY BAY";
+    Layout = null;
+    string mTrangThaiTour = DungChung.GetTrangThaiTour(ViewBag.idtour);
+}
+<!-- //breadcrumbs -->
+<div class="inner_content_w3_agile_info two_in">
+
+    <!-- tables -->
+
+    <div class="agile-tables">
+        <div class="w3l-table-info agile_info_shadow">
+            <h3 class="w3_inner_tittle two">  DANH SÁCH VÉ MÁY BAY</h3>
+
+            <div class="form-body">
+                <div>
+
+                    @{
+                        string sFilePath = ViewBag.ViewUploadPath + Model.filevemaybay;
+
+                        string encodePath = DungChung.FTP_PATH + DungChung.VEMAYBAY_FTP_PATH + Model.filevemaybay;
+                        encodePath = encodePath.Replace(":", "aabbccddee");
+                        encodePath = encodePath.Replace("/", "asdfghjkl");
+                        encodePath = encodePath.Replace("+", "aqwsedrf");
+
+                    }
+
+                    @if (Model.filevemaybay != null)
+                    {
+                        <a href="@Url.Action("ShowSoftwareNewJsTreeFTP", "Vmb",new { path = encodePath })" target="_blank">
+                            @Model.filevemaybay
+                        </a>
+                    }
+
+
+                </div>
+            </div>
+            <!--END FORM BODY-->
+
+        </div>
+
+
+    </div>
+
+
+</div>
+

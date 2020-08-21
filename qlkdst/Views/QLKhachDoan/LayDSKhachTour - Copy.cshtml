@@ -1,0 +1,157 @@
+﻿@model List<qlkdstDB.EF.dmkhachtour>
+@using qlkdst.Common
+@{
+    ViewBag.Title = "Danh sách khách đi tour";
+    Layout = null;
+}
+
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        DANH SÁCH KHÁCH ĐI TOUR
+    </div>
+
+    <div class="panel-body">
+        <a href="#tour-top" id="toTop" style="display: block;"><span id="toTopHover" style="opacity: 0;"></span> <span id="toTopHover" style="opacity: 1;"> </span></a>
+
+        @using (Html.BeginForm("SearchKhach", "QLKhachDoan", FormMethod.Get, htmlAttributes: new { @class = "form-inline" }))
+        {
+            string urlExcel = Url.Action("ImportDmKhach", "QLKhachDoan") + "/" + ViewBag.idtour;
+            string sTrangthaiTour = DungChung.GetTrangThaiTour(ViewBag.idtour);
+            <div class="col-xs-12">
+                <div class="col-xs-6">
+                    <div class="input-group">
+                        
+                        <span class="input-group-btn">
+                            @if (sTrangthaiTour != "3" && sTrangthaiTour != "4")//tour chua thanh ly va chua bi huy moi hien nut them
+                            {
+                                string urlExcel1 = Url.Action("PrintDSKhach", "QLKhachDoan") + "/" + ViewBag.idtour;
+
+                                <a href="#" data-toggle="tooltip" data-id="@ViewBag.idtour" data-placement="right" class="btn btn-primary themkhach" title="Thêm khách"><i class="fa fa-plus">Thêm mới</i></a>
+                                <a href="@urlExcel" data-placement="right" class="btn btn-success" title="Thêm khách"><i class="fa fa-file-excel-o" title="Xuất Excel Rooming List">Import</i></a>
+                                <a href="@urlExcel1" data-id="@ViewBag.idtour" data-toggle="tooltip" data-placement="right" class="btn btn-warning" title="Xuất Excel danh sách khách"><i class="fa fa-print">Xuất Excel danh sách khách đi tour</i></a>
+                            }
+                           
+                        </span>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <!--Danh sach tour-->
+        <div class="col-sm-12 col-md-12" style="overflow-x: auto">          
+
+            <!--TABLE-->
+            <table class="table table-striped table-bordered table-hover table-condensed text-nowrap">
+                <thead>
+                    <tr>
+                        <th>Quản lý</th>
+                        <th>Tên Khách hàng</th>
+                        <th>hộ chiếu</th>
+                        <th>Hiệu lực</th>
+                        <th>Ngày sinh</th>
+                        <th>CMND</th>
+                        <th>Ngày cấp</th>
+                        <th>Nơi cấp</th>
+                        <th>Phái</th>
+                        <th>Điện thoại</th>
+                        <th>Quốc tịch</th>
+                    </tr>
+                </thead>
+                <tbody class="text-nowrap">
+                    @if (Model != null)
+                    {
+                        foreach (qlkdstDB.EF.dmkhachtour m in Model)
+                        {
+                            string tenphai = "";
+                            string urlDel = Url.Action("XoaKhach", "QLKhachDoan") + "/" + m.id_dsk;
+                           
+                                <tr>
+                                    <td>
+                                    @if (DungChung.GetTrangThaiTour(ViewBag.idtour) != "3")
+                                    {
+                                        <span><i class="fa fa-edit fa-lg editkhach" title="Sửa thông tin khách" data-idk="@m.id_dsk" style="cursor:pointer;" /></span>
+                                        <a href='@urlDel' style="cursor:pointer;"><i class="fa  fa-lg fa-trash xoakhach" title="Xóa khách đi tour" data-idk="@m.id_dsk" /></a>
+                                    }                                        
+                                    </td>
+                                <td class="text-left">@m.tenkhach</td>
+                                <td class="text-left">@m.hochieu</td>
+                                <td>@(m.hieuluchochieu.HasValue ? @m.hieuluchochieu.Value.ToString("dd/MM/yyyy") : "")</td>
+                                <td>@(m.ngaysinh.HasValue ? @m.ngaysinh.Value.ToString("dd/MM/yyyy") : "")</td>
+                                <td>@m.socmnd</td>
+                                <td>@(m.ngaycmnd.HasValue ? @m.ngaycmnd.Value.ToString("dd/MM/yyyy") : "")</td>
+                                <td>@m.noicapcmnd</td>
+                                <td>
+                                    @{
+                                        if (m.phai == "1")
+                                        {
+                                            tenphai="Nam";
+                                        }
+                                        else if (m.phai == "2")
+                                        {
+                                            tenphai="Nữ";
+                                        }
+                                        else if (m.phai == "3")
+                                        {
+                                            tenphai="Khác";
+                                        }
+                                    }                                 
+
+                                    @tenphai
+
+                                </td>
+                                <td>@m.dienthoai</td>
+                                <td>@m.quoctich</td>
+                            </tr>
+                        }                      
+                    }
+
+                </tbody>
+            </table>            
+
+            <!--END TABLE-->           
+
+        </div>
+
+        <!--/ Danh sach tour-->
+
+    </div>
+</div>
+
+
+<div class="modal fade in" role="dialog" id="them-khach">
+    <div class="them-khach1"></div>
+</div>
+
+<div class="modal fade in" role="dialog" id="indskhach">
+    <div class="in-dskhach"></div>
+</div>
+<script>
+  
+    $('.themkhach').click(function () {
+
+        var id = $(this).data('id');
+
+        var url = '@Url.Action("ThemKhach", "QLKhachDoan")' + '/' + id;
+        //$.get(url, function (data) {
+        //    $('#them-khach').modal('show');
+        //    $('.them-khach1').html(data);
+        //});
+
+        window.location.href = url;
+    });
+
+
+    $('.editkhach').click(function () {
+        debugger
+        var id = $(this).data('idk');//id khach
+
+        var url = '@Url.Action("EditKhach", "QLKhachDoan")' + '/' + id;
+        //$.get(url, function (data) {
+        //    $('#them-khach').modal('show');
+        //    $('.them-khach1').html(data);
+        //});
+
+        window.location.href = url;
+    });
+</script>

@@ -1,0 +1,146 @@
+﻿@model PagedList.IPagedList<qlkdstDB.EF.khuvuc>
+@using PagedList.Mvc;
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    string sRole = Session["RoleName"].ToString();
+
+}
+
+<div class="inner_content_w3_agile_info two_in">
+
+    @*<h2 class="w3_inner_tittle">MỤC KHÁCH ĐOÀN</h2>*@
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            DANH MỤC KHU VỰC
+        </div>
+        <div class="panel-body">
+
+            @using (Html.BeginForm("Index", "KV", FormMethod.Get, new { @class = "form-inline" }))
+            {
+                <div class="form-group">
+                    @Html.Label("Tên khu", htmlAttributes: new { @class = "col-sm-4 control-label" })
+                    <div class="col-sm-8">
+                        <input type="text" value="@ViewBag.searchString" class="form-control" name="searchString" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success"><i class="fa fa-search"></i>Tìm kiếm</button>
+                    <a href="#" data-toggle="tooltip" data-placement="right" class="btn btn-primary themkhu" title="Thêm khu"><i class="fa fa-plus">Thêm mới</i></a>
+                </div>
+            }
+
+            @if (TempData["AlertMessage"] != null)
+            {
+                <div class='@TempData["AlertType"]' role="alert">
+                    <strong> @TempData["AlertMessage"]</strong>
+                </div>
+
+                TempData["AlertType"] = null;
+                TempData["AlertMessage"] = null;
+            }
+
+            <!--TABLE-->
+            <table id="table" class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Mã</th>
+                        <th>Tên khu vực</th>
+                        <th>Quản lý</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr id="row_@item.idkhu" data-id="@item.idkhu" class="khu">
+                            <td>@item.idkhu</td>
+                            <td>@item.tenkhu</td>
+                            <td class="col-md-2">
+
+                                <a href="#" data-id="@item.idkhu" data-toggle="tooltip" data-placement="right" class="btn btn-primary editkhu" title="Cập nhật"><i class="fa fa-edit">Sửa</i></a>
+                                @if (sRole == "superadmin" || sRole == "admin")
+                                {
+                                    @Html.ActionLink(
+                                    "Xoá",
+                                    "Delete",
+                                    "KV",
+                                    new { id = item.idkhu },
+                                    new { onclick = "return confirm('Bạn có muốn xóa mục này?')", @class = "btn btn-danger  fa fa-trash" }
+
+                                        )
+                                }
+
+
+                            </td>
+                        </tr>
+                    }
+                    @Html.PagedListPager(Model, page => Url.Action("Index", new { page, @searchString = @ViewBag.searchString }))
+                </tbody>
+            </table>
+
+
+
+            <!--END TABLE-->
+
+
+        </div>
+
+
+    </div>
+
+</div>
+
+<script>
+
+
+    $(document).ready(function () {
+        $('#table').basictable({
+            tableWrapper: true
+        });
+    });
+
+
+    $(function () {
+        $('.themkhu').click(function () {
+            var url = '@Url.Action("Create", "KV")';
+
+            window.location.href = url;
+        });
+
+        $('.editkhu').click(function () {
+            var id = $(this).data('id');
+            var url = '@Url.Action("Edit", "KV")' + '/' + id;
+
+            window.location.href = url;
+
+        });
+
+    })
+
+
+    $('#btnXoa').click(function () {
+        var btn = $(this);
+        var id = btn.data('id');
+
+        var urlaction = '@Url.Action("Delete", "KV")';
+
+        $.ajax({
+            url: urlaction,
+            type: 'POST',
+            data: { id: id },
+            success: function (res) {
+                if (res) {
+                    alert("ok");
+                }
+                else {
+
+                }
+            }
+        });
+    });
+
+
+</script>
+

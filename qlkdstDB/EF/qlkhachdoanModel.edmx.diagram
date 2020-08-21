@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="cc7685d70ae5472db989e7a62c83398a" Name="Diagram1" ZoomLevel="81">
+        <EntityTypeShape EntityType="qlkdtrModel.chinhanh" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="qlkdtrModel.dmdaily" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="qlkdtrModel.mainmenu" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="qlkdtrModel.submenu" Width="1.5" PointX="0.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="qlkdtrModel.users" Width="1.5" PointX="2.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="qlkdtrModel.vie_dsmenu" Width="1.5" PointX="4.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="qlkdtrModel.roles" Width="1.5" PointX="7.375" PointY="0.75" />
+        <EntityTypeShape EntityType="qlkdtrModel.dmkhachtour" Width="1.5" PointX="7.75" PointY="3.75" />
+        <EntityTypeShape EntityType="qlkdtrModel.nuoc" Width="1.5" PointX="5.75" PointY="8.75" />
+        <EntityTypeShape EntityType="qlkdtrModel.roominglist" Width="1.5" PointX="7.75" PointY="8.75" />
+        <EntityTypeShape EntityType="qlkdtrModel.roominglistd" Width="1.5" PointX="9.75" PointY="0.75" />
+        <EntityTypeShape EntityType="qlkdtrModel.tour" Width="1.5" PointX="9.75" PointY="3.75" />
+        <EntityTypeShape EntityType="qlkdtrModel.thongtintour" Width="1.5" PointX="11.75" PointY="0.75" />
+        <EntityTypeShape EntityType="qlkdtrModel.loaitour" Width="1.5" PointX="5.375" PointY="11.75" />
+        <EntityTypeShape EntityType="qlkdtrModel.quan" Width="1.5" PointX="12.375" PointY="3.75" />
+        <EntityTypeShape EntityType="qlkdtrModel.dmkhachhang" Width="1.5" PointX="12.375" PointY="6.75" />
+        <EntityTypeShape EntityType="qlkdtrModel.vie_roomtour" Width="1.5" PointX="7.375" PointY="12.75" />
+        <AssociationConnector Association="qlkdtrModel.FK__roomingli__id_ro__4E88ABD4" />
+        <EntityTypeShape EntityType="qlkdtrModel.vie_roominglist" Width="1.5" PointX="8.25" PointY="13.125" />
+        <EntityTypeShape EntityType="qlkdtrModel.vie_khachNotInRoominglist" Width="1.5" PointX="12.375" PointY="11.75" />
+        <EntityTypeShape EntityType="qlkdtrModel.datcoc" Width="1.5" PointX="14.375" PointY="0.75" />
+        <EntityTypeShape EntityType="qlkdtrModel.vemaybay" Width="1.5" PointX="0.75" PointY="11.75" />
+        <EntityTypeShape EntityType="qlkdtrModel.vie_tttour" Width="1.5" PointX="3.375" PointY="14.75" />
+        <EntityTypeShape EntityType="qlkdtrModel.vie_tourvathongtin" Width="1.5" PointX="14.375" PointY="6.75" />
+        <EntityTypeShape EntityType="qlkdtrModel.vie_biennhan" Width="1.5" PointX="14.375" PointY="10.75" />
+        <EntityTypeShape EntityType="qlkdtrModel.vie_tpvanuoc" Width="1.5" PointX="5.375" PointY="15.75" />
+        <EntityTypeShape EntityType="qlkdtrModel.dmhoahong" Width="1.5" PointX="16.375" PointY="0.75" />
+        <EntityTypeShape EntityType="qlkdtrModel.vie_tourvahoahong" Width="1.5" PointX="16.375" PointY="4.75" />
+        <EntityTypeShape EntityType="qlkdtrModel.dmnghanhnghe" Width="1.5" PointX="16.375" PointY="8.75" />
+        <EntityTypeShape EntityType="qlkdtrModel.khuvuc" Width="1.5" PointX="16.375" PointY="11.75" />
+        <EntityTypeShape EntityType="qlkdtrModel.vie_nuoc" Width="1.5" PointX="11.375" PointY="16.75" />
+        <EntityTypeShape EntityType="qlkdtrModel.vie_tour" Width="1.5" PointX="13.375" PointY="16.75" />
+        <EntityTypeShape EntityType="qlkdtrModel.cacnoidunghuytour" Width="1.5" PointX="16.75" PointY="14.75" />
+        <EntityTypeShape EntityType="qlkdtrModel.tourlog" Width="1.5" PointX="0.75" PointY="17.75" />
+        <EntityTypeShape EntityType="qlkdtrModel.tourtmp" Width="1.5" PointX="15.75" PointY="17.75" />
+        <EntityTypeShape EntityType="qlkdtrModel.datcoclog" Width="1.5" PointX="18.375" PointY="0.75" />
+        <EntityTypeShape EntityType="qlkdtrModel.phankhucn" Width="1.5" PointX="18.375" PointY="7.75" />
+        <EntityTypeShape EntityType="qlkdtrModel.vie_chinhanh" Width="1.5" PointX="7.375" PointY="18.75" />
+        <EntityTypeShape EntityType="qlkdtrModel.usrkhucn" Width="1.5" PointX="18.375" PointY="10.75" />
+        <EntityTypeShape EntityType="qlkdtrModel.vie_usrkhucn" Width="1.5" PointX="18.375" PointY="17.75" />
+        <EntityTypeShape EntityType="qlkdtrModel.vie_quyenusrtheocn" Width="1.5" PointX="3.375" PointY="19.75" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

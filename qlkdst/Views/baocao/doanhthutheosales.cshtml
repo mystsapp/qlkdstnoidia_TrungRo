@@ -1,0 +1,302 @@
+﻿@using System.Data
+@using System.Globalization
+@model DataTable
+@using PagedList.Mvc;
+@{
+    ViewBag.Title = "Báo cáo Doanh số theo sales";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!-- jQuery UI CSS Reference -->
+<link href="@Url.Content("~/Content/themes/base/jquery-ui.css")" rel="stylesheet" />
+
+
+
+<script>
+
+    $(function () { // will trigger when the document is ready
+        //$('.date-picker').datepicker({ dateFormat: 'dd/mm/yy' }); //Initialise any date pickers
+        $('.date-picker').datepicker({ dateFormat: 'dd/mm/yy' });
+
+    });
+
+</script>
+
+<style>
+    .tongcss {
+        width: 75px;
+        font-weight: bold;
+        background-color: #D3D3D3;
+    }
+
+    .horizontal-scrollbar {
+        overflow-x: auto; /*for horizontal scroll bar */
+        overflow-y: hidden; /*for hiding vertical scroll bar */
+    }
+</style>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        BÁO CÁO DOANH SỐ THEO SALES
+    </div>
+
+    <div class="panel-body">
+        <a href="#tour-top" id="toTop" style="display: block;"><span id="toTopHover" style="opacity: 0;"></span> <span id="toTopHover" style="opacity: 1;"> </span></a>
+
+        @using (Html.BeginForm("doanhthutheosales", "baocao", FormMethod.Get, htmlAttributes: new { @class = "form-horizontal" }))
+        {
+            <div class="col-xs-12">
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <label for="txttungay">Từ ngày:</label>
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="text" value="@ViewBag.tungay" id="txttungay" name="tungay" placeholder="Chọn ngày" class="form-control date-picker glyphicon glyphicon-calendar" />
+                    </div>
+                    <div class="col-sm-2">
+                        <label for="txtdenngay">Đến ngày:</label>
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="text" value="@ViewBag.denngay" id="txtdenngay" name="denngay" placeholder="Chọn ngày" class="form-control date-picker glyphicon glyphicon-calendar" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <label>Chi nhánh:</label>
+                    </div>
+                    <div class="col-sm-6">
+                        @Html.DropDownList("dlcn", null, new { @class = "form-control" })
+                    </div>
+                    <div class="col-sm-4">
+                        <button type="submit" class="btn btn-success"><i class="fa fa-search"></i>Tìm kiếm</button>
+                        @Html.ActionLink("Excel", "Excel", new { tungay = @ViewBag.tungay, denngay = @ViewBag.denngay, schinhanh = ViewBag.chinhanhSelected }, new { @class = "btn btn-primary" })
+                        @Html.ActionLink("Chart", "Chart", new { tungay = @ViewBag.tungay, denngay = @ViewBag.denngay, schinhanh = ViewBag.chinhanhSelected }, new { @class = "btn btn-warning glyphicon glyphicon-stats" })
+                    </div>
+                </div>
+
+            </div>
+
+
+        }
+
+        <!--Danh sach tour-->
+        <div class="col-sm-12 col-md-12" style="overflow-x: auto;">
+
+            <!--TABLE-->
+            <table id="table" class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Code đoàn</th>
+                        <th>Tên công ty/Khách hàng</th>
+                        <th>Thời gian</th>
+                        <th>Chủ đề tour</th>
+                        <th>Tuyến tham quan</th>
+                        <th>SK Dự kiến</th>
+                        <th>Doanh số dự kiến</th>
+                        <th>SK thực tế</th>
+                        <th>Doanh số thực tế</th>
+                        <th>Sales</th>
+                    </tr>
+                </thead>
+                <tbody class="text-nowrap">
+
+                    @if (Model != null)
+                    {
+                        int idem = 1;
+
+                        DataView view = new DataView(Model);
+                        DataTable distinctValues = view.ToTable(true, "username");//lay distinct ten cac sales
+                        decimal dFinalTotal = 0, dFinalTotalSK = 0;
+                        foreach (DataRow rr in distinctValues.Rows)
+                        {
+
+                            DataRow[] rows = Model.Select("username='" + rr["username"].ToString() + "'");
+
+                            decimal totalSKDK = 0, totalDoanhThuDK = 0, totalSKTT = 0;//chua thanh ly
+                            decimal totalSKTT1 = 0, totalDoanhthuTT1 = 0;//da thanh ly
+                            decimal dTotalSK = 0, dTotalDT = 0;
+
+
+                            foreach (DataRow item in rows)
+                            {
+                                string sbatdau = item["batdau"].ToString() == "" ? "" : DateTime.Parse(item["batdau"].ToString()).ToString("dd/MM");
+                                string sketthuc = item["ketthuc"].ToString() == "" ? "" : DateTime.Parse(item["ketthuc"].ToString()).ToString("dd/MM/yyyy");
+                                string sngay = sbatdau + "~" + sketthuc;
+                                string sTrangThai = item["trangthai"].ToString();
+                                <tr>
+                                    <td>@idem.ToString()</td>
+                                    @*<td>@row["sgtcode"]</td>*@
+                                    @if (@item["trangthai"].ToString() == "3")
+                                    {
+                                        <td style="background-color:chartreuse;">@item["sgtcode"]</td>
+                                    }
+                                    else if (@item["trangthai"].ToString() == "2")
+                                    {
+                                        <td style="background-color:yellow;">@item["sgtcode"]</td>
+                                    }
+                                    else if (@item["trangthai"].ToString() == "4")
+                                    {
+                                        <td style="background-color:red;">@item["sgtcode"]</td>
+                                    }
+                                    else
+                                    {
+                                        <td style="background-color:white;">@item["sgtcode"]</td>
+                                    }
+
+                                    @*@if (item["trangthai"].ToString() == "3")
+                                    {
+                                        <td class="col-md-2" style="background-color:chartreuse;">@item["tenkh"]</td>
+                                    }
+                                    else
+                                    {
+                                        <td class="col-md-2" style="background-color:navajowhite;">@item["tenkh"]</td>
+                                    }*@
+                                    <td>@item["tenkh"]</td>
+                                    <td>@sngay</td>
+                                    <td>@item["chudetour"]</td>
+                                    <td>@item["diemtq"]</td>
+
+                                    @if (sTrangThai != "3")
+                                    {
+                                        <td>@Decimal.Parse(item["sokhachdk"].ToString() == "" ? "0" : @item["sokhachdk"].ToString()).ToString("#,#")</td>
+                                        <td>@Decimal.Parse(item["doanhthudk"].ToString() == "" ? "0" : @item["doanhthudk"].ToString()).ToString("#,#")</td>
+                                    }
+                                    else
+                                    {
+                                        <td></td>
+                                        <td></td>
+                                    }
+
+
+                                    @if (sTrangThai != "3")
+                                    {//chua thanh ly
+                                        <td></td>
+                                        <td></td>
+                                    }
+                                    else
+                                    {
+                                        <td>@Decimal.Parse(item["sokhachtt"].ToString() == "" ? "0" : @item["sokhachtt"].ToString()).ToString("#,#")</td>
+                                        <td>@Decimal.Parse(item["doanhthutt"].ToString() == "" ? "0" : @item["doanhthutt"].ToString()).ToString("#,#")</td>
+                                    }
+
+
+                                    <td>@item["fullName"]</td>
+                                </tr>
+
+                                if (sTrangThai != "3")
+                                {//chua thanh ly
+
+                                    totalSKDK += @Decimal.Parse(item["sokhachdk"].ToString() == "" ? "0" : @item["sokhachdk"].ToString());
+                                    totalDoanhThuDK += @Decimal.Parse(item["doanhthudk"].ToString() == "" ? "0" : @item["doanhthudk"].ToString());
+                                    //totalSKTT += @Decimal.Parse(item["sokhachtt"].ToString() == "" ? "0" : @item["sokhachtt"].ToString());
+                                    //totalDoanhthuTT += @Decimal.Parse(item["doanhthutt"].ToString() == "" ? "0" : @item["doanhthutt"].ToString());
+
+                                    dTotalSK = dTotalSK + totalSKTT;
+                                    dTotalDT = dTotalDT + totalDoanhThuDK;
+
+                                }
+                                else  //da thanh ly
+                                {
+                                    //totalSKDK1 += @Decimal.Parse(item["sokhachdk"].ToString() == "" ? "0" : @item["sokhachdk"].ToString());
+                                    //totalDoanhThuDK1 += @Decimal.Parse(item["doanhthudk"].ToString() == "" ? "0" : @item["doanhthudk"].ToString());
+                                    totalSKTT1 += @Decimal.Parse(item["sokhachtt"].ToString() == "" ? "0" : @item["sokhachtt"].ToString());
+                                    totalDoanhthuTT1 += @Decimal.Parse(item["doanhthutt"].ToString() == "" ? "0" : @item["doanhthutt"].ToString());
+
+                                }
+
+                                idem = idem + 1;
+                            }
+
+                            //tong so khach du tinh = tong so khach du tinh - tong so khach thuc te hay so khach cua tour da thanh ly
+                            //doanh so du tinh= Doanh số du tinh - doanh so thuc te
+                            decimal dTotalSKChuaThanhLy = 0, dTotalDTChuaThanhLy = 0;
+                            // dTotalSKChuaThanhLy = totalSKDK - totalSKTT1;
+                            dTotalSKChuaThanhLy = totalSKDK;
+                            //dTotalDTChuaThanhLy = totalDoanhThuDK - totalDoanhthuTT1;
+                            dTotalDTChuaThanhLy = totalDoanhThuDK;
+
+                            dTotalSK = dTotalSKChuaThanhLy + totalSKTT1;
+                            dTotalDT = dTotalDTChuaThanhLy + totalDoanhthuTT1;
+                            //them dong tong chua thanh ly
+                            <tr>
+                                <td></td>
+                                <td><strong>TỔNG CỘNG</strong></td>
+                                <td><strong>CHƯA THANH LÝ HỢP ĐỒNG</strong></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><strong>@dTotalSKChuaThanhLy.ToString("#,#")</strong></td>
+                                <td><strong>@dTotalDTChuaThanhLy.ToString("#,#")</strong></td>
+                                <td><strong></strong></td>
+                                <td><strong></strong></td>
+                                <td></td>
+                            </tr>
+
+                            //them dong tong da thanh ly
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td><strong>ĐÃ THANH LÝ HỢP ĐỒNG</strong></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><strong>@totalSKTT1.ToString("#,#")</strong></td>
+                                <td><strong>@totalDoanhthuTT1.ToString("#,#")</strong></td>
+                                <td></td>
+                            </tr>
+
+
+                            //them dong tong
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td><strong>TỔNG CỘNG THEO TỪNG SALE</strong></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td colspan="2"><strong>@dTotalSK.ToString("#,#")</strong></td>
+                                <td colspan="2"><strong>@dTotalDT.ToString("#,#")</strong></td>
+                                <td></td>
+                            </tr>
+
+                            dFinalTotal = dFinalTotal + dTotalDT;
+                            dFinalTotalSK = dFinalTotalSK + dTotalSK;
+                        }
+                        //add final total
+                        <tr style="background-color:#66ccff;">
+                            <td></td>
+                            <td><strong>TỔNG CỘNG</strong></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td colspan="2"><strong>@dFinalTotalSK.ToString("#,#")</strong></td>
+                            <td colspan="2"><strong>@dFinalTotal.ToString("#,#")</strong></td>
+                            <td></td>
+                        </tr>
+                    }
+
+
+                </tbody>
+            </table>
+
+            <!--END TABLE-->
+
+        </div>
+
+        <!--/ Danh sach tour-->
+
+    </div>
+</div>
+
+
+
+<script>
+    $(function () {
+        $(".date-picker").mask("99/99/9999");
+    });
+</script>

@@ -1,0 +1,108 @@
+﻿@model qlkdstDB.EF.users
+@using qlkdst.Common
+@{
+    ViewBag.Title = "Thêm user";
+    Layout = null;    
+}
+
+<script>
+
+    $(function () { // will trigger when the document is ready
+        $('.date-picker').datepicker({ dateFormat: 'dd/mm/yy' });
+
+    });
+
+
+
+</script>
+<script src="~/Scripts/script-custom-validator.js"></script>
+
+<div id="modaltr" class="modal-dialog modal-lg" style="width: 900px !important;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <a href="#" class="close" data-dismiss="modal">&times;</a>
+            <h4>Thêm user</h4>
+        </div>
+       
+            @using (Html.BeginForm("Create", "User", FormMethod.Post, new { @id = "frmThemUser" }))
+            {
+                @Html.AntiForgeryToken()
+
+            <div class="modal-body">
+
+
+                <h5 style="color:#ff6347">Thông tin user</h5>
+                <hr />
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-md-2">
+                            Tài khoản đăng nhập:
+                        </label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(model => model.username, new { @id = "txtusrnm", @class = "form-control" })<span style="color:red;">*</span>
+                        </div>
+                        <label class="control-label col-md-2">
+                            Mật mã:
+                        </label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(model => model.password, new { @id = "txtpwd", @class = "form-control", type = "password" })<span style="color:red;">*</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">
+                            Họ tên:
+                        </label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(model => model.fullName, new { @id = "txtname", @class = "form-control" })
+                        </div>
+                        <label class="control-label col-md-2">
+                            Số điện thoại:
+                        </label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(model => model.dienthoai, new { @id = "txttel", @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @*<label class="control-label col-md-2">
+                            Đại lý:
+                        </label>
+                        <div class="col-md-4">
+                            @Html.DropDownList("daily", null, "--Chọn đại lý--", new { @class = "form-control", @id = "ddlDailyBN" })
+                        </div>*@
+                        <label class="control-label col-md-2">
+                            Chi nhánh:
+                        </label>
+                        <div class="col-md-4">
+                            @Html.DropDownList("chinhanh", null, "--Chọn chi nhánh--", new { @class = "form-control", @id = "ddlCN" })
+                        </div>
+                        <label class="control-label col-md-2">
+                            Role:
+                        </label>
+                        <div class="col-md-4">
+                            @Html.DropDownList("role", null, "--Chọn role--", new { @class = "form-control", @id = "ddlRole" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                       
+                        <label class="control-label col-md-2">
+                            Email:
+                        </label>
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.email, new { @id = "txtEmail", @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button id="btnAddUsr" type="submit" class="btn btn-danger">Lưu</button>
+                <button type="reset" class="btn btn-default" data-dismiss="modal">Đóng</button>
+            </div>
+            }
+
+      
+    </div>
+</div>
+
+
+

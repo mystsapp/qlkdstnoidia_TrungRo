@@ -1,0 +1,141 @@
+﻿@model List<qlkdstDB.EF.vie_tourvahoahong>
+@using qlkdst.Common
+@{
+    ViewBag.Title = "Danh mục hoa hồng";
+    // Layout = null;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        DANH MỤC HOA HỒNG CỦA TOUR <B>@ViewBag.sgtcode</B>
+    </div>
+
+    <div class="panel-body">
+        <a href="#tour-top" id="toTop" style="display: block;"><span id="toTopHover" style="opacity: 0;"></span> <span id="toTopHover" style="opacity: 1;"> </span></a>
+
+        @using (Html.BeginForm("SearchHoaHong", "QLKhachDoan", FormMethod.Get, htmlAttributes: new { @class = "form-inline" }))
+        {
+           
+            <div class="col-xs-12">
+                <div class="col-xs-6">
+                    <div class="input-group">
+
+                        <span class="input-group-btn">                           
+                            <a href="#" data-toggle="tooltip" data-id="@ViewBag.idtour" data-placement="right" class="btn btn-primary themhoahong" title="Thêm khách"><i class="fa fa-plus">Thêm mới</i></a>
+                            
+                        </span>
+                        <a href="#" data-toggle="tooltip" data-id="@ViewBag.idtour" data-placement="right" class="btn btn-danger nuthuy" title="Quay lại"><i class="fa fa-close">Quay lại</i></a>                            
+
+                    </div>
+                </div>
+            </div>
+        }
+
+        <!--Danh sach tour-->
+        <div class="col-sm-12 col-md-12" style="overflow-x: auto">
+
+            <!--TABLE-->
+            <table class="table table-striped table-bordered table-hover table-condensed text-nowrap">
+                <thead>
+                    <tr>
+                        <th>Quản lý</th>                        
+                        <th>Sales</th>
+                        <th>Tên khách</th>                      
+                        <th>CMND</th>
+                        <th>Số tiền</th>                       
+                    </tr>
+                </thead>
+                <tbody class="text-nowrap">
+                    @if (Model != null)
+                    {
+                        foreach (qlkdstDB.EF.vie_tourvahoahong m in Model)
+                        {
+                            
+                            string urlDel = Url.Action("XoaHoaHong", "QLKhachDoan") + "/" + m.idhoahong;
+
+                            <tr>
+                                <td>
+                                    @if (DungChung.GetTrangThaiTour(ViewBag.idtour) != "3")
+                                    {
+                                        /*Khi dung ajax*/
+                                        @*<span><i class="fa fa-edit fa-lg editkhach" title="Sửa thông tin hoa hồng" data-idk="@m.idhoahong" style="cursor:pointer;" /></span>*@
+                                        @*<a href='@urlDel' style="cursor:pointer;"><i class="fa  fa-lg fa-trash xoakhach" title="Xóa khách đi tour" data-idk="@m.idhoahong" /></a>*@
+
+                                        <a href="#" data-idk="@m.idhoahong" data-toggle="tooltip" data-placement="right" class="editkhach" title="Cập nhật"><i class="fa fa-edit fa-lg"></i></a>
+
+                                        @Html.ActionLink(
+                                        " ",
+                                        "XoaHoaHong",
+                                        "QLKhachDoan",
+                                        new { id = m.idhoahong },
+                                        new { onclick = "return confirm('Bạn có muốn xóa mục này?')", @class = "fa fa-trash fa-lg" }
+
+                                        )
+                                    }
+                                </td>                               
+                                <td class="text-left">@m.salesnm</td>
+                                <td class="text-left">@m.tenkhach</td>
+                                <td>@m.socmnd</td>
+                                <td class="text-left">@(m.sotien.HasValue ? Decimal.Parse(m.sotien.ToString()).ToString("#,#") : "") </td>
+                            </tr>
+                            }
+                        }
+
+                </tbody>
+            </table>
+
+            <!--END TABLE-->
+
+        </div>
+
+        <!--/ Danh sach tour-->
+
+    </div>
+</div>
+
+
+<div class="modal fade in" role="dialog" id="them-khach">
+    <div class="them-khach1"></div>
+</div>
+
+
+<script>
+
+    $('.themhoahong').click(function () {
+
+        var id = $(this).data('id');
+
+        var url = '@Url.Action("HienCuaSoThemHoaHong", "QLKhachDoan")' + '/' + id;
+        $.get(url, function (data) {
+            $('#them-khach').modal('show');
+            $('.them-khach1').html(data);
+        });
+
+        //window.location.href = url;
+    });
+
+    $('.nuthuy').click(function () {
+
+        var id = $(this).data('id');
+
+        var url = '@Url.Action("Edit", "QLKhachDoan")' + '/' + id;       
+
+        window.location.href = url;
+    });
+
+
+    $('.editkhach').click(function () {
+        debugger
+        var id = $(this).data('idk');//id khach
+
+        var url = '@Url.Action("EditHoaHong", "QLKhachDoan")' + '/' + id;
+        //$.get(url, function (data) {
+        //    $('#them-khach').modal('show');
+        //    $('.them-khach1').html(data);
+        //});
+
+        window.location.href = url;
+    });
+</script>

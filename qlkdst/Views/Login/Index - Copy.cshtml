@@ -1,0 +1,153 @@
+﻿@model qlkdst.Models.LoginModel
+<!DOCTYPE html>
+<html lang="zxx">
+<head>
+    <title>CHƯƠNG TRÌNH QUẢN LÝ KHÁCH ĐOÀN | ĐĂNG NHẬP</title>
+    <!-- custom-theme -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="Esteem Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template,
+Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyEricsson, Motorola web design" />
+    <script type="application/x-javascript">
+        addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false);
+               function hideURLbar(){ window.scrollTo(0,1); } </script>
+    <!-- //custom-theme -->
+    @*<link href="css/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
+        <link href="css/component.css" rel="stylesheet" type="text/css" media="all" />
+        <link href="css/style_grid.css" rel="stylesheet" type="text/css" media="all" />
+        <link href="css/style.css" rel="stylesheet" type="text/css" media="all" />*@
+    @Styles.Render("~/Content/trstyle")
+    <!-- font-awesome-icons -->
+    @*<link href="css/font-awesome.css" rel="stylesheet">*@
+    <!-- //font-awesome-icons -->
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800" rel="stylesheet">
+</head>
+<body>
+    <!-- banner -->
+    <div class="wthree_agile_admin_info">
+        <!-- /w3_agileits_top_nav-->
+        <!-- /nav-->
+        <div class="w3_agileits_top_nav">
+            <ul id="gn-menu" class="gn-menu-main">
+
+                <!-- //nav_agile_w3l -->
+                <li class="second logo admin"><h1><a href="main-page.html"><i class="fa fa-graduation-cap" aria-hidden="true"></i>QUẢN LÝ KHÁCH ĐOÀN </a></h1></li>
+
+                <li class="second w3l_search admin_login">
+
+                    @*<form action="#" method="post">
+                        <input type="search" name="search" placeholder="Search here..." required="">
+                        <button class="btn btn-default" type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
+                    </form>*@
+
+                </li>
+                <li class="second full-screen">
+                    @*<section class="full-top">
+                        <button id="toggle"><i class="fa fa-arrows-alt" aria-hidden="true"></i></button>
+                    </section>*@
+                </li>
+
+            </ul>
+            <!-- //nav -->
+
+        </div>
+        <div class="clearfix"></div>
+        <!-- //w3_agileits_top_nav-->
+        <!-- /inner_content-->
+        <div class="inner_content">
+            <!-- /inner_content_w3_agile_info-->
+            <div class="inner_content_w3_agile_info">
+
+                <div class="registration admin_agile">
+
+                    <div class="signin-form profile admin">
+                        <h2>Đăng nhập</h2>
+@using (Html.BeginForm("login", "Login", FormMethod.Post))
+{
+    <div class="login-form">
+        <form action="main-page.html" method="post">
+            @Html.TextBoxFor(model => model.username, new { @class = "form-control", @autofocus = "autofocus", placeholder = "Tên đăng nhập" })
+            @Html.PasswordFor(model => model.password, new { @class = "form-control", placeholder = "Mật khẩu" })
+
+
+            <div class="tp">
+                <input type="submit" value="Đồng ý">
+            </div>
+
+        </form>
+    </div>
+}
+                        
+                      @if (TempData["AlertMessage"] != null)
+                        {
+                                    <div class='@TempData["AlertType"]' role="alert">
+                                        <strong> @TempData["AlertMessage"]</strong>
+                                    </div>
+
+                                      TempData["AlertType"] = null;
+                                      TempData["AlertMessage"] = null;
+                       }
+                        @*<div class="login-social-grids admin_w3">
+                            <ul>
+                                <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                                <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                                <li><a href="#"><i class="fa fa-rss"></i></a></li>
+                            </ul>
+                        </div>*@
+
+                        @*<h6><a href="main-page.html">Back To Home</a></h6>*@
+
+
+                    </div>
+
+
+
+                </div>
+
+
+                <!-- //inner_content_w3_agile_info-->
+            </div>
+            <!-- //inner_content-->
+        </div>
+        
+        <!-- banner -->
+        @*@Html.Partial("~/Views/Shared/_Copyright1.cshtml")*@
+        <!-- js -->
+        @Scripts.Render("~/bundles/trjs")
+        @*<script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
+            <script src="js/modernizr.custom.js"></script>
+
+            <script src="js/classie.js"></script>
+            <script src="js/gnmenu.js"></script>*@
+        <script>
+			new gnMenu( document.getElementById( 'gn-menu' ) );
+        </script>
+    
+    
+        @*<script src="js/prettymaps.js"></script>*@
+        
+        <!-- //js -->
+        @*<script src="js/screenfull.js"></script>*@
+        <script>
+		$(function () {
+			$('#supported').text('Supported/allowed: ' + !!screenfull.enabled);
+
+			if (!screenfull.enabled) {
+				return false;
+			}
+
+
+
+			$('#toggle').click(function () {
+				screenfull.toggle($('#container')[0]);
+			});
+		});
+        </script>
+        @*<script src="js/jquery.nicescroll.js"></script>
+            <script src="js/scripts.js"></script>
+
+            <script type="text/javascript" src="js/bootstrap-3.1.1.min.js"></script>*@
+
+
+</body>
+</html>

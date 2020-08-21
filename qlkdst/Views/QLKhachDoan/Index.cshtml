@@ -1,0 +1,442 @@
+﻿@model PagedList.IPagedList<qlkdstDB.EF.tour>
+@using PagedList.Mvc;
+
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script>
+
+        $(function () { // will trigger when the document is ready
+            $('.date-picker').datepicker({ dateFormat: 'dd/mm/yy' });
+        });
+
+</script>
+
+<div class="inner_content_w3_agile_info two_in">
+    
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            DANH SÁCH TOUR
+        </div>
+
+        <div class="panel-body">
+            <a href="#tour-top" id="toTop" style="display: block;"><span id="toTopHover" style="opacity: 0;"></span> <span id="toTopHover" style="opacity: 1;"> </span></a>
+
+            @using (Html.BeginForm("Index", "QLKhachDoan", FormMethod.Get, htmlAttributes: new { @class = "form-horizontal" }))
+            {
+                <div class="col-xs-12">
+                    <div class="form-group">
+                        <div class="col-md-1">
+                            <label for="txtCode">Code đoàn:</label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" value="@ViewBag.searchString" class="form-control" name="searchString" />
+                        </div>
+                        <div class="col-md-2">
+                            <label for="txtbatdau">Bắt đầu:</label>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" value="@ViewBag.ngayditourb" class="form-control date-picker glyphicon glyphicon-calendar" name="ngayditourb" />
+                        </div>
+                        <div class="col-md-2">
+                            <label for="txtketthuc">Kết thúc:</label>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" value="@ViewBag.ngayditoure" class="form-control date-picker glyphicon glyphicon-calendar" name="ngayditoure" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-2">
+                            <label for="txtketthuc">Tên công ty:</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" value="@ViewBag.tencongty" class="form-control" name="tencongty" />
+                        </div>
+                        <div class="col-md-2">
+                            <label for="txtketthuc">Số hợp đồng:</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" value="@ViewBag.sohopdong" class="form-control" name="sohopdong" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-2">
+                            <label for="txtsale">Sale:</label>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" value="@ViewBag.nguoitao" class="form-control" name="nguoitao" />
+                        </div>
+                        <div class="col-md-2">
+                            <label for="txtuyen">Tuyến tham quan</label>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" value="@ViewBag.tuyentq" class="form-control" name="tuyentq" />
+                        </div>
+                        @*</div>
+            <div class="form-group">*@
+                        <div class="col-md-4">
+                            @*<span class="input-group-btn">*@
+                            <button type="submit" class="btn btn-success"><i class="fa fa-search"></i>Tìm kiếm</button>
+                            <a href="#" data-toggle="tooltip" data-placement="right" class="btn btn-primary themkhu" title="Thêm khu"><i class="fa fa-plus">Thêm mới</i></a>
+                            @*</span>*@
+                        </div>
+                    </div>
+                        
+                  </div>
+               
+            }                  
+               
+             <!--Danh sach tour-->
+            <div class="col-sm-12 col-md-12" style="overflow-x: auto">
+
+                @if (TempData["AlertMessage"] != null)
+                {
+                    <div class='@TempData["AlertType"]' role="alert">
+                        <strong> @TempData["AlertMessage"]</strong>  
+                    </div>
+
+                    TempData["AlertType"] = null;
+                    TempData["AlertMessage"] = null;
+                }
+
+                @*<a href="#chitiettour" class="page-scroll scroll">*@                  
+
+                    <!--TABLE-->
+                <table id="table" class="table table-striped table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Quản lý</th>
+                            <th>Code đoàn</th>
+                            <th>Số hợp đồng</th>
+                            <th>Chủ đề tour</th>
+                            <th>Tuyến tham quan</th>
+                            <th>ngày khởi hành</th>
+                            <th>Ngày kết thúc</th>
+                            <th>Trạng thái</th>
+                            <th>Sale</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            string sTrangthai = "";
+                            sTrangthai = item.trangthai == null ? "" : item.trangthai;
+                            <tr id="row_@item.idtour" data-id="@item.idtour" class="khu">
+                                <td>
+                                    @if (item.trangthai != "3" && item.trangthai != "4")
+                                    {                                  
+                                        string surledit = Url.Action("Edit", "QLKhachDoan", new RouteValueDictionary(new {id=item.idtour,ngayditourb=ViewBag.ngayditourb,ngayditoure=ViewBag.ngayditoure}));
+                                        <a href="@surledit" data-id="@item.idtour" data-toggle="tooltip" data-placement="right" class="btn btn-primary" title="Cập nhật"><i class="fa fa-edit">Sửa</i></a>
+                                        
+                                        @*<a href="#" data-id="@item.idtour" data-toggle="tooltip" data-placement="right" class="btn btn-primary editkhu"  title="Cập nhật"><i class="fa fa-edit">Sửa</i></a>*@
+                                    }                                
+
+
+                                </td>
+                                @*<td>@item.sgtcode</td>*@
+                                 
+                                @if (sTrangthai.ToString() == "3")
+                                {
+                                    <td class="col-md-2" style="background-color:chartreuse;">@item.sgtcode</td>
+                                }
+                                else if (sTrangthai.ToString() == "4")
+                                {
+                                    <td class="col-md-2" style="background-color:red;">@item.sgtcode</td>
+                                }
+                                else if (sTrangthai.ToString() == "2")
+                                {
+                                    <td class="col-md-2" style="background-color:yellow;">@item.sgtcode</td>
+                                }
+                                else
+                                {
+                                    <td class="col-md-2" style="background-color:white;">@item.sgtcode</td>
+                                }
+
+                                <td>@item.sohopdong</td>
+                                <td>@item.chudetour</td>
+
+                                @{
+                                    if (item.diemtq != null)
+                                    {
+                                        <td>@item.diemtq.ToUpper()</td>
+                                    }
+                                    else
+                                    {
+                                        <td>@item.diemtq</td>
+                                    }
+                                }
+                               
+                                <td>@(item.batdau.HasValue ? @item.batdau.Value.ToString("dd/MM/yyyy") : "")</td>
+                                <td>@(item.ketthuc.HasValue ? @item.ketthuc.Value.ToString("dd/MM/yyyy") : "")</td>
+                                <td>
+                                    @{
+                                        string sTT = "";
+                                        if (item.trangthai == "0" || item.trangthai == null)
+                                        {
+                                            sTT = "Mới tạo";
+                                        }
+                                        else if (item.trangthai == "1")
+                                        {
+                                            sTT = "Mới đàm phán";
+                                        }
+                                        else if (item.trangthai == "2")
+                                        {
+                                            sTT = "Đã ký hợp đồng";
+                                        }
+                                        else if (item.trangthai == "3")
+                                        {
+                                            sTT = "Đã thanh lý hợp đồng";
+                                        }
+                                        else if (item.trangthai == "4")
+                                        {
+                                            sTT = "Giao dịch chưa thành công";
+                                        }
+                                        else
+                                        {
+                                            sTT = "";
+                                        }
+                                    }
+                                    @sTT
+                                </td>
+                                <td>@item.nguoitao</td>
+                            </tr>
+                                        }
+
+                    </tbody>
+                </table>
+
+                    @Html.PagedListPager(Model, page => Url.Action("Index", new { page, @searchString = @ViewBag.searchString, @ngayditourb = ViewBag.ngayditourb, @ngayditoure = ViewBag.ngayditoure,@tencongty= @ViewBag.tencongty,@sohopdong= @ViewBag.sohopdong, @nguoitao = @ViewBag.nguoitao, @tuyentq = @ViewBag.tuyentq }))
+
+                    <!--END TABLE-->
+
+                </a>                
+
+            </div>
+
+            <!--/ Danh sach tour-->
+
+        </div>
+    </div>
+
+</div>
+
+<script>
+    $(function () {
+        $('.themkhu').click(function () {
+            var url='@Url.Action("Create", "QLKhachDoan")';
+            //$.get(url, function(data){
+            //    $('#themkhu').modal('show');
+            //    $('.them-khu').html(data);
+            //});
+
+            window.location.href = url;
+        });
+
+        $('.xoa').click(function () {
+    debugger
+            var id = $(this).data('id');
+            var url = '@Url.Action("Delete", "QLKhachDoan")' + '/' + id;
+
+            if (confirm('Bạn có muốn xóa tour này?')) {
+                $.get(url, function (data) {
+                    // alert(data);
+
+                });
+
+                window.location.url = '@Url.Action("Index","QLKhachDoan")';
+            }
+
+        });       
+
+        @*$('.editkhu').click(function () {
+            var id = $(this).data('id');
+            var url = '@Url.Action("Edit", "QLKhachDoan")'+'/'+id;
+                      
+            window.location.href = url;
+
+         });*@
+    })
+
+
+
+</script>
+
+
+<div class="inner_content_w3_agile_info two_in container" style="display:none">
+    <div style="margin-top:50px;">
+        <div class="panel panel-default panel-primary" style="background-color:#EEEEEE">
+            <div class="row" id="chitiettour">
+                
+            </div>
+        </div>
+
+        
+        <div class="row">
+            <nav class="nav nav-tabs">
+                <div class="col-xs-12 col-md-12">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a data-toggle="tab" href="#tabthanhly">Thanh lý hợp đồng</a></li>
+                        <li><a data-toggle="tab" href="#tabcttour">Chương trình tour</a></li>
+                        <li><a data-toggle="tab" href="#tabdv">Các dịch vụ</a></li>
+                        <li><a data-toggle="tab" href="#tabdskhach">Danh sách khách</a></li>
+                        @*<li><a data-toggle="tab" href="#tabphongks">Rooming List</a></li>*@
+                        <li><a data-toggle="tab" href="#tabbiennhan">Biên nhận</a></li>
+                        <li><a data-toggle="tab" href="#tabvemaybay">Vé máy bay</a></li>
+                        <li><a data-toggle="tab" href="#tabthongtin">Thông tin</a></li>
+                    </ul>
+                </div>
+            </nav>
+            <!--tab contain-->
+            <!--Tab containt-->
+            <div class="tab-content" style="min-height:500px">
+                <!--Tab THONG TIN-->
+                    <div id="tabthanhly" class="tab-pane fade in">
+                        <div id="tabthanhlynd" class="page-scroll scroll" style="height:400px;">
+
+                        </div>
+                    </div>
+                <!--/Tabl THONG TIN-->
+                <!--Tab CT TOUR-->
+                <div id="tabcttour" class="tab-pane fade in">
+                    <div class="panel panel-default panel-primary" style="background-color:#EEEEEE">
+                        <div class="panel-body" id="precttour">
+                        </div>
+                    </div>
+                </div>
+                <!--/Tabl CT TOUR-->
+                <!--Tab  DICH VU-->
+                <div id="tabdv" class="tab-pane fade in">
+                    <div class="panel panel-default panel-primary" style="background-color:#EEEEEE">
+                        <div class="panel-body" id="pretabdv">
+                        </div>
+                    </div>
+                </div>
+                <!--/  DICH VU-->
+                <!--Tab  -->
+                <!--Tab Ve tour-->
+                <div id="tabdskhach" class="tab-pane fade in  active" style="overflow-x: auto">  
+                        <div id="tabdskhachtour" class="page-scroll scroll" style="height:400px;">                         
+                </div>
+                    
+                </div>
+                <!--/Tabl -->
+                <!--Tab  -->
+                <div id="tabphongks" class="tab-pane fade in">
+                   <div id="tabdataphongks" class="page-scroll scroll"></div>
+                </div>
+                <!--/Tabl -->
+                <!--Tab  -->
+                <div id="tabbiennhan" class="tab-pane fade in">
+                    <div id="tabbiennhannoidung" class="page-scroll scroll"></div>                    
+                </div>
+                <!--/Tabl -->
+                <!--Tab  -->
+                <div id="tabvemaybay" class="tab-pane fade in">
+                    
+                    <div id="tabvemaybaynoidung" class="page-scroll scroll"></div>                    
+                </div>
+                <!--/Tabl -->
+                <!--Tab  -->
+                <div id="tabthongtin" class="tab-pane fade in">
+                    <div id="tabthongtinnd" class="page-scroll scroll"></div>
+                </div>
+                <!--/Tabl -->
+            </div>
+            <!--END tab contain-->
+      </div>
+         
+
+    </div>
+
+</div>
+
+
+<script>
+
+    $(function () {
+        $(".date-picker").mask("99/99/9999");
+    });
+
+    $(document).ready(function () {
+        $('tr.khu').click(function () {
+
+            //reset to white background
+            $('tr.khu').css('background-color', '#ffffff');
+            $(this).css('background-color', '#a8f4ee');
+
+            $('.container').show();
+
+            var id = $(this).data('id');
+
+
+            var urlthanhly = '@Url.Action("ThanhLyIndex","ThanhLy")';
+            $.get(urlthanhly + '/' + id, function (data) {
+                $('#tabthanhlynd').html(data);
+            })
+
+            //var url = "/QLKhachDoan/CTTour";
+            var url = '@Url.Action("CTTour", "QLKhachDoan")';
+            $.get(url + '/' + id, function (data) {
+
+                $('#chitiettour').html(data);
+            })
+
+            var urldv = '@Url.Action("CacDVIndex","CacDV")';
+            $.get(urldv + '/' + id, function (data) {
+                $('#pretabdv').html(data);
+            })
+
+            //gan chuong trinh tour
+            //var urlcttour = "/QLKhachDoan/LayCTChuongTrinhTour";
+            var urlcttour='@Url.Action("LayCTChuongTrinhTour", "QLKhachDoan")';
+            $.get(urlcttour + '/' + id, function (data) {
+                $('#precttour').html(data);
+            })
+
+            //lay danh sach khach tour
+            //var urldskhachtour = "/QLKhachDoan/LayDSKhachTour";
+            var urldskhachtour='@Url.Action("LayDSKhachTour", "QLKhachDoan")';
+            $.get(urldskhachtour + '/' + id, function (data) {
+                debugger
+                $('#tabdskhachtour').html(data);
+            })
+         
+            //tabdataphongks
+            //var urlroom = "/Room/Index";
+            //var urlroom = '@Url.Action("Index", "Room")';
+            var urlroom = '@Url.Action("RoomIndex", "QLKhachDoan")';
+            $.get(urlroom + '/' + id, function (data) {
+                $('#tabdataphongks').html(data);
+            })
+
+
+            var urlbiennhan = '@Url.Action("BienNhanIndex", "BienNhan")';
+            $.get(urlbiennhan + '/' + id, function (data) {
+                $('#tabbiennhannoidung').html(data);
+            })
+
+            //tabvemaybaynoidung
+            var urlvmb = '@Url.Action("VmbIndex", "Vmb")';            
+            $.get(urlvmb + '/' + id, function (data) {
+                $('#tabvemaybaynoidung').html(data);
+            })
+
+
+            var urltt = '@Url.Action("ThongTinIndex", "thongtin")';
+            //tabvemaybaynoidung
+            $.get(urltt + '/' + id, function (data) {
+                $('#tabthongtinnd').html(data);
+            })
+
+
+            //show LoadingStatusBienNhan
+            //$("#LoadingStatusBienNhan").html("Loading....");
+        })
+
+
+    });
+
+</script>
+

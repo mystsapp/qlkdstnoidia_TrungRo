@@ -1,0 +1,192 @@
+﻿@model qlkdstDB.EF.dmhoahong
+@{
+    ViewBag.Title = "Thêm hoa hồng";
+    Layout = null;
+}
+<script src="~/Scripts/script-custom-validator.js"></script>
+@*<div class="modal fade" id="editOrderModal">*@
+<div class="modal-dialog modal-lg" style="width: 900px !important;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <a href="#" class="close" data-dismiss="modal">&times;</a>
+            <h4>Thêm hoa hồng</h4>
+        </div>
+        <form id="frmHhEdit">
+            <div class="modal-body">
+
+                <h5 style="margin-top:10px;color:#ff6347">Chi tiết hoa hồng</h5>
+                <hr />
+                <div class="form-horizontal">
+                    <input type="hidden" id="id_touredit" value="@Model.idtour" />
+                    <div class="form-group">
+                        <label class="control-label col-md-2">
+                            Sales
+                        </label>
+                        <div class="col-md-4">
+                            <input type="text" id="txtEditSales" name="txtEditSales" value="@Model.salesnm" class="form-control" readonly />
+                        </div>
+                        <label class="control-label col-md-2">
+                            Tên khách
+                        </label>
+                        <div class="col-md-4">
+                            <input type="text" id="txtEditTenKH" name="txtEditTenKH" placeholder="Tên khách" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-md-2">
+                            Số CMND
+                        </label>
+                        <div class="col-md-4">
+                            <input type="text" id="txtcmnd" name="txtcmnd" placeholder="CMND" class="form-control" />
+                        </div>
+                        <label class="control-label col-md-2">
+                            Số tiền
+                        </label>
+                        <div class="col-md-4">
+                            <input type="text" id="txtsotienhoahong" name="txtsotienhoahong" placeholder="Số tiền" class="form-control numbers" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-2 col-lg-offset-4">
+                            <a id="addToListEdit" class="btn btn-primary">Thêm chi tiết hoa hồng</a>
+                        </div>
+                    </div>
+
+                    <table id="detailsTableEdit" class="table">
+                        <thead>
+                            <tr>
+                                <th>Sales</th>
+                                <th>Tên khách</th>
+                                <th>CMND</th>
+                                <th>Số tiền</th>
+                                <th>Quản lý</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="editHh" type="submit" class="btn btn-danger">Lưu</button>
+                <button type="reset" class="btn btn-default" data-dismiss="modal">Đóng</button>
+            </div>
+        </form>
+    </div>
+</div>
+@*</div>*@
+
+<script>
+
+    $(function () {
+        $(".date-picker").mask("99/99/9999");
+    });
+
+    //Edit Multiple Order.
+    $("#addToListEdit").click(function (e) {
+        e.preventDefault();
+
+        if ($.trim($("#txtEditSales").val()) == "" || $.trim($("#txtEditTenKH").val()) == "" || $.trim($("#txtcmnd").val()) == "" || $.trim($("#txtcmnd").val()) == "" || $.trim($("#txtsotienhoahong").val()) == "") alert('Phải nhập đủ thông tin');
+        else {
+
+            var txtEditSales = $("#txtEditSales").val(),
+            txtEditTenKH = $("#txtEditTenKH").val(),
+            txtcmnd = $("#txtcmnd").val(),
+            txtsotien = $("#txtsotienhoahong").val(),
+            detailsTableBody = $("#detailsTableEdit tbody");
+
+            var khachitem = '<tr><td>' + txtEditSales + '</td><td>' + txtEditTenKH + '</td><td>' + txtcmnd + '</td><td>' + txtsotien + '</td><td><a data-itemIdHH="0" href="#" class="deleteItemHH">Remove</a></td></tr>';
+            detailsTableBody.append(khachitem);
+            clearItemEdit();
+
+        }
+    });
+    //After Add A New Order In The List, Clear Clean The Form For Add More Order.
+    function clearItemEdit() {
+        //$("#txtEditSales").val('');
+        $("#txtEditTenKH").val('');
+        $("#txtcmnd").val('');
+        $("#txtsotienhoahong").val('');
+    }
+
+    //remove dong moi them neu khong muon
+    $(document).on('click', 'a.deleteItemHH', function (e) {
+        e.preventDefault();
+        var $self = $(this);
+        if ($(this).attr('data-itemIdHH') == "0") {
+            $(this).parents('tr').css("background-color", "#ff6347").fadeOut(800, function () {
+                $(this).remove();
+            });
+        }
+    });
+    //them khach vao roominglist
+    function addKhach(data) {
+        var vurl = '@Url.Action("AddHoaHong", "QLKhachDoan")';
+
+        return $.ajax({
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            type: 'POST',
+            url: vurl,//"/Room/AddKhach",
+            data: data,
+            success: function (result) {
+                alert(result);
+                location.reload();
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert(xhr.status);
+            }
+        });
+    }
+    //Collect Multiple Order List For Pass To Controller
+    $("#editHh").click(function (e) {
+        e.preventDefault();
+    debugger
+        //lay id roominglist de truyen cho chi tiet
+        var id = $('#id_touredit').val();
+        //sau khi lay thi reset
+        $('#id_touredit').val("");
+
+        var khachArr = [];
+        khachArr.length = 0;
+
+        $.each($("#detailsTableEdit tbody tr"), function () {
+            debugger
+            khachArr.push({
+                salesnm: $(this).find('td:eq(0)').html(),
+                tenkhach: $(this).find('td:eq(1)').html(),
+                socmnd: $(this).find('td:eq(2)').html(),
+                sotien: $(this).find('td:eq(3)').html()
+            });
+        });
+
+        var data = JSON.stringify({
+            id:id,
+            khachs: khachArr
+        });
+
+        $.when(addKhach(data)).then(function (response) {
+            console.log(response);
+        }).fail(function (err) {
+            console.log(err);
+        });
+    });
+
+
+    function isNumber(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if ((charCode > 31 && charCode < 48) || charCode > 57) {
+            return false;
+        }
+        return true;
+    }
+
+    $(function () {
+        $('.numbers').inputmask({ alias: 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'autoUnmask': true, 'removeMaskOnSubmit': true });
+    });
+
+
+</script>
+
+

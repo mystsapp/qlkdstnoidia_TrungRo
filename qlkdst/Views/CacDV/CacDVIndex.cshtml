@@ -1,0 +1,87 @@
+﻿@model qlkdstDB.EF.tour
+@using qlkdst.Common;
+@{
+    ViewBag.Title = " DỊCH VỤ";
+    Layout = null;
+
+}
+
+<!-- //breadcrumbs -->
+<div class="inner_content_w3_agile_info two_in">
+
+    <!-- tables -->
+
+    <div class="agile-tables">
+        <div class="w3l-table-info agile_info_shadow">
+            <h3 class="w3_inner_tittle two">  DỊCH VỤ</h3>
+
+            <div class="form-body">
+                <div>
+                                        @*
+                             string sContent = "";
+                            @if (ViewBag.fileext == ".docx" || ViewBag.fileext == ".doc")
+        {
+            sContent = ViewBag.WordDVHtml;
+        }
+        else if (ViewBag.fileext == ".xlsx" || ViewBag.fileext == ".xls")
+        {
+            sContent=ViewBag.ExcelDVHtml;
+        }
+        else
+        {
+            string sFilePath = ViewBag.UploadPath + Model.dichvu;
+
+            <a href="@sFilePath" target="_blank">File dịch vụ</a>
+        }
+        @Html.Raw(sContent)*@
+                                    
+                    @{
+
+                        string sFilePath = ViewBag.ViewUploadPath + Model.dichvu;
+
+                        string encodePath = DungChung.FTP_PATH + DungChung.DV_FTP_PATH +  Model.dichvu;
+                        encodePath = encodePath.Replace(":", "aabbccddee");
+                        encodePath = encodePath.Replace("/", "asdfghjkl");
+                        encodePath = encodePath.Replace("+", "aqwsedrf");
+                    }
+
+                    @*@if (Model.dichvu != null)
+                    {
+                        <a href="@sFilePath" target="_blank">File dịch vụ</a>
+                    }*@
+                    @if (Model.dichvu != null)
+                    {
+                        <a href="@Url.Action("ShowSoftwareNewJsTreeFTP", "CacDV",new { path = encodePath })" target="_blank">
+                            @Model.dichvu
+                        </a>
+                    }
+                    
+
+                    @*@if (ViewBag.fileext == ".docx" || ViewBag.fileext == ".doc")
+                    {
+                        <a href=@(Url.Action("ViewWordFile", "CacDV", new { path = Model.dichvu })) target="_blank">File dịch vụ</a>
+                    }
+                    else if (ViewBag.fileext == ".xlsx" || ViewBag.fileext == ".xls")
+                    {
+                        <a href=@(Url.Action("ViewExcelFile", "CacDV", new { path = Model.dichvu })) target="_blank">File dịch vụ</a>
+                    }
+                    else
+                    {
+                        string sFilePath = ViewBag.ViewUploadPath + Model.dichvu;
+
+                        <a href="@sFilePath" target="_blank">File dịch vụ</a>
+                    }*@ 
+                   
+                </div>
+            </div>
+            <!--END FORM BODY-->
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+

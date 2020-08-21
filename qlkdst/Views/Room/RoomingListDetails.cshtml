@@ -1,0 +1,32 @@
+﻿@model qlkdstDB.EF.roominglistd
+@{
+    decimal i = ViewBag.i == null ? 0 : ViewBag.i;
+}
+
+<div class="wthree_general graph-form agile_info_shadow ">
+ 
+
+    <div class="grid-1">
+        <div class="form-body">
+
+            <div class="form-group">
+
+                <label for="controllernm" class="col-sm-2 control-label">   Số phòng:</label>
+                <div class="col-sm-2">
+                    @Html.TextBoxFor(model => model.sophong, new { @class = "form-control", @Name = "[" + i + "].sophong" })
+                </div>
+
+                <label for="areaname" class="col-sm-2 control-label">  Loại phòng:</label>
+                <div class="col-sm-2">
+                    @Html.DropDownList("loaiphong", null,String.Empty, new { @class = "form-control", @Name = "[" + i + "].loaiphong" })
+                </div>
+
+                <label for="areaname" class="col-sm-2 control-label">  Chọn khách:</label>
+                <div class="col-sm-2">
+                    @Html.DropDownList("id_dsk",null,String.Empty, new { @class = "form-control", @Name = "[" + i + "].id_dsk" })
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

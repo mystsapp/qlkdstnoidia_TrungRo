@@ -1,0 +1,75 @@
+﻿@model qlkdstDB.EF.tour
+@using qlkdst.Common;
+
+@{
+    ViewBag.Title = " THANH LÝ HỢ ĐỒNG";
+    Layout = null;
+
+}
+
+<!-- //breadcrumbs -->
+<div class="inner_content_w3_agile_info two_in">
+
+    <!-- tables -->
+
+    <div class="agile-tables">
+        <div class="w3l-table-info agile_info_shadow">
+            <h3 class="w3_inner_tittle two">  THANH LÝ HỢP ĐỒNG</h3>
+
+            <div class="form-body">
+                <div>
+                    @*@Html.Raw(ViewBag.WordHtml)*@
+
+                    @*@if (ViewBag.fileext == ".docx" || ViewBag.fileext == ".doc")
+                    {
+                        sContent = ViewBag.WordHtml;
+                    }
+                    else if (ViewBag.fileext == ".xlsx" || ViewBag.fileext == ".xls")
+                    {
+                        sContent = ViewBag.ExcelHtml;
+                    }
+                    else
+                    {
+                        string sFilePath = ViewBag.ViewUploadPath + Model.dichvu;
+
+                        <a href="@sFilePath" target="_blank">File dịch vụ</a>
+                    }
+
+                    @Html.Raw(sContent)*@
+                    @{
+                        string sFilePath = ViewBag.ViewUploadPath + Model.noidungthanhlyhd;
+
+                        string encodePath = DungChung.FTP_PATH + DungChung.TL_FTP_PATH + Model.noidungthanhlyhd;
+                        //string encodePath = DungChung.FTP_PATH +  Model.noidungthanhlyhd;
+                        encodePath = encodePath.Replace(":", "aabbccddee");
+                        encodePath = encodePath.Replace("/", "asdfghjkl");
+                        encodePath = encodePath.Replace("+", "aqwsedrf");
+
+                         }
+
+                    @*@if (Model.noidungthanhlyhd != null)
+                    {
+                        <a href="@sFilePath" target="_blank">File thanh lý hợp đồng</a>
+                    }*@
+
+                    @if (Model.noidungthanhlyhd != null)
+                    {
+                        <a href="@Url.Action("ShowSoftwareNewJsTreeFTP", "QLKhachDoan",new { path = encodePath })" target="_blank">
+                            @Model.noidungthanhlyhd
+                        </a>
+                    }
+                 
+
+                </div>
+            </div>
+            <!--END FORM BODY-->
+            
+        </div>
+
+
+    </div>
+
+
+</div>
+
+

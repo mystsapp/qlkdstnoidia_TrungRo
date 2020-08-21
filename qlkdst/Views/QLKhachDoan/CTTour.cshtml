@@ -1,0 +1,204 @@
+﻿@model qlkdstDB.EF.tour
+@{
+    ViewBag.Title = "CTTour";
+    Layout = null;
+}
+
+<blockquote>
+
+    @if (Model != null)
+    {
+        <div class="col-md-6 form-group-sm form-inline">
+            <div class="display-label">                
+                <strong>Code đoàn:</strong> @Model.sgtcode
+                <br><br>
+            </div>
+        </div>
+        <div class="col-md-6 form-group-sm form-inline">
+            <div class="display-label">
+                <strong>Chủ đề tour:</strong> @Model.chudetour
+                <br><br>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="col-md-6 form-group-sm form-inline">
+            <div class="display-label">
+                <strong>Quốc gia:</strong> @Model.tuyentq
+                <br><br>
+            </div>
+        </div>
+        <div class="col-md-6 form-group-sm form-inline">
+            <div class="display-label">
+                <strong>Tuyến tham quan:</strong> @Model.diemtq
+                <br><br>
+            </div>
+        </div>
+       
+        <div class="clearfix"></div>
+        <div class="col-md-6 form-group-sm form-inline">
+            <div class="display-label">
+                <strong>Khách hàng:</strong> @Model.tenkh
+                <br><br>
+            </div>
+        </div>
+        <div class="col-md-6 form-group-sm form-inline">
+            <div class="display-label">
+                <strong>Điện thoại:</strong> @Model.dienthoai
+                <br><br>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="col-md-6 form-group-sm form-inline">
+            <div class="display-label">
+                <strong>Bắt đầu:</strong> @(Model.batdau.HasValue ? @Model.batdau.Value.ToString("dd/MM/yyyy") : "")
+                <br><br>
+            </div>
+        </div>
+        <div class="col-md-6 form-group-sm form-inline">
+            <div class="display-label">
+                <strong>Kết thúc:</strong> @(Model.ketthuc.HasValue ? @Model.ketthuc.Value.ToString("dd/MM/yyyy") : "")
+                <br><br>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="col-md-6 form-group-sm form-inline">
+            <div class="display-label">
+                <strong>Ngày đàm phán:</strong> @(Model.ngaydamphan.HasValue ? @Model.ngaydamphan.Value.ToString("dd/MM/yyyy") : "")
+                <br><br>
+            </div>
+        </div>
+        <div class="col-md-6 form-group-sm form-inline">
+            <div class="display-label">
+                <strong>Ngày đặt cọc vé:</strong> @(Model.hanxuatvmb.HasValue ? @Model.hanxuatvmb.Value.ToString("dd/MM/yyyy") : "")
+                <br><br>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="col-md-6 form-group-sm form-inline">
+            <div class="display-label">
+                <strong>Số khách dự kiến:</strong>@(Model.sokhachdk.HasValue ? @Model.sokhachdk.Value.ToString("#,#") : "") 
+                <br><br>
+            </div>
+        </div>
+
+        <div class="col-md-6 form-group-sm form-inline">
+            <div class="display-label">
+                <strong>Doanh thu dự kiến:</strong> @(Model.doanhthudk.HasValue ? @Model.doanhthudk.Value.ToString("#,#") : "")
+                <br><br>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="col-md-6 form-group-sm form-inline">
+            <div class="display-label">
+                <strong>Ngày ký hợp đồng:</strong> @(Model.ngaykyhopdong.HasValue ? @Model.ngaykyhopdong.Value.ToString("dd/MM/yyyy") : "")
+                <br><br>
+            </div>
+        </div>
+        <div class="col-md-6 form-group-sm form-inline">
+            <div class="display-label">
+                <strong>Người ký hợp đồng:</strong> @Model.nguoikyhopdong
+                <br><br>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="col-md-6 form-group-sm form-inline">
+            <div class="display-label">
+                <strong>Người đại diện:</strong> @Model.nguoidaidien
+                <br><br>
+            </div>
+        </div>
+        <div class="col-md-6 form-group-sm form-inline">
+            <div class="display-label">
+                <strong>Đối tác nước ngoài:</strong> @Model.doitacnuocngoai
+                <br><br>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="col-md-6 form-group-sm form-inline">
+            <div class="display-label">
+                <strong>Số hợp đồng:</strong> @Model.sohopdong
+                <br><br>
+            </div>
+        </div>
+        <div class="col-md-6 form-group-sm form-inline">
+            <div class="display-label">
+                <strong>Nguồn tour:</strong> @Model.nguontour
+                <br><br>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="col-md-6 form-group-sm form-inline">
+            <div class="display-label">
+                <strong>Hình thức liên hệ:</strong> @Model.hinhthucgiaodich
+                <br><br>
+            </div>
+        </div>      
+
+        <div class="col-md-6 form-group-sm form-inline">
+            <div class="display-label">
+                <strong>Ngày thanh lý hợp đồng:</strong> @(Model.ngaythanhlyhd.HasValue ? @Model.ngaythanhlyhd.Value.ToString("dd/MM/yyyy") : "")
+                <br><br>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="col-md-6 form-group-sm form-inline">
+            <div class="display-label">
+                <strong>Số khách thực tế:</strong> @(Model.sokhachtt.HasValue ? @Model.sokhachtt.Value.ToString("#,#") : "")  
+                <br><br>
+            </div>
+        </div>
+        <div class="col-md-6 form-group-sm form-inline">
+           
+            <div class="display-label">
+                <strong>Doanh thu thực tế:</strong> @(Model.doanhthutt.HasValue ? Decimal.Parse(@Model.doanhthutt.ToString()).ToString("#,#") : "")
+                <br><br>
+            </div>
+        </div>
+
+        <div class="col-md-6 form-group-sm form-inline">
+            <div class="display-label">
+                <strong>Ngày về đủ tiền:</strong> @(Model.ngaynhandutien.HasValue ? @Model.ngaynhandutien.Value.ToString("dd/MM/yyyy") : "")
+                <br><br>
+            </div>
+        </div>
+        <div class="col-md-6 form-group-sm form-inline">
+
+            <div class="display-label">
+                <strong>Lí do:</strong> @Model.lidonhandu
+                <br><br>
+            </div>
+        </div>
+        <div class="col-md-6 form-group-sm form-inline">
+            <div class="display-label">
+                <strong>Lãi chưa vé (vé máy bay/vé xe lửa):</strong>@(Model.laichuave.HasValue ? Decimal.Parse(@Model.laichuave.ToString()).ToString("#,#") : "")
+                <br><br>
+            </div>
+        </div>
+        <div class="col-md-6 form-group-sm form-inline">
+            <div class="display-label">
+                <strong>Lãi bao gồm vé (vé máy bay/vé xe lửa):</strong>@(Model.laigomve.HasValue ? Decimal.Parse(@Model.laigomve.ToString()).ToString("#,#") : "") 
+                <br><br>
+            </div>
+        </div>
+
+        <div class="col-md-6 form-group-sm form-inline">
+
+            <div class="display-label">
+                <strong>Lãi thực tế gồm vé (vé máy bay/vé xe lửa):</strong>@(Model.laithuctegomve.HasValue ? Decimal.Parse(@Model.laithuctegomve.ToString()).ToString("#,#") : "") 
+                <br><br>
+            </div>
+        </div>
+        <div class="col-md-6 form-group-sm form-inline">
+
+            <div class="display-label">
+                <strong>Nguyên nhân hủy thầu: </strong>@Model.nguyennhanhuythau
+                <br><br>
+            </div>
+        </div>
+    }
+
+    
+
+
+</blockquote>
+

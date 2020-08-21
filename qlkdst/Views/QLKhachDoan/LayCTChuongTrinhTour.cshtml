@@ -1,0 +1,64 @@
+﻿@model qlkdstDB.EF.tour
+@using qlkdst.Common;
+@{
+    ViewBag.Title = "CTTour";
+    Layout = null;
+}
+
+@*<blockquote>
+
+    @if (Model != null)
+    {
+        <pre>
+            @Model.chuongtrinhtour
+        </pre>
+
+    }
+
+
+
+
+</blockquote>*@
+
+<!-- //breadcrumbs -->
+<div class="inner_content_w3_agile_info two_in">
+
+    <!-- tables -->
+
+    <div class="agile-tables">
+        <div class="w3l-table-info agile_info_shadow">
+            <h3 class="w3_inner_tittle two">  CHƯƠNG TRÌNH TOUR</h3>
+
+            <div class="form-body">
+                <div>
+                
+                    @{
+                        string sFilePath = ViewBag.ViewUploadPath + Model.noidungthanhlyhd;
+
+                        string encodePath = DungChung.FTP_PATH + DungChung.CTTOUR_FTP_PATH + Model.chuongtrinhtour;                        
+                        encodePath = encodePath.Replace(":", "aabbccddee");
+                        encodePath = encodePath.Replace("/", "asdfghjkl");
+                        encodePath = encodePath.Replace("+", "aqwsedrf");
+
+                    }                  
+
+                    @if (Model.chuongtrinhtour != null)
+                    {
+                        <a href="@Url.Action("ShowSoftwareNewJsTreeFTP", "ThanhLy",new { path = encodePath })" target="_blank">
+                            @Model.chuongtrinhtour
+                        </a>
+                    }
+
+
+                </div>
+            </div>
+            <!--END FORM BODY-->
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
